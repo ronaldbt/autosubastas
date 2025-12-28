@@ -1,95 +1,89 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4 py-8">
-    <!-- Fondo decorativo -->
-    <div class="absolute inset-0 bg-gradient-to-r from-orange-600/10 to-orange-500/5"></div>
-    
-    <div class="relative z-10 w-full max-w-md">
-      <!-- Logo y título -->
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    <div class="max-w-md w-full">
+      <!-- Logo/Header -->
       <div class="text-center mb-8">
-        <div class="flex justify-center mb-4">
-          <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-2xl">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-          </div>
-        </div>
-        <h1 class="text-3xl font-bold text-white mb-2">Bienvenido de vuelta</h1>
-        <p class="text-slate-300">Inicia sesión en tu cuenta</p>
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">Autoventas</h1>
+        <p class="text-gray-600">Sistema de Remates de Autos</p>
       </div>
 
-      <!-- Formulario -->
-      <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl shadow-orange-500/10 border border-white/20 p-8">
-        <form @submit.prevent="login" class="space-y-6">
-          <!-- Campo Email -->
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-slate-700">Correo electrónico</label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
-                </svg>
-              </div>
-              <input
-                v-model="email"
-                type="email"
-                required
-                placeholder="tu@email.com"
-                class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 bg-white text-slate-900 placeholder-slate-500"
-              />
-            </div>
+      <!-- Card de Login -->
+      <div class="bg-white rounded-2xl shadow-xl p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Iniciar Sesión</h2>
+
+        <form @submit.prevent="handleLogin" class="space-y-6">
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              id="email"
+              v-model="form.email"
+              type="email"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+              placeholder="tu@email.com"
+            />
           </div>
 
-          <!-- Campo Contraseña -->
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-slate-700">Contraseña</label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
-              </div>
-              <input
-                v-model="password"
-                type="password"
-                required
-                placeholder="••••••••"
-                class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 bg-white text-slate-900 placeholder-slate-500"
-              />
-            </div>
+          <!-- Password -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              v-model="form.password"
+              type="password"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+              placeholder="••••••••"
+            />
           </div>
 
-          <!-- Botón de envío -->
-          <button 
-            type="submit" 
-            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          <!-- Error Message -->
+          <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            {{ error }}
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            :disabled="loading"
+            class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span class="flex items-center justify-center space-x-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+            <span v-if="!loading">Iniciar Sesión</span>
+            <span v-else class="flex items-center justify-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <span>Iniciar Sesión</span>
+              Iniciando sesión...
             </span>
           </button>
-
-          <!-- Mensaje de error -->
-          <div v-if="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
-            <div class="flex items-center space-x-2">
-              <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <p class="text-red-700 text-sm">{{ error }}</p>
-            </div>
-          </div>
         </form>
 
-        <!-- Enlaces adicionales -->
-        <div class="mt-6 pt-6 border-t border-slate-200">
-          <p class="text-center text-slate-600 text-sm">
-            ¿No tienes cuenta? 
-            <NuxtLink to="/register" class="text-orange-600 hover:text-orange-700 font-medium transition-colors duration-200">
+        <!-- Register Link -->
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            ¿No tienes cuenta?
+            <NuxtLink to="/registro" class="text-orange-500 hover:text-orange-600 font-semibold">
               Regístrate aquí
             </NuxtLink>
           </p>
+        </div>
+      </div>
+
+      <!-- Credenciales de Prueba -->
+      <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p class="text-xs font-semibold text-blue-900 mb-2">🔑 Credenciales de Prueba:</p>
+        <div class="text-xs text-blue-700 space-y-1">
+          <p><strong>Super Admin:</strong> superadmin@autoventas.com / superadmin123</p>
+          <p><strong>Admin:</strong> admin@autoventas.com / admin123</p>
+          <p><strong>Vendedor:</strong> vendedor@test.com / vendedor123</p>
+          <p><strong>Dealer:</strong> dealer@test.com / dealer123</p>
+          <p><strong>Perito:</strong> perito@test.com / perito123</p>
         </div>
       </div>
     </div>
@@ -98,110 +92,94 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/authStore'
+import { useAuth } from '~/composables/useAuth'
 
-// Usar layout de autenticación sin sidebar
 definePageMeta({
-  layout: 'auth'
+  layout: false
 })
 
-const email = ref('')
-const password = ref('')
+const { login, checkAuth, user } = useAuth()
+const router = useRouter()
+
+const form = ref({
+  email: '',
+  password: ''
+})
+
+const loading = ref(false)
 const error = ref('')
 
-const { $api, $toast } = useNuxtApp()
-const router = useRouter()
-let authStore = null
-const storeReady = ref(false)
-
-// Función para redirigir según el rol
-const redirigirPorRol = (rol) => {
-  switch (rol) {
-    case 'CLIENTE':
-      return '/cliente/dashboard'
-    case 'AUTOMOTORA':
-      return '/automotora/dashboard'
-    case 'PUBLICISTA':
-      return '/publicista/dashboard'
-    case 'ADMIN':
-      return '/admin/dashboard'
-    case 'PERITO':
-      return '/perito/dashboard'
-    default:
-      return '/automotora/dashboard' // Default fallback
-  }
-}
-
-// Verificar si ya está logueado al cargar la página
-onMounted(async () => {
-  // Verificar localStorage directamente primero
+// Verificar si ya está autenticado al cargar la página
+onMounted(() => {
   if (process.client) {
-    try {
-      const token = localStorage.getItem('token')
-      const userLS = localStorage.getItem('user')
-      
-      if (token && userLS) {
-        console.log('🔵 [Login] Usuario ya está logueado, redirigiendo...')
-        const user = JSON.parse(userLS)
-        const redirectTo = redirigirPorRol(user.rol)
-        
-        $toast.success('Ya tienes una sesión activa')
-        await router.push(redirectTo)
-        return
+    // Solo verificar localStorage sin hacer llamada al API
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser)
+        if (parsedUser && parsedUser.rol) {
+          const rol = parsedUser.rol
+          switch (rol) {
+            case 'superadmin':
+              router.push('/superadmin/dashboard')
+              break
+            case 'admin':
+              router.push('/admin/dashboard')
+              break
+            case 'vendedor':
+              router.push('/vendedor/dashboard')
+              break
+            case 'dealer':
+              router.push('/dealer/dashboard')
+              break
+            case 'perito':
+              router.push('/perito/dashboard')
+              break
+            default:
+              router.push('/')
+          }
+        }
+      } catch (e) {
+        // Si hay error parseando, continuar con el login
+        console.error('Error parsing user:', e)
       }
-    } catch (error) {
-      console.error('Error verificando sesión:', error)
-      // Limpiar datos corruptos
-      localStorage.removeItem('user')
-      localStorage.removeItem('token')
-      localStorage.removeItem('rol')
     }
-  }
-  
-  // Inicializar store después de verificar
-  try {
-    authStore = useAuthStore()
-    storeReady.value = true
-  } catch (error) {
-    console.error('Error inicializando AuthStore:', error)
   }
 })
 
-const login = async () => {
-  try {
-    const res = await $api.post('/auth/login', {
-      email: email.value,
-      password: password.value
-    })
+const handleLogin = async () => {
+  loading.value = true
+  error.value = ''
 
-    if (!res.data || !res.data.usuario || !res.data.token) {
-      throw new Error('Respuesta inválida del servidor')
+  const result = await login(form.value.email, form.value.password)
+
+  if (result.success) {
+    // Redirigir según el rol
+    const rol = result.usuario.rol
+    switch (rol) {
+      case 'superadmin':
+        router.push('/superadmin/dashboard')
+        break
+      case 'admin':
+        router.push('/admin/dashboard')
+        break
+      case 'vendedor':
+        router.push('/vendedor/dashboard')
+        break
+      case 'dealer':
+        router.push('/dealer/dashboard')
+        break
+      case 'perito':
+        router.push('/perito/dashboard')
+        break
+      default:
+        router.push('/')
     }
-
-    // Si tenemos authStore disponible, usarlo
-    if (authStore) {
-      authStore.login(res.data)
-    } else {
-      // Fallback: guardar directamente en localStorage
-      localStorage.setItem('user', JSON.stringify(res.data.usuario))
-      localStorage.setItem('token', res.data.token)
-      localStorage.setItem('rol', res.data.usuario.rol)
-    }
-
-    $toast.success('✅ Sesión iniciada con éxito')
-
-    const rol = res.data.usuario.rol
-    const redirectTo = redirigirPorRol(rol)
-    
-    console.log('🔵 [Login] Redirigiendo a:', redirectTo)
-    await router.push(redirectTo)
-
-  } catch (err) {
-    console.error('❌ Error al iniciar sesión:', err)
-    error.value = err.response?.data?.error || err.message || 'Error al iniciar sesión'
-    $toast.error('❌ ' + error.value)
+  } else {
+    error.value = result.message || 'Credenciales inválidas'
   }
+
+  loading.value = false
 }
 </script>
 

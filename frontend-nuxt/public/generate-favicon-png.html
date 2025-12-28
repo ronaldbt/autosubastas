@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Generar Favicon PNG</title>
+</head>
+<body style="margin:0;padding:20px;background:#f3f4f6;font-family:Arial">
+  <div style="max-width:600px;margin:0 auto;background:white;padding:20px;border-radius:8px">
+    <h2>Favicon - Icono Car de Lucide</h2>
+    <p>Este archivo genera un PNG del icono Car de Lucide usado en el sidebar.</p>
+    <canvas id="canvas" width="32" height="32" style="border:1px solid #ddd;display:block;margin:20px auto"></canvas>
+    <div style="text-align:center">
+      <button onclick="download()" style="background:#f97316;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer">Descargar PNG (32x32)</button>
+    </div>
+    <div style="margin-top:20px;padding:15px;background:#f9fafb;border-radius:6px;font-size:14px">
+      <strong>Instrucciones:</strong><br>
+      1. Haz clic en "Descargar PNG"<br>
+      2. Visita <a href="https://favicon.io/favicon-converter/" target="_blank">favicon.io</a> para convertir a ICO<br>
+      3. Reemplaza public/favicon.ico con el archivo generado
+    </div>
+  </div>
+  <script>
+    const c = document.getElementById('canvas');
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#f97316';
+    ctx.fillRect(0, 0, 32, 32);
+    ctx.strokeStyle = 'white';
+    ctx.fillStyle = 'white';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.save();
+    ctx.translate(4, 4);
+    ctx.scale(24/24, 24/24);
+    ctx.beginPath(); ctx.arc(7, 17, 2, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(17, 17, 2, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(5,17); ctx.lineTo(3,17); ctx.lineTo(3,11); ctx.lineTo(5,6); ctx.lineTo(11,6); ctx.lineTo(15,11); ctx.lineTo(19,11); ctx.lineTo(19,17); ctx.lineTo(17,17); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(7,10); ctx.lineTo(17,10); ctx.stroke();
+    ctx.restore();
+    function download() {
+      const a = document.createElement('a');
+      a.download = 'favicon.png';
+      a.href = c.toDataURL('image/png');
+      a.click();
+    }
+  </script>
+</body>
+</html>

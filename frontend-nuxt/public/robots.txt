@@ -1,0 +1,9 @@
+User-Agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /superadmin/
+Disallow: /vendedor/
+Disallow: /dealer/
+Disallow: /perito/
+
+Sitemap: https://rematauto.cl/sitemap.xml

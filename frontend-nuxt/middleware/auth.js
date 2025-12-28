@@ -1,14 +1,23 @@
-// middleware/auth.js
 export default defineNuxtRouteMiddleware((to, from) => {
-  if (process.server) return
+  const { user, checkAuth } = useAuth()
   
-  const authStore = useAuthStore()
-  
-  // Verificar si el usuario está autenticado
-  if (!authStore.isLoggedIn) {
-    console.log('🔴 [Auth Middleware] Usuario no autenticado, redirigiendo a login')
-    return navigateTo('/login')
+  // Verificar autenticación
+  if (process.client) {
+    const isAuthenticated = checkAuth()
+    
+    if (!isAuthenticated && !user.value) {
+      return navigateTo('/login')
+    }
   }
-  
-  console.log('✅ [Auth Middleware] Usuario autenticado, permitir acceso')
 })
+
+
+
+
+
+
+
+
+
+
+

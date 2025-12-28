@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Favicon Generator - Car Icon</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .favicon-preview {
+      width: 32px;
+      height: 32px;
+      background: #f97316;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin: 20px auto;
+      display: block;
+    }
+    .instructions {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    button {
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #ea580c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Favicon Generator - Icono Car de Lucide</h1>
+    <div class="favicon-preview">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+        <circle cx="7" cy="17" r="2"/>
+        <circle cx="17" cy="17" r="2"/>
+        <path d="M5 17h-2v-6l2-5h6l4 5h4v6h-2"/>
+        <line x1="7" y1="10" x2="17" y2="10"/>
+      </svg>
+    </div>
+    
+    <canvas id="faviconCanvas" width="32" height="32"></canvas>
+    
+    <div style="text-align: center;">
+      <button onclick="downloadPNG()">Descargar PNG (32x32)</button>
+      <button onclick="downloadICO()">Instrucciones para ICO</button>
+    </div>
+    
+    <div class="instructions">
+      <h3>Instrucciones:</h3>
+      <ol>
+        <li>Haz clic en "Descargar PNG" para obtener el favicon en formato PNG</li>
+        <li>Para convertir a ICO, visita: <a href="https://favicon.io/favicon-converter/" target="_blank">https://favicon.io/favicon-converter/</a></li>
+        <li>Sube el PNG descargado y descarga el favicon.ico</li>
+        <li>Reemplaza el archivo <code>public/favicon.ico</code> con el generado</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    // Dibujar el favicon en el canvas
+    const canvas = document.getElementById('faviconCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Fondo naranja
+    ctx.fillStyle = '#f97316';
+    ctx.fillRect(0, 0, 32, 32);
+    
+    // Dibujar el icono Car de Lucide
+    ctx.strokeStyle = 'white';
+    ctx.fillStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    
+    // Escalar el icono (24x24) a 32x32 con padding
+    const scale = 32 / 24;
+    const offset = 4;
+    
+    ctx.save();
+    ctx.translate(offset, offset);
+    ctx.scale(scale, scale);
+    
+    // Rueda izquierda
+    ctx.beginPath();
+    ctx.arc(7, 17, 2, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Rueda derecha
+    ctx.beginPath();
+    ctx.arc(17, 17, 2, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Cuerpo del auto
+    ctx.beginPath();
+    ctx.moveTo(5, 17);
+    ctx.lineTo(3, 17);
+    ctx.lineTo(3, 11);
+    ctx.lineTo(5, 6);
+    ctx.lineTo(11, 6);
+    ctx.lineTo(15, 11);
+    ctx.lineTo(19, 11);
+    ctx.lineTo(19, 17);
+    ctx.lineTo(17, 17);
+    ctx.stroke();
+    
+    // Línea horizontal
+    ctx.beginPath();
+    ctx.moveTo(7, 10);
+    ctx.lineTo(17, 10);
+    ctx.stroke();
+    
+    ctx.restore();
+    
+    function downloadPNG() {
+      const link = document.createElement('a');
+      link.download = 'favicon.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+    
+    function downloadICO() {
+      alert('Para crear un favicon.ico:\n\n1. Descarga el PNG usando el botón anterior\n2. Visita https://favicon.io/favicon-converter/\n3. Sube el PNG y descarga el ICO\n4. Reemplaza public/favicon.ico con el archivo generado');
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+

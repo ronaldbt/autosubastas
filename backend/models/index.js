@@ -1,44 +1,39 @@
-'use strict';
+// Archivo para inicializar todas las relaciones entre modelos
+// Esto evita problemas de dependencias circulares
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
-const db = {};
+const Usuario = require('./Usuario');
+const Auto = require('./Auto');
+const Peritaje = require('./Peritaje');
+const Remate = require('./Remate');
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+// Relaciones Usuario-Auto (ya definidas en Auto.js)
+// Auto.belongsTo(Usuario, { foreignKey: 'creadoPor', as: 'creador' });
+// Usuario.hasMany(Auto, { foreignKey: 'creadoPor', as: 'autos' });
+
+// Relaciones Usuario-Peritaje (ya definidas en Peritaje.js)
+// Peritaje.belongsTo(Usuario, { foreignKey: 'peritoId', as: 'perito' });
+// Usuario.hasMany(Peritaje, { foreignKey: 'peritoId', as: 'peritajes' });
+
+// Relaciones Auto-Peritaje (definidas aquí para evitar dependencia circular)
+// Solo definir si no están ya definidas
+if (!Auto.associations.peritaje) {
+  Auto.belongsTo(Peritaje, {
+    foreignKey: 'peritajeId',
+    as: 'peritaje'
+  });
 }
 
-// Cargar todos los modelos en la carpeta actual
-fs
-  .readdirSync(__dirname)
-  .filter(file =>
-    file.indexOf('.') !== 0 &&
-    file !== basename &&
-    file.slice(-3) === '.js' &&
-    !file.includes('.test.js')
-  )
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
+if (!Peritaje.associations.auto) {
+  Peritaje.hasOne(Auto, {
+    foreignKey: 'peritajeId',
+    as: 'auto'
   });
+}
 
-// Ejecutar asociaciones si existen
-Object.keys(db).forEach(modelName => {
-  if (typeof db[modelName].associate === 'function') {
-    db[modelName].associate(db);
-  }
-});
+module.exports = {
+  Usuario,
+  Auto,
+  Peritaje,
+  Remate
+};
 
-// Exportar instancia y modelos
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-module.exports = db;
