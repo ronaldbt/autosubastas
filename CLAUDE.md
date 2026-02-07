@@ -8,7 +8,7 @@ This is Autoventas360, a car sales platform with a monorepo structure containing
 
 - **backend/**: Node.js/Express API with Sequelize ORM and PostgreSQL
 - **frontend/**: Vue.js 3 + Vite application (legacy frontend, mostly removed)  
-- **frontend-nuxt/**: Nuxt 3 application (primary frontend)
+- **frontend/**: Nuxt 3 application (primary frontend)
 
 ### Backend Architecture
 
@@ -26,15 +26,15 @@ Key entities: Usuario, Vehiculo, Marca, Modelo, Automotora, Peritaje, Region, Co
 ### Frontend Architecture (Nuxt 3)
 
 The primary frontend is built with Nuxt 3:
-- **Pages**: File-based routing in `frontend-nuxt/pages/`
-- **Components**: Vue components in `frontend-nuxt/components/`
-- **Stores**: Pinia stores in `frontend-nuxt/stores/`
-- **Services**: API service layer in `frontend-nuxt/services/`
-- **Composables**: Reusable composition functions in `frontend-nuxt/composables/`
-- **Middleware**: Route middleware in `frontend-nuxt/middleware/`
-- **Plugins**: Nuxt plugins in `frontend-nuxt/plugins/`
-- **Utils**: Utility functions in `frontend-nuxt/utils/`
-- **Styling**: Tailwind CSS v4 with custom CSS in `frontend-nuxt/assets/css/`
+- **Pages**: File-based routing in `frontend/pages/`
+- **Components**: Vue components in `frontend/components/`
+- **Stores**: Pinia stores in `frontend/stores/`
+- **Services**: API service layer in `frontend/services/`
+- **Composables**: Reusable composition functions in `frontend/composables/`
+- **Middleware**: Route middleware in `frontend/middleware/`
+- **Plugins**: Nuxt plugins in `frontend/plugins/`
+- **Utils**: Utility functions in `frontend/utils/`
+- **Styling**: Tailwind CSS v4 with custom CSS in `frontend/assets/css/`
 
 ### User Roles & Authentication
 
@@ -69,7 +69,7 @@ npx sequelize-cli seed:generate --name seeder-name
 
 ### Frontend (Nuxt 3)
 ```bash
-cd frontend-nuxt
+cd frontend
 npm install
 # Development server
 npm run dev
@@ -85,7 +85,7 @@ npm run test  # Note: Test framework is Vitest
 
 ### Testing
 
-Tests are located in `frontend-nuxt/tests/` and use Vitest framework:
+Tests are located in `frontend/tests/` and use Vitest framework:
 - Store tests: `catalogoStore.test.js`
 - Composable tests: `useCatalogo.test.js`  
 - Service tests: `logoService.test.js`
@@ -137,7 +137,7 @@ The project is fully dockerized for both development and production environments
 ### Docker Setup
 
 - **Development**: Use `docker-compose.yml` for local development
-- **Production**: Use `docker-compose.prod.yml` with Traefik reverse proxy
+- **Production**: Use `docker-compose.yml` with Traefik (variables en `.env`)
 - **Database**: PostgreSQL container with persistent volumes
 - **SSL**: Automatic SSL certificates via Let's Encrypt in production
 - **Backup**: Automated database backups with retention policy
@@ -151,7 +151,7 @@ The project is fully dockerized for both development and production environments
 
 # Production setup
 ./scripts/setup.sh prod
-# Or manually: docker compose -f docker-compose.prod.yml up -d --build
+# Or manually: docker compose up -d --build
 
 # Database operations
 docker exec -it autoventas-postgres psql -U autoventas_user -d autoventas360
@@ -173,7 +173,7 @@ docker exec autoventas-backend npx sequelize-cli db:seed:all
 ### Environment Configuration
 
 - **Development**: Uses default values from `backend/.env`
-- **Production**: Requires `.env.prod` file based on `.env.production` template
+- **Production**: Requires `.env` with DB, JWT, and domain variables
 - **Database persistence**: Data stored in Docker volumes, prevents data loss
 - **SSL certificates**: Stored in persistent Traefik volume
 
@@ -192,9 +192,9 @@ docker exec autoventas-backend npx sequelize-cli db:seed:all
 ### Key Docker Files
 
 - `docker-compose.yml` - Development environment
-- `docker-compose.prod.yml` - Production with Traefik
+- `docker-compose.yml` - Development and production (Traefik, frontend, backend)
 - `backend/Dockerfile` - Backend container definition
-- `frontend-nuxt/Dockerfile` - Frontend container with multi-stage build
+- `frontend/Dockerfile` - Frontend container with multi-stage build
 - `traefik/traefik.yml` - Traefik static configuration
 - `scripts/setup.sh` - Automated setup script
 - `scripts/backup.sh` - Database backup script
@@ -217,6 +217,6 @@ cd backend && npx sequelize-cli db:migrate
 ### Next Steps
 
 - Install Docker Desktop to use the containerized environment
-- Configure production environment variables in `.env.prod`
+- Configure environment variables in `.env`
 - Set up domain DNS to point to your server for production deployment
 - Configure SSL email and Traefik dashboard authentication for production

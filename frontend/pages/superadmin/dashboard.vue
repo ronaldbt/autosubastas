@@ -5,18 +5,22 @@
       <p class="text-gray-600 mt-2">Panel de control principal</p>
     </div>
 
-    <!-- Loading -->
-    <div v-if="loading" class="text-center py-12">
-      <p class="text-gray-500">Cargando estadísticas...</p>
-    </div>
+    <ClientOnly>
+      <template #fallback>
+        <div class="text-center py-12"><p class="text-gray-500">Cargando estadísticas...</p></div>
+      </template>
+      <!-- Loading -->
+      <div v-if="loading" class="text-center py-12">
+        <p class="text-gray-500">Cargando estadísticas...</p>
+      </div>
 
-    <!-- Error -->
-    <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-      {{ error }}
-    </div>
+      <!-- Error -->
+      <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        {{ error }}
+      </div>
 
-    <!-- Stats Cards -->
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Stats Cards -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center justify-between">
           <div>
@@ -109,6 +113,7 @@
         </div>
       </div>
     </div>
+    </ClientOnly>
   </div>
 </template>
 

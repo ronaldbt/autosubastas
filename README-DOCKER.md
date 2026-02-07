@@ -28,15 +28,12 @@ docker compose up -d
 ### Producción
 
 ```bash
-# 1. Configurar variables de entorno
-cp .env.production .env.prod
-# Editar .env.prod con tus valores
-
+# 1. Configurar variables en .env (editar si hace falta)
 # 2. Ejecutar setup de producción
 ./scripts/setup.sh prod
 
 # O manualmente:
-docker compose -f docker-compose.prod.yml up -d --build
+docker compose up -d --build
 ```
 
 ## 🌐 URLs de Acceso
@@ -48,9 +45,9 @@ docker compose -f docker-compose.prod.yml up -d --build
 - **PostgreSQL**: localhost:5432
 
 ### Producción
-- **Frontend**: https://autoventas360.com
-- **Backend API**: https://api.autoventas360.com
-- **Traefik Dashboard**: https://traefik.autoventas360.com
+- **Frontend**: https://autoventas360.cl
+- **Backend API**: https://api.autoventas360.cl
+- **Traefik Dashboard**: https://traefik.autoventas360.cl
 
 ## 🗄️ Base de Datos
 
@@ -61,7 +58,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 docker exec -it autoventas-postgres psql -U autoventas_user -d autoventas360
 
 # Producción
-docker exec -it autoventas-postgres-prod psql -U autoventas_user -d autoventas360
+docker exec -it autoventas-postgres psql -U autoventas_user -d autoventas360
 ```
 
 ### Migraciones y Seeders
@@ -106,7 +103,7 @@ docker compose ps
 - Redirección automática HTTP → HTTPS
 
 ### Variables de Entorno
-Configurar en `.env.prod`:
+Configurar en `.env`:
 
 ```bash
 # Generar contraseña segura para BD
@@ -144,7 +141,7 @@ echo $(htpasswd -nb admin tu_password) | sed -e s/\\$/\\$\\$/g
 gunzip -c backup/autoventas_YYYYMMDD_HHMMSS.sql.gz | docker exec -i autoventas-postgres psql -U autoventas_user -d autoventas360
 
 # Producción
-gunzip -c backup/autoventas_YYYYMMDD_HHMMSS.sql.gz | docker exec -i autoventas-postgres-prod psql -U autoventas_user -d autoventas360
+gunzip -c backup/autoventas_YYYYMMDD_HHMMSS.sql.gz | docker exec -i autoventas-postgres psql -U autoventas_user -d autoventas360
 ```
 
 ## 🔧 Personalización
@@ -189,13 +186,12 @@ docker system prune -a --volumes
 
 ```
 ├── docker-compose.yml          # Desarrollo
-├── docker-compose.prod.yml     # Producción
-├── .env.production             # Template de producción
+├── .env                         # Variables de entorno
 ├── backend/
 │   ├── Dockerfile
 │   ├── .dockerignore
 │   └── healthcheck.js
-├── frontend-nuxt/
+├── frontend/
 │   ├── Dockerfile
 │   └── .dockerignore
 ├── traefik/

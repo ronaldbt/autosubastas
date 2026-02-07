@@ -15,7 +15,7 @@ echo "📁 Creating directories..."
 mkdir -p backup
 mkdir -p traefik
 mkdir -p backend/uploads
-mkdir -p frontend-nuxt/.output
+mkdir -p frontend/.output
 
 # Set permissions
 chmod +x scripts/*.sh
@@ -46,16 +46,16 @@ if [ "$1" = "dev" ]; then
 elif [ "$1" = "prod" ]; then
     echo "🏭 Setting up production environment..."
     
-    if [ ! -f .env.prod ]; then
-        echo "❌ .env.prod file not found. Please create it from .env.production template."
+    if [ ! -f .env ]; then
+        echo "❌ .env file not found. Create .env with your configuration."
         exit 1
     fi
     
-    echo "🔐 Loading production environment..."
-    source .env.prod
+    echo "🔐 Loading environment from .env..."
+    source .env
     
-    echo "🐳 Building and starting production services..."
-    docker-compose -f docker-compose.prod.yml up -d --build
+    echo "🐳 Building and starting services..."
+    docker compose up -d --build
     
     echo "⏳ Waiting for services to start..."
     sleep 20

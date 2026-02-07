@@ -12,7 +12,7 @@ echo "📦 Creating database backup..."
 mkdir -p $BACKUP_DIR
 
 # Create backup
-docker exec autoventas-postgres-prod pg_dump -U autoventas_user -d autoventas360 > $BACKUP_DIR/$BACKUP_FILE
+docker exec autoventas-postgres pg_dump -U autoventas_user -d autoventas360 > $BACKUP_DIR/$BACKUP_FILE
 
 if [ $? -eq 0 ]; then
     echo "✅ Backup created successfully: $BACKUP_FILE"

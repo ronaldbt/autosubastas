@@ -74,18 +74,6 @@
           </p>
         </div>
       </div>
-
-      <!-- Credenciales de Prueba -->
-      <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p class="text-xs font-semibold text-blue-900 mb-2">🔑 Credenciales de Prueba:</p>
-        <div class="text-xs text-blue-700 space-y-1">
-          <p><strong>Super Admin:</strong> superadmin@autoventas.com / superadmin123</p>
-          <p><strong>Admin:</strong> admin@autoventas.com / admin123</p>
-          <p><strong>Vendedor:</strong> vendedor@test.com / vendedor123</p>
-          <p><strong>Dealer:</strong> dealer@test.com / dealer123</p>
-          <p><strong>Perito:</strong> perito@test.com / perito123</p>
-        </div>
-      </div>
     </div>
   </div>
 </template>

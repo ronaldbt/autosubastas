@@ -6,9 +6,9 @@ services:
     image: postgres:15-alpine
     container_name: autoventas-postgres
     environment:
-      POSTGRES_DB: autoventas360
-      POSTGRES_USER: autoventas_user
-      POSTGRES_PASSWORD: parol123
+      POSTGRES_DB: ${DB_NAME:-autoventas360}
+      POSTGRES_USER: ${DB_USER:-autoventas_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-parol123}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data/pgdata
@@ -30,14 +30,14 @@ services:
       dockerfile: Dockerfile
     container_name: autoventas-backend
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_NAME: autoventas360
-      DB_USER: autoventas_user
-      DB_PASSWORD: parol123
-      PORT: 3001
-      JWT_SECRET: claveultrasecreta
-      NODE_ENV: production
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-autoventas360}
+      DB_USER: ${DB_USER:-autoventas_user}
+      DB_PASSWORD: ${DB_PASSWORD:-parol123}
+      PORT: ${PORT:-3001}
+      JWT_SECRET: ${JWT_SECRET:-claveultrasecreta}
+      NODE_ENV: ${NODE_ENV:-production}
     ports:
       - "3001:3001"
     networks:
@@ -50,19 +50,24 @@ services:
       - ./backend/uploads:/app/uploads
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`api.autoventas360.com`)"
+      - "traefik.http.routers.backend.rule=Host(`api.autoventas360.cl`)"
       - "traefik.http.routers.backend.tls=true"
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
       - "traefik.http.services.backend.loadbalancer.server.port=3001"
+      - "traefik.http.middlewares.backend-cors.headers.accessControlAllowOriginList=https://autoventas360.cl,https://www.autoventas360.cl"
+      - "traefik.http.middlewares.backend-cors.headers.accessControlAllowMethods=GET,POST,PUT,PATCH,DELETE,OPTIONS"
+      - "traefik.http.middlewares.backend-cors.headers.accessControlAllowHeaders=Authorization,Content-Type,Accept,X-Requested-With"
+      - "traefik.http.routers.backend.middlewares=backend-cors@docker"
 
   # Frontend Nuxt
   frontend:
     build:
-      context: ./frontend-nuxt
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: autoventas-frontend
     environment:
-      NUXT_PUBLIC_API_BASE: http://backend:3001/api
+      NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE:-https://api.autoventas360.cl/api}
+      NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-https://autoventas360.cl}
     ports:
       - "3000:3000"
     networks:
@@ -72,7 +77,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`autoventas360.com`) || Host(`www.autoventas360.com`)"
+      - "traefik.http.routers.frontend.rule=Host(`autoventas360.cl`) || Host(`www.autoventas360.cl`)"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
@@ -104,7 +109,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.autoventas360.com`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.autoventas360.cl`)"
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.routers.dashboard.service=api@internal"

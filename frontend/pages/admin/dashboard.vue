@@ -5,18 +5,24 @@
       <p class="text-gray-600 mt-2">Panel de control y gestión de remates y autos</p>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="text-center py-20">
-      <p class="text-gray-500">Cargando estadísticas...</p>
-    </div>
+    <ClientOnly>
+      <template #fallback>
+        <div class="text-center py-20">
+          <p class="text-gray-500">Cargando estadísticas...</p>
+        </div>
+      </template>
+      <!-- Loading State -->
+      <div v-if="loading" class="text-center py-20">
+        <p class="text-gray-500">Cargando estadísticas...</p>
+      </div>
 
-    <!-- Error State -->
-    <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-      {{ error }}
-    </div>
+      <!-- Error State -->
+      <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        {{ error }}
+      </div>
 
-    <!-- Dashboard Content -->
-    <div v-else-if="stats">
+      <!-- Dashboard Content -->
+      <div v-else-if="stats">
       <!-- Stats Cards - Primera Fila -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-lg p-6 border border-orange-200">
@@ -302,6 +308,7 @@
         </div>
       </div>
     </div>
+    </ClientOnly>
   </div>
 </template>
 

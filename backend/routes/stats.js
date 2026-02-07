@@ -8,20 +8,36 @@ const auth = require('../middleware/auth');
 const { Op } = require('sequelize');
 const { sequelize } = require('../config/database');
 
+// Respuesta por defecto si falla cualquier consulta (tablas inexistentes, etc.)
+function defaultDashboardResponse() {
+  return {
+    autos: { pendientes: 0, aprobados: 0, enRemate: 0, vendidos: 0, rechazados: 0, total: 0 },
+    remates: { activos: 0, totalPujas: 0, pujasHoy: 0, pujasSemana: 0, proximos: [], finalizados: [] },
+    usuarios: { totalVendedores: 0, totalDealers: 0, vendedoresActivos: 0, dealersActivos: 0 },
+    peritajes: { pendientes: 0, completados: 0, mes: 0 },
+    financiero: { ingresosMes: 0, autosVendidosMes: 0 },
+    topMarcas: [],
+    pujasPorDia: [],
+    autosPorEstado: []
+  };
+}
+
 // @route   GET /api/stats/dashboard
 // @desc    Obtener estadísticas del dashboard para admin
 // @access  Private (Admin)
 router.get('/dashboard', auth, async (req, res) => {
+  let usuario;
   try {
-    console.log('[GET /api/stats/dashboard] Iniciando...');
-    const usuario = await Usuario.findByPk(req.user.id);
-    if (!usuario || (usuario.rol !== 'admin' && usuario.rol !== 'superadmin')) {
-      return res.status(403).json({ message: 'Acceso denegado. Se requiere rol de admin' });
-    }
+    usuario = await Usuario.findByPk(req.user.id);
+  } catch (e) {
+    console.error('[GET /api/stats/dashboard] Error obteniendo usuario:', e);
+    return res.status(500).json({ message: 'Error al verificar usuario' });
+  }
+  if (!usuario || (usuario.rol !== 'admin' && usuario.rol !== 'superadmin')) {
+    return res.status(403).json({ message: 'Acceso denegado. Se requiere rol de admin' });
+  }
 
-    console.log('[GET /api/stats/dashboard] Usuario autorizado:', usuario.rol);
-
-    // Fechas para cálculos
+  try {
     const ahora = new Date();
     const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
     const inicioSemana = new Date(ahora);
@@ -29,12 +45,7 @@ router.get('/dashboard', auth, async (req, res) => {
     const inicioDia = new Date(ahora);
     inicioDia.setHours(0, 0, 0, 0);
 
-    console.log('[GET /api/stats/dashboard] Fechas calculadas');
-
-    // Estadísticas de Autos
-    console.log('[GET /api/stats/dashboard] Obteniendo estadísticas de autos...');
     let autosPendientes = 0, autosAprobados = 0, autosEnRemate = 0, autosVendidos = 0, autosRechazados = 0;
-    
     try {
       autosPendientes = await Auto.count({ where: { estado: 'pendiente' } });
       autosAprobados = await Auto.count({ where: { estado: 'aprobado' } });
@@ -42,8 +53,8 @@ router.get('/dashboard', auth, async (req, res) => {
       autosVendidos = await Auto.count({ where: { estado: 'vendido' } });
       autosRechazados = await Auto.count({ where: { estado: 'rechazado' } });
     } catch (err) {
-      console.error('[GET /api/stats/dashboard] Error en estadísticas de autos:', err);
-      throw err;
+      console.error('[GET /api/stats/dashboard] Error en estadísticas de autos:', err.message);
+      return res.json(defaultDashboardResponse());
     }
 
     // Estadísticas de Remates
@@ -318,16 +329,10 @@ router.get('/dashboard', auth, async (req, res) => {
       autosPorEstado: autosPorEstado
     };
     
-    console.log('[GET /api/stats/dashboard] Enviando respuesta');
     res.json(response);
   } catch (error) {
-    console.error('Error obteniendo estadísticas:', error);
-    console.error('Stack trace:', error.stack);
-    res.status(500).json({ 
-      message: 'Error al obtener estadísticas', 
-      error: process.env.NODE_ENV === 'development' ? error.message : 'Error interno del servidor',
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
+    console.error('[GET /api/stats/dashboard] Error:', error.message, error.stack);
+    res.json(defaultDashboardResponse());
   }
 });
 

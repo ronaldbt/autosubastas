@@ -1,18 +1,20 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
-    <!-- Sidebar en desktop (lateral izquierdo) - solo visible en lg+ -->
-    <Sidebar v-if="hasUser" :mobile="false" />
-    
-    <!-- Contenido principal -->
-    <div :class="['flex-1 transition-all duration-300 flex flex-col', hasUser ? sidebarWidthDesktop : 'ml-0', 'pb-20 lg:pb-6']">
-      <main class="p-6 flex-1">
-        <slot />
-      </main>
+  <ClientOnly>
+    <div class="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
+      <Sidebar v-if="hasUser" :mobile="false" />
+      <div :class="['flex-1 transition-all duration-300 flex flex-col', hasUser ? sidebarWidthDesktop : 'ml-0', 'pb-20 lg:pb-6']">
+        <main class="p-6 flex-1">
+          <slot />
+        </main>
+      </div>
+      <Sidebar v-if="hasUser" :mobile="true" />
     </div>
-    
-    <!-- Sidebar en mobile (parte inferior horizontal) - solo visible en mobile -->
-    <Sidebar v-if="hasUser" :mobile="true" />
-  </div>
+    <template #fallback>
+      <div class="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p class="text-gray-500">Cargando...</p>
+      </div>
+    </template>
+  </ClientOnly>
 </template>
 
 <script setup>

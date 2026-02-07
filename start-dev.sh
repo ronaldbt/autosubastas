@@ -25,7 +25,7 @@ echo "🔧 Abriendo Backend..."
 open_terminal "npm run dev"
 
 echo "🎨 Abriendo Frontend..."
-open_terminal "cd frontend-nuxt && npm run dev"
+open_terminal "cd frontend && npm run dev"
 
 echo "✅ Servicios iniciados:"
 echo "   - PostgreSQL: localhost:5432"

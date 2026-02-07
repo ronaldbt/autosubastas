@@ -82,8 +82,9 @@ const Auto = sequelize.define('Auto', {
     defaultValue: []
   },
   estado: {
-    type: DataTypes.ENUM('disponible', 'en_remate', 'vendido', 'cancelado'),
-    defaultValue: 'disponible'
+    type: DataTypes.STRING,
+    defaultValue: 'pendiente',
+    comment: 'pendiente, en_revision, aprobado, rechazado, disponible, en_remate, vendido, cancelado'
   },
   fechaInicioRemate: {
     type: DataTypes.DATE,

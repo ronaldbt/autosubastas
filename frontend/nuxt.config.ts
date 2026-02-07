@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: true,
   pages: true,
+  app: {
+    baseURL: '/'
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxtjs/seo',
