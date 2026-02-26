@@ -39,8 +39,30 @@
         VOLVER AL PANEL
       </button>
 
-      <div v-if="loading" class="text-center py-20">
-        <p class="text-slate-500">Cargando información del remate...</p>
+      <!-- Skeleton mientras carga la primera vez: misma estructura que el contenido, sin texto "Cargando..." -->
+      <div v-if="loading && !auction" class="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-pulse">
+        <div class="lg:col-span-8 space-y-8">
+          <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-3">
+            <div class="aspect-video rounded-[2rem] bg-slate-200" />
+            <div class="flex gap-3 mt-4 p-2">
+              <div v-for="i in 5" :key="i" class="flex-shrink-0 w-32 h-20 rounded-2xl bg-slate-200" />
+            </div>
+          </div>
+          <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-10">
+            <div class="h-8 w-48 bg-slate-200 rounded-lg mb-4" />
+            <div class="h-12 w-3/4 bg-slate-200 rounded-xl mb-10" />
+            <div class="grid grid-cols-4 gap-8 p-8 bg-slate-50 rounded-3xl">
+              <div v-for="i in 4" :key="i" class="h-16 bg-slate-200 rounded-lg" />
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-4 space-y-6">
+          <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-8">
+            <div class="h-10 bg-slate-200 rounded-lg mb-4" />
+            <div class="h-24 bg-slate-200 rounded-2xl mb-6" />
+            <div class="h-12 bg-slate-200 rounded-xl" />
+          </div>
+        </div>
       </div>
 
       <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -62,10 +84,6 @@
                   :end-time="new Date(auction.fechaFinRemate)"
                   @urgency-change="setUrgency"
                 />
-                <div class="bg-white/90 backdrop-blur px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm">
-                  <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                  <span class="text-xs font-black text-slate-800">{{ viewsCount }} PERSONAS VIENDO</span>
-                </div>
               </div>
             </div>
             <div class="flex gap-3 mt-4 p-2 overflow-x-auto no-scrollbar">
@@ -86,26 +104,17 @@
           </div>
 
           <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-10">
-            <div class="flex justify-between items-start mb-10">
-              <div>
-                <div class="flex items-center gap-3 mb-2">
-                  <span class="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs font-black uppercase">
-                    LOTE #{{ String(auction.id).padStart(4, '0') }}
-                  </span>
-                  <span class="text-slate-400 font-bold text-xs uppercase tracking-widest">SUBASTA ACTIVA</span>
-                </div>
-                <h1 class="text-4xl font-black text-slate-900 tracking-tighter">
-                  {{ auction.marca }} {{ auction.modelo }}
-                  <span class="text-blue-600">{{ auction.anio }}</span>
-                </h1>
+            <div class="mb-10">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs font-black uppercase">
+                  LOTE #{{ String(auction.id).padStart(4, '0') }}
+                </span>
+                <span class="text-slate-400 font-bold text-xs uppercase tracking-widest">SUBASTA ACTIVA</span>
               </div>
-              <div class="text-right" v-if="auction.peritaje">
-                <div class="text-xs text-slate-400 font-bold uppercase mb-1">Puntuación Técnica</div>
-                <div class="text-4xl font-black text-blue-600">
-                  {{ Math.round((auction.peritaje.precio / auction.precioBase) * 10) / 10 }}
-                  <span class="text-xl text-slate-300">/10</span>
-                </div>
-              </div>
+              <h1 class="text-4xl font-black text-slate-900 tracking-tighter">
+                {{ auction.marca }} {{ auction.modelo }}
+                <span class="text-blue-600">{{ auction.anio }}</span>
+              </h1>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 p-8 bg-slate-50 rounded-3xl">
@@ -135,7 +144,7 @@
                   </svg>
                   <span class="text-[10px] font-black uppercase tracking-widest">Motorización</span>
                 </div>
-                <p class="text-lg font-black text-slate-700">{{ getEngineInfo() }}</p>
+                <p class="text-lg font-black text-slate-700">{{ getEngineSummary() }}</p>
               </div>
               <div class="space-y-2">
                 <div class="flex items-center gap-2 text-slate-400">
@@ -167,24 +176,8 @@
               </div>
             </div>
 
-            <!-- Información del Peritaje -->
+            <!-- Peritaje: datos técnicos -->
             <div v-if="auction.peritaje" class="space-y-6">
-              <div class="p-8 bg-blue-600 rounded-3xl text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-                <h3 class="flex items-center gap-2 font-black mb-4 uppercase text-xs tracking-[0.2em]">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1a1 1 0 112 0v1a1 1 0 11-2 0zM13 16v-1a1 1 0 112 0v1a1 1 0 11-2 0zM14.586 11H13.5a1 1 0 110-2h1.086l.707-.707a1 1 0 011.414 1.414l-.707.707zM3.636 15.657a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414z"
-                    />
-                  </svg>
-                  Información del Peritaje
-                </h3>
-                <p class="text-blue-50 leading-relaxed font-medium">
-                  Precio sugerido: ${{ formatPrice(auction.peritaje.precio) }} • 
-                  Valor avalúo: ${{ formatPrice(auction.peritaje.valorAvaluo) }}
-                </p>
-              </div>
-
               <!-- Diagrama de Carrocería con Números -->
               <div v-if="auction.peritaje.carroceriaImagenNumeros && auction.peritaje.carroceriaImagenNumeros.length > 0" class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-6">
                 <h3 class="text-xl font-black text-slate-900 mb-4 flex items-center gap-2">
@@ -254,6 +247,62 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Motorización: grid legible como en el peritaje -->
+              <div v-if="motorEntries.length > 0" class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-6 mt-6">
+                <h3 class="text-xl font-black text-slate-900 mb-4 flex items-center gap-2">
+                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  </svg>
+                  Revisión de Motor
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  <div
+                    v-for="(item, idx) in motorEntries"
+                    :key="idx"
+                    class="p-3 rounded-xl border border-slate-200 bg-slate-50"
+                  >
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-0.5">{{ item.label }}</p>
+                    <p
+                      :class="[
+                        'text-sm font-bold',
+                        item.badge === 'alert' ? 'text-red-600' : item.badge === 'warn' ? 'text-amber-600' : 'text-slate-700'
+                      ]"
+                    >
+                      {{ item.value }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Datos técnicos del peritaje (todos los campos excepto datos personales) -->
+              <div v-if="peritajeTechnicalSections.length > 0" class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-6 mt-6">
+                <h3 class="text-xl font-black text-slate-900 mb-4 flex items-center gap-2">
+                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Datos técnicos del peritaje
+                </h3>
+                <div class="space-y-6">
+                  <div
+                    v-for="(section, sIdx) in peritajeTechnicalSections"
+                    :key="sIdx"
+                    class="border-b border-slate-100 pb-4 last:border-0 last:pb-0"
+                  >
+                    <h4 class="text-sm font-black text-slate-600 uppercase tracking-wide mb-3">{{ section.title }}</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                      <div
+                        v-for="(item, idx) in section.items"
+                        :key="idx"
+                        class="p-3 rounded-xl border border-slate-200 bg-slate-50"
+                      >
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-0.5">{{ item.label }}</p>
+                        <p class="text-sm font-bold text-slate-700">{{ item.value }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -297,40 +346,58 @@
               <div class="space-y-3 mb-6">
                 <div class="grid grid-cols-2 gap-3">
                   <button
-                    @click="handleUserBid(500)"
+                    @click="handleUserBid(50000)"
                     :disabled="isPlacingBid || isFinished"
                     class="bg-slate-50 border-2 border-slate-100 py-4 rounded-2xl font-black text-slate-700 hover:border-blue-600 hover:text-blue-600 transition-all active:scale-90 disabled:opacity-50"
                   >
-                    +$500
+                    +$50.000
                   </button>
                   <button
-                    @click="handleUserBid(1000)"
+                    @click="handleUserBid(100000)"
                     :disabled="isPlacingBid || isFinished"
                     class="bg-slate-50 border-2 border-slate-100 py-4 rounded-2xl font-black text-slate-700 hover:border-blue-600 hover:text-blue-600 transition-all active:scale-90 disabled:opacity-50"
                   >
-                    +$1,000
+                    +$100.000
                   </button>
                 </div>
-                <button
-                  @click="handleUserBid(2500)"
-                  :disabled="isPlacingBid || isFinished"
-                  :class="[
-                    'w-full py-5 rounded-2xl font-black text-xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50',
-                    urgency === UrgencyLevel.FINAL_CALL
-                      ? 'bg-red-600 text-white shadow-red-200'
-                      : 'bg-blue-600 text-white shadow-blue-200'
-                  ]"
-                >
-                  PUJAR $2,500
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                      stroke-width="3"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </button>
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    @click="customBidAmount = Math.max(50000, customBidAmount - 50000)"
+                    :disabled="isPlacingBid || isFinished || customBidAmount <= 50000"
+                    class="w-12 h-12 rounded-xl border-2 border-slate-200 font-black text-slate-600 hover:bg-slate-100 disabled:opacity-50 flex items-center justify-center"
+                  >
+                    −
+                  </button>
+                  <button
+                    @click="handleUserBid(customBidAmount)"
+                    :disabled="isPlacingBid || isFinished"
+                    :class="[
+                      'flex-1 py-5 rounded-2xl font-black text-xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50',
+                      urgency === UrgencyLevel.FINAL_CALL
+                        ? 'bg-red-600 text-white shadow-red-200'
+                        : 'bg-blue-600 text-white shadow-blue-200'
+                    ]"
+                  >
+                    PUJAR ${{ formatPrice(customBidAmount) }}
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    @click="customBidAmount = customBidAmount + 50000"
+                    :disabled="isPlacingBid || isFinished"
+                    class="w-12 h-12 rounded-xl border-2 border-slate-200 font-black text-slate-600 hover:bg-slate-100 disabled:opacity-50 flex items-center justify-center"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
               <p class="text-[10px] text-center text-slate-400 font-bold uppercase leading-tight">
@@ -424,9 +491,12 @@ const notification = ref(null)
 const loading = ref(false)
 const error = ref(null)
 const isPlacingBid = ref(false)
-const viewsCount = ref(15 + Math.floor(Math.random() * 20))
+const customBidAmount = ref(100000)
+const viewersCount = ref(0)
 let updateInterval = null
 let hammerTimeout = null
+let viewerPollInterval = null
+let viewerHeartbeatInterval = null
 
 // Obtener el ID del parámetro de ruta (ahora desde route.params.id)
 const autoId = computed(() => {
@@ -559,21 +629,72 @@ const getImageUrl = (imagePath) => {
   return getImageUrlHelper(imagePath)
 }
 
-const getEngineInfo = () => {
-  // Intentar obtener del peritaje primero, luego usar valores por defecto
-  if (auction.value?.peritaje?.motor) {
-    return auction.value.peritaje.motor
+const motorLabel = (key) => {
+  const labels = {
+    bloque_motor: 'Bloque motor',
+    culata: 'Culata',
+    valvulas: 'Válvulas',
+    pistones: 'Pistones',
+    bielas: 'Bielas',
+    cigueñal: 'Cigüeñal',
+    sistema_refrigeracion: 'Sist. refrigeración',
+    sistema_lubricacion: 'Sist. lubricación',
+    filtro_aceite: 'Filtro aceite',
+    filtro_aire: 'Filtro aire',
+    correa_distribucion: 'Correa distribución',
+    cadena_distribucion: 'Cadena distribución',
+    bujias: 'Bujías',
+    bobinas_encendido: 'Bobinas encendido',
+    inyectores: 'Inyectores',
+    bomba_combustible: 'Bomba combustible',
+    alternador: 'Alternador',
+    motor_arranque: 'Motor arranque',
+    sensor_oxigeno: 'Sensor oxígeno',
+    catalizador: 'Catalizador',
+    sistema_escape: 'Sistema escape'
   }
-  // Valores por defecto según marca común
-  const defaultEngines = {
-    'Toyota': '2.0L',
-    'Honda': '1.8L',
-    'BMW': '2.0 TwinPower Turbo',
-    'Audi': '2.0 TFSI',
-    'Volkswagen': '2.0 TSI',
-    'Mercedes-Benz': '2.0L Turbo'
+  return labels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+}
+
+const motorEntries = computed(() => {
+  let motor = auction.value?.peritaje?.motor
+  if (!motor) return []
+  if (typeof motor === 'string') {
+    try {
+      motor = JSON.parse(motor)
+    } catch {
+      return []
+    }
   }
-  return defaultEngines[auction.value?.marca] || 'N/A'
+  if (typeof motor !== 'object') return []
+  const alertValues = ['REQUIERE_REPARACION', 'MALO', 'REPARAR']
+  const warnValues = ['REGULAR']
+  return Object.entries(motor)
+    .filter(([, v]) => v !== null && v !== undefined && String(v).trim() !== '')
+    .map(([key, value]) => {
+      const v = String(value).trim()
+      let badge = null
+      if (alertValues.some(x => v.toUpperCase().includes(x))) badge = 'alert'
+      else if (warnValues.some(x => v.toUpperCase().includes(x))) badge = 'warn'
+      return { label: motorLabel(key), value: v, badge }
+    })
+})
+
+const getEngineSummary = () => {
+  let motor = auction.value?.peritaje?.motor
+  if (!motor) return 'N/A'
+  if (typeof motor === 'string') {
+    try {
+      motor = JSON.parse(motor)
+    } catch {
+      return motor
+    }
+  }
+  if (typeof motor === 'object') {
+    const n = Object.values(motor).filter(v => v !== null && v !== undefined && String(v).trim() !== '').length
+    return n ? `Revisión técnica (${n} ítems)` : 'Sin detalle'
+  }
+  return 'N/A'
 }
 
 const getTransmissionInfo = () => {
@@ -589,6 +710,136 @@ const getFuelInfo = () => {
   }
   return 'Gasolina' // Valor por defecto
 }
+
+// Campos técnicos del peritaje a mostrar (excluye patente, propietario, RUT, cliente, teléfono, email, dirección)
+const PERITAJE_FIELD_LABELS = {
+  numeroMotor: 'Nº Motor',
+  numeroChasis: 'Nº Chasis',
+  numeroSerial: 'Nº Serial',
+  tipoTransporte: 'Tipo transporte',
+  anio: 'Año',
+  color: 'Color',
+  procedencia: 'Procedencia',
+  fabricante: 'Fabricante',
+  tipoSello: 'Tipo sello',
+  combustible: 'Combustible',
+  kilometraje: 'Kilometraje',
+  revisionTecnica_comuna: 'Rev. técnica comuna',
+  revisionTecnica_mes: 'Rev. técnica mes',
+  revisionTecnica_estado: 'Rev. técnica estado',
+  revisionTecnica_ultimoControl: 'Rev. técnica último control',
+  revisionTecnica_fechaVencimiento: 'Rev. técnica vencimiento',
+  gases_comuna: 'Gases comuna',
+  gases_mes: 'Gases mes',
+  gases_estado: 'Gases estado',
+  gases_ultimoControl: 'Gases último control',
+  gases_fechaVencimiento: 'Gases vencimiento',
+  permisoCirculacion_info: 'Permiso circulación',
+  permisoCirculacion_fechaVencimiento: 'Permiso vencimiento',
+  soap_estado: 'SOAP estado',
+  soap_compania: 'SOAP compañía',
+  soap_fechaInicio: 'SOAP inicio',
+  soap_fechaVencimiento: 'SOAP vencimiento',
+  transportePublico: 'Transporte público',
+  tipoTransportePublico: 'Tipo transp. público',
+  restriccionVehicular_condicion: 'Restricción vehicular',
+  restriccionVehicular_comunasPuenteAltoSanBernardo: 'Restricción PA-SB',
+  restriccionVehicular_provinciaSantiago: 'Restricción Stgo',
+  reporte_robo: 'Reporte robo',
+  reporte_remate: 'Reporte remate',
+  multas: 'Multas',
+  valorAvaluo: 'Valor avalúo',
+  precio: 'Precio sugerido',
+  frenos_eficacia_delantera: 'Frenos eff. del.',
+  frenos_eficacia_trasera: 'Frenos eff. tras.',
+  frenos_diferencia_fuerza_delantera: 'Frenos diff. del.',
+  frenos_diferencia_fuerza_trasera: 'Frenos diff. tras.',
+  frenos_esfuerzo: 'Frenos esfuerzo',
+  frenos_peso: 'Frenos peso',
+  frenos_total: 'Frenos total',
+  frenos_estado_general: 'Frenos estado',
+  suspension_delantera_izquierda: 'Susp. del. izq.',
+  suspension_delantera_derecha: 'Susp. del. der.',
+  suspension_trasera_izquierda: 'Susp. tras. izq.',
+  suspension_trasera_derecha: 'Susp. tras. der.',
+  suspension_diferencia_delantera: 'Susp. diff. del.',
+  suspension_diferencia_trasera: 'Susp. diff. tras.',
+  suspension_estado_general: 'Suspensión estado',
+  escanerMotor: 'Escáner OBD-II',
+  observaciones_generales: 'Observaciones'
+}
+
+const toLabel = (key) => PERITAJE_FIELD_LABELS[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+const excludeKeys = new Set(['patente', 'propietario', 'propietarioRut', 'cliente', 'telefono', 'email', 'direccion', 'fecha', 'creadoPor', 'peritoId', 'estado', 'imagenes', 'imagenesPorSeccion', 'carroceriaImagenNumeros', 'carroceria', 'chasis', 'llantas', 'motor'])
+
+const peritajeTechnicalSections = computed(() => {
+  const p = auction.value?.peritaje
+  if (!p) return []
+  const sections = []
+  const toItem = (key, value) => {
+    if (value === null || value === undefined || value === '') return null
+    if (key === 'valorAvaluo' || key === 'precio') {
+      const n = Number(value)
+      if (!n || isNaN(n)) return null
+    }
+    let display = value
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) return null
+    if (key === 'valorAvaluo' || key === 'precio') display = formatPrice(Number(value))
+    if (key === 'kilometraje') display = formatNumber(Number(value)) + ' km'
+    if (value instanceof Date || (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value))) {
+      try { display = new Date(value).toLocaleDateString('es-CL') } catch {}
+    }
+    return { label: toLabel(key), value: String(display) }
+  }
+  const groups = {
+    'Vehículo': ['numeroMotor', 'numeroChasis', 'numeroSerial', 'tipoTransporte', 'anio', 'color', 'procedencia', 'fabricante', 'tipoSello', 'combustible', 'kilometraje'],
+    'Revisión técnica': ['revisionTecnica_comuna', 'revisionTecnica_mes', 'revisionTecnica_estado', 'revisionTecnica_ultimoControl', 'revisionTecnica_fechaVencimiento'],
+    'Gases': ['gases_comuna', 'gases_mes', 'gases_estado', 'gases_ultimoControl', 'gases_fechaVencimiento'],
+    'Permiso circulación': ['permisoCirculacion_info', 'permisoCirculacion_fechaVencimiento'],
+    'SOAP': ['soap_estado', 'soap_compania', 'soap_fechaInicio', 'soap_fechaVencimiento'],
+    'Restricción vehicular': ['restriccionVehicular_condicion', 'restriccionVehicular_comunasPuenteAltoSanBernardo', 'restriccionVehicular_provinciaSantiago'],
+    'Reportes y deudas': ['reporte_robo', 'reporte_remate', 'multas'],
+    'Valoración': ['valorAvaluo', 'precio'],
+    'Frenos': ['frenos_eficacia_delantera', 'frenos_eficacia_trasera', 'frenos_diferencia_fuerza_delantera', 'frenos_diferencia_fuerza_trasera', 'frenos_esfuerzo', 'frenos_peso', 'frenos_total', 'frenos_estado_general'],
+    'Suspensión': ['suspension_delantera_izquierda', 'suspension_delantera_derecha', 'suspension_trasera_izquierda', 'suspension_trasera_derecha', 'suspension_diferencia_delantera', 'suspension_diferencia_trasera', 'suspension_estado_general'],
+    'Otros': ['escanerMotor', 'observaciones_generales']
+  }
+  for (const [title, keys] of Object.entries(groups)) {
+    const items = keys
+      .filter(k => !excludeKeys.has(k) && p[k] !== undefined)
+      .map(k => toItem(k, p[k]))
+      .filter(Boolean)
+    if (items.length) sections.push({ title, items })
+  }
+  // Carrocería, chasis, llantas (objetos key-value)
+  const formatObjValue = (v) => {
+    if (v === null || v === undefined) return ''
+    if (typeof v !== 'object') return String(v).trim()
+    const parts = Object.entries(v).filter(([, x]) => x != null && x !== '').map(([key, x]) => `${key}: ${x}`)
+    return parts.length ? parts.join(' · ') : ''
+  }
+  const objToItems = (obj, labelFn) => {
+    if (!obj || typeof obj !== 'object') return []
+    const parsed = typeof obj === 'string' ? (() => { try { return JSON.parse(obj) } catch { return {} } })() : obj
+    return Object.entries(parsed)
+      .map(([k, v]) => ({ label: labelFn(k), value: formatObjValue(v) }))
+      .filter(item => item.value)
+  }
+  const toLabelKey = (k) => k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+  if (p.carroceria && Object.keys(typeof p.carroceria === 'string' ? (() => { try { return JSON.parse(p.carroceria) } catch { return {} } })() : p.carroceria).length) {
+    const items = objToItems(p.carroceria, toLabelKey)
+    if (items.length) sections.push({ title: 'Carrocería (detalle)', items })
+  }
+  if (p.chasis && Object.keys(typeof p.chasis === 'string' ? (() => { try { return JSON.parse(p.chasis) } catch { return {} } })() : p.chasis).length) {
+    const items = objToItems(p.chasis, toLabelKey)
+    if (items.length) sections.push({ title: 'Chasis (detalle)', items })
+  }
+  if (p.llantas && Object.keys(typeof p.llantas === 'string' ? (() => { try { return JSON.parse(p.llantas) } catch { return {} } })() : p.llantas).length) {
+    const items = objToItems(p.llantas, toLabelKey)
+    if (items.length) sections.push({ title: 'Llantas (detalle)', items })
+  }
+  return sections
+})
 
 // Estados de carrocería (24 estados) - mismo orden que en autos-peritaje.vue
 const estadosCarroceria = [
@@ -649,20 +900,38 @@ const loadAuction = async () => {
     return
   }
 
-  loading.value = true
-  error.value = null
-  console.log('[remates-live-[id]] Cargando remate con ID:', autoId.value)
-  
+  const isInitialLoad = !auction.value
+  if (isInitialLoad) {
+    loading.value = true
+    error.value = null
+  }
+
+  let timeoutId
+  if (isInitialLoad) {
+    timeoutId = setTimeout(() => {
+      if (loading.value && !auction.value) {
+        loading.value = false
+        error.value = 'Tiempo de espera agotado. Compruebe que el backend esté en marcha y la URL de la API sea correcta.'
+      }
+    }, 15000)
+  }
+
   try {
     const response = await $fetch(`${API_BASE}/autos/${autoId.value}`, {
       headers: getAuthHeaders()
     })
-    console.log('[remates-live-[id]] Remate cargado exitosamente:', response)
-    auction.value = response
+    if (isInitialLoad && timeoutId) clearTimeout(timeoutId)
+    if (isInitialLoad) {
+      auction.value = response
+      loading.value = false
+    } else {
+      Object.assign(auction.value, response)
+    }
     await loadBids()
   } catch (err) {
+    if (isInitialLoad && timeoutId) clearTimeout(timeoutId)
     console.error('[remates-live-[id]] Error cargando remate:', err)
-    error.value = err.data?.message || 'Error al cargar el remate'
+    error.value = err.data?.message || err.message || 'Error al cargar el remate'
   } finally {
     loading.value = false
   }
@@ -727,6 +996,40 @@ const handleUserBid = async (increase) => {
   }
 }
 
+// Viewers: dealers + admin viendo este remate (datos reales desde el backend)
+const loadViewers = async () => {
+  if (!auction.value?.id) return
+  try {
+    const res = await $fetch(`${API_BASE}/remates/autos/${auction.value.id}/viewers`, {
+      headers: getAuthHeaders()
+    })
+    if (typeof res?.count === 'number') viewersCount.value = res.count
+  } catch (_) {
+    // No bloquear la UI si falla el conteo
+  }
+}
+
+const sendViewHeartbeat = async () => {
+  if (!auction.value?.id) return
+  try {
+    const res = await $fetch(`${API_BASE}/remates/autos/${auction.value.id}/view`, {
+      method: 'POST',
+      headers: getAuthHeaders()
+    })
+    if (typeof res?.count === 'number') viewersCount.value = res.count
+  } catch (_) {}
+}
+
+function startViewerTracking() {
+  if (!auction.value?.id) return
+  loadViewers()
+  sendViewHeartbeat()
+  if (viewerPollInterval) clearInterval(viewerPollInterval)
+  viewerPollInterval = setInterval(loadViewers, 10000)
+  if (viewerHeartbeatInterval) clearInterval(viewerHeartbeatInterval)
+  viewerHeartbeatInterval = setInterval(sendViewHeartbeat, 25000)
+}
+
 // Watcher para detener actualizaciones cuando el remate termine
 watch([isFinished, () => auction.value?.estado], ([finished, estado]) => {
   if (finished || estado === 'vendido') {
@@ -760,10 +1063,17 @@ onMounted(() => {
   }, 2000)
 })
 
+// Iniciar conteo de viewers cuando el remate esté cargado (dealers + admin, datos reales)
+watch(auction, (a) => {
+  if (a?.id) startViewerTracking()
+}, { immediate: true })
+
 onUnmounted(() => {
   console.log('[remates-live-[id]] Componente desmontado')
   if (updateInterval) clearInterval(updateInterval)
   if (hammerTimeout) clearTimeout(hammerTimeout)
+  if (viewerPollInterval) clearInterval(viewerPollInterval)
+  if (viewerHeartbeatInterval) clearInterval(viewerHeartbeatInterval)
 })
 </script>
 

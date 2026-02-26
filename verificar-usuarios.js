@@ -31,7 +31,7 @@ async function verificarYCrearUsuarios() {
     const usuariosPrueba = [
       {
         nombre: 'Administrator',
-        email: 'admin@autoventas360.cl',
+        email: 'admin@autoremates.cl',
         password: 'admin123',
         rol: 'ADMIN',
         telefono: '+56912345678'

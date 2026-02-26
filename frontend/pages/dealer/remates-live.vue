@@ -12,7 +12,7 @@
               </svg>
             </div>
             <span class="text-2xl font-black text-slate-900 tracking-tighter">
-              AutoBid<span class="text-blue-600">PRO</span>
+              Auto<span class="text-blue-600">ventas</span>
             </span>
           </div>
 
@@ -170,26 +170,27 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('es-CL').format(price)
 }
 
-const loadAuctions = async () => {
-  loading.value = true
-  error.value = null
+const loadAuctions = async (isRefresh = false) => {
+  // Solo mostrar loading en la primera carga; en refrescos actualizar en silencio
+  if (!isRefresh) {
+    loading.value = true
+    error.value = null
+  }
   try {
     const response = await $fetch(`${API_BASE}/autos?estado=en_remate`, {
       headers: getAuthHeaders()
     })
-    
-    // Obtener pujas para cada auto
+
+    // Enriquecer con pujas
     for (const auto of response) {
       try {
         const pujas = await $fetch(`${API_BASE}/remates?autoId=${auto.id}`, {
           headers: getAuthHeaders()
         })
         auto.totalPujas = pujas.length
-        
         if (pujas.length > 0) {
           const pujaMasAlta = pujas.reduce((max, p) => parseFloat(p.monto) > parseFloat(max.monto) ? p : max, pujas[0])
           auto.precioActual = parseFloat(pujaMasAlta.monto)
-          
           const miPuja = pujas.find(p => p.pujadorId === user.value?.id)
           auto.miPuja = miPuja ? parseFloat(miPuja.monto) : null
         } else {
@@ -202,8 +203,22 @@ const loadAuctions = async () => {
         auto.miPuja = null
       }
     }
-    
-    auctions.value = response
+
+    const idsInResponse = new Set(response.map(a => a.id))
+    if (isRefresh && auctions.value.length > 0) {
+      // Actualizar en lugar de reemplazar: mismo objeto = no se re-monta la card, la imagen no parpadea
+      for (const a of auctions.value) {
+        if (!idsInResponse.has(a.id)) continue
+        const r = response.find(x => x.id === a.id)
+        if (r) Object.assign(a, r)
+      }
+      auctions.value = auctions.value.filter(a => idsInResponse.has(a.id))
+      for (const r of response) {
+        if (!auctions.value.some(a => a.id === r.id)) auctions.value.push(r)
+      }
+    } else {
+      auctions.value = response
+    }
   } catch (err) {
     console.error('Error cargando subastas:', err)
     error.value = err.data?.message || 'Error al cargar subastas'
@@ -219,23 +234,23 @@ const viewAuction = (id) => {
 }
 
 onMounted(() => {
-  loadAuctions()
-  // Actualizar cada 3 segundos solo si hay remates activos
+  loadAuctions(false)
+  // Actualizar cada 3 segundos en silencio (sin loading, merge para no parpadear imágenes)
   updateInterval = setInterval(() => {
     const hayRematesActivos = auctions.value.some(a => {
-      // Verificar que esté en remate y que no haya terminado el tiempo
       if (a.estado !== 'en_remate') return false
       if (a.fechaFinRemate) {
         const ahora = new Date()
         const fin = new Date(a.fechaFinRemate)
-        return fin > ahora // Solo activo si aún no ha terminado
+        return fin > ahora
       }
       return true
     })
     if (hayRematesActivos) {
-      loadAuctions()
+      loadAuctions(true)
+    } else if (auctions.value.length === 0) {
+      loadAuctions(false)
     } else {
-      // Si no hay remates activos, detener actualizaciones
       if (updateInterval) {
         clearInterval(updateInterval)
         updateInterval = null

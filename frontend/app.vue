@@ -11,7 +11,7 @@ useHead({
   htmlAttrs: {
     lang: 'es-CL'
   },
-  title: 'RematAuto Chile - Remate Online de Autos Usados',
+  title: 'AutoRemates Chile - Remate y Subasta de Autos Online',
   link: [
     { rel: 'icon', type: 'image/png', href: '/favicon-256.png', sizes: '256x256' },
     { rel: 'icon', type: 'image/png', href: '/favicon-128.png', sizes: '128x128' },
@@ -24,18 +24,18 @@ useHead({
   ],
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
-    { name: 'description', content: 'El primer remate online de autos en Chile con inspección profesional incluida. Vende tu auto usado en 2 horas con seguridad, rapidez y transparencia. Pago inmediato y sin compromiso.' },
+    { name: 'description', content: 'El primer remate online de autos en Chile. Remates de particulares y empresas. Entregamos el auto al comprador en cualquier ciudad de Chile. Pago inmediato y sin compromiso.' },
     { name: 'robots', content: 'index, follow' },
     { name: 'language', content: 'Spanish' },
     { name: 'geo.region', content: 'CL' },
     { name: 'geo.placename', content: 'Chile' },
     // Open Graph
     { property: 'og:type', content: 'website' },
-    { property: 'og:site_name', content: 'RematAuto Chile' },
+    { property: 'og:site_name', content: 'AutoRemates Chile' },
     { property: 'og:locale', content: 'es_CL' },
     // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:site', content: '@rematauto' }
+    { name: 'twitter:site', content: '@autoremates' }
   ]
 })
 </script>

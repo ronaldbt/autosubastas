@@ -4,11 +4,11 @@
     <Header />
     
     <main>
-      <h1 class="sr-only">RematAuto Chile - Vende tu Auto en 2 Horas | Remate Online de Autos Usados en Chile</h1>
+      <h1 class="sr-only">Remate de Autos de Particulares y Empresas en Chile - Remates Online</h1>
       <Hero />
       
       <!-- Modern How It Works Section -->
-      <section class="py-24 bg-white">
+      <section id="como-funciona" class="py-24 bg-white">
         <div class="container mx-auto px-4">
           <AnimatedSection class="text-center mb-16">
             <h2 class="text-4xl font-extrabold text-gray-900 mb-4">¿Cómo Funciona?</h2>
@@ -138,6 +138,8 @@
       </section>
 
       <AuctionPreview />
+      <TiposDeRemates />
+      <RematesPorCiudad />
       <Services />
       <Testimonials />
       
@@ -146,19 +148,29 @@
         <div class="container mx-auto px-4">
           <h2 class="text-3xl font-bold mb-10 text-center">Guías y Consejos</h2>
           <div class="grid md:grid-cols-3 gap-8">
-            <div 
-              v-for="(post, i) in blogPosts" 
-              :key="i" 
-              class="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition-shadow cursor-pointer"
+            <NuxtLink
+              v-for="(post, i) in blogPosts"
+              :key="i"
+              :to="post.slug ? `/blog/${post.slug}` : '/blog'"
+              class="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition-shadow block group"
             >
-              <img :src="post.img" :alt="post.title" class="w-full h-48 object-cover" />
+              <img :src="post.img" :alt="post.title" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
               <div class="p-6">
                 <span class="text-xs font-bold text-brand-orange uppercase mb-2 block">Blog</span>
-                <h3 class="text-lg font-bold mb-2">{{ post.title }}</h3>
+                <h3 class="text-lg font-bold mb-2 group-hover:text-brand-orange transition-colors">{{ post.title }}</h3>
                 <p class="text-sm text-gray-500">Aprende los mejores trucos para comprar y vender autos en Chile de forma segura.</p>
-                <button class="text-brand-orange font-semibold text-sm mt-4 hover:underline">Leer más →</button>
+                <span class="text-brand-orange font-semibold text-sm mt-4 inline-block group-hover:underline">Leer más →</span>
               </div>
-            </div>
+            </NuxtLink>
+          </div>
+          <div class="text-center mt-10">
+            <NuxtLink
+              to="/blog"
+              class="inline-flex items-center gap-2 bg-brand-orange hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold transition-colors"
+            >
+              Ver todos los artículos
+              <ArrowRight :size="18" />
+            </NuxtLink>
           </div>
         </div>
       </section>
@@ -169,7 +181,7 @@
       <section class="py-20 bg-gray-900 text-white text-center">
         <div class="container mx-auto px-4">
           <h2 class="text-3xl md:text-5xl font-extrabold mb-6">¿Listo para Vender?</h2>
-          <p class="text-xl text-gray-400 mb-8">Próximo remate: {{ nextFridayText }}</p>
+          <p class="text-xl text-gray-400 mb-8">Cada remate tiene su propio plazo. Inscribe tu auto y participa cuando quieras.</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <NuxtLink
               to="/registro"
@@ -208,7 +220,7 @@
 
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue'
-import { ArrowUp, MessageCircle, FileText, Wrench, Gavel, DollarSign } from 'lucide-vue-next'
+import { ArrowUp, ArrowRight, MessageCircle, FileText, Wrench, Gavel, DollarSign } from 'lucide-vue-next'
 import Header from '~/components/Header.vue'
 import Hero from '~/components/Hero.vue'
 import AuctionPreview from '~/components/AuctionPreview.vue'
@@ -220,29 +232,29 @@ import ScrollToTop from '~/components/ScrollToTop.vue'
 import FAQ from '~/components/FAQ.vue'
 
 const config = useRuntimeConfig()
-const siteUrl = config.public.siteUrl || 'https://rematauto.cl'
+const siteUrl = config.public.siteUrl || 'https://autoremates.cl'
 const route = useRoute()
 
 // SEO Meta Tags
 useSeoMeta({
-  title: 'RematAuto Chile - Vende tu Auto en 2 Horas | Remate Online',
-  description: 'El primer remate online de autos en Chile con inspección profesional incluida. Vende tu auto usado en 2 horas con seguridad, rapidez y transparencia. Pago inmediato y sin compromiso.',
-  keywords: 'remate autos chile, vender auto usado, subasta autos, comprar auto usado chile, remate online autos, vender auto rapido, inspeccion autos chile, remate vehiculos, autos usados chile, comprar auto remate, venta autos chile, remate carros',
-  ogTitle: 'RematAuto Chile - Vende tu Auto en 2 Horas',
-  ogDescription: 'El primer remate online de autos en Chile con inspección profesional incluida. Vende tu auto usado en 2 horas con seguridad, rapidez y transparencia.',
+  title: 'AutoRemates Chile - Remate de Autos de Particulares y Empresas | Remates Online',
+  description: 'Remate de autos de particulares y empresas en Chile. Remates online. Podemos entregar el auto al comprador en cualquier ciudad de Chile. Inspección profesional incluida. Si el precio no te convence, no vendes.',
+  keywords: 'remate de autos particulares, remate de autos empresas, remate de autos chile, subasta de autos, remates de autos en santiago, remates de autos en concepcion, remates de autos en iquique, remate autos buen estado, remates de autos online, como saber si un auto es de remate, remate autos particulares chile',
+  ogTitle: 'AutoRemates Chile - Remate de Autos de Particulares y Empresas',
+  ogDescription: 'Remate de autos de particulares y empresas en Chile. Remates online, vehículos inspeccionados, en buen estado. Inspección profesional incluida.',
   ogImage: siteUrl + '/subasta.png',
   ogImageWidth: 1200,
   ogImageHeight: 630,
-  ogImageAlt: 'RematAuto Chile - Remate online de autos usados en Chile',
+  ogImageAlt: 'AutoRemates Chile - Remate y subasta de autos online en Chile',
   ogUrl: siteUrl + route.path,
   ogType: 'website',
-  ogSiteName: 'RematAuto Chile',
+  ogSiteName: 'AutoRemates Chile',
   ogLocale: 'es_CL',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'RematAuto Chile - Vende tu Auto en 2 Horas',
-  twitterDescription: 'El primer remate online de autos en Chile con inspección profesional incluida.',
+  twitterTitle: 'AutoRemates Chile - Remate de Autos de Particulares y Empresas',
+  twitterDescription: 'Remate de autos de particulares y empresas en Chile. Vehículos en buen estado, inspección profesional incluida.',
   twitterImage: siteUrl + '/subasta.png',
-  twitterImageAlt: 'RematAuto Chile - Remate online de autos usados'
+  twitterImageAlt: 'AutoRemates Chile - Remate y subasta de autos usados'
 })
 
 useHead({
@@ -255,10 +267,10 @@ useHead({
       children: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Organization',
-        name: 'RematAuto Chile',
+        name: 'AutoRemates Chile',
         url: siteUrl,
         logo: siteUrl + '/favicon-256.png',
-        description: 'El primer remate online de autos en Chile con inspección profesional incluida.',
+        description: 'Remate de autos de particulares y empresas en Chile. Remates online, vehículos inspeccionados, en buen estado, sin daños estructurales.',
         address: {
           '@type': 'PostalAddress',
           streetAddress: 'Av. Apoquindo 4500',
@@ -274,9 +286,9 @@ useHead({
           availableLanguage: 'Spanish'
         },
         sameAs: [
-          'https://www.facebook.com/rematauto',
-          'https://www.instagram.com/rematauto',
-          'https://www.youtube.com/rematauto'
+          'https://www.facebook.com/autoremates',
+          'https://www.instagram.com/autoremates',
+          'https://www.youtube.com/autoremates'
         ]
       })
     },
@@ -285,9 +297,9 @@ useHead({
       children: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebSite',
-        name: 'RematAuto Chile',
+        name: 'AutoRemates Chile',
         url: siteUrl,
-        description: 'El primer remate online de autos en Chile con inspección profesional incluida.',
+        description: 'Remate de autos de particulares y empresas en Chile. Remates online, vehículos inspeccionados, en buen estado, sin daños estructurales.',
         potentialAction: {
           '@type': 'SearchAction',
           target: {
@@ -349,9 +361,9 @@ onUnmounted(() => {
 })
 
 const blogPosts = [
-  { title: 'Remate vs Clasificados', img: 'https://picsum.photos/seed/blog1/600/400' },
-  { title: '10 Cosas que revisar', img: 'https://picsum.photos/seed/blog2/600/400' },
-  { title: 'Cómo funciona la inspección', img: 'https://picsum.photos/seed/blog3/600/400' }
+  { title: 'Remate vs Clasificados', img: 'https://picsum.photos/seed/blog1/600/400', slug: 'remate-vs-clasificados' },
+  { title: '10 Cosas que revisar antes de comprar', img: 'https://picsum.photos/seed/blog2/600/400', slug: '10-cosas-revisar-comprar-auto' },
+  { title: 'Cómo funciona la inspección', img: 'https://picsum.photos/seed/blog3/600/400', slug: 'como-funciona-inspeccion-auto' }
 ]
 
 // Función para obtener el próximo viernes

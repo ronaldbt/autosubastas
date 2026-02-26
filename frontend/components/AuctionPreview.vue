@@ -4,19 +4,20 @@
       <div class="text-center max-w-3xl mx-auto mb-12">
         <AnimatedSection>
           <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-            Próximo Remate: {{ nextFridayText }}
+            Remates activos
           </h2>
+          <p class="text-gray-600 mb-6">Cada auto tiene su propio plazo. Participa en las subastas en curso.</p>
           <div class="w-24 h-1 bg-brand-orange mx-auto mb-6"></div>
-        </AnimatedSection>
-        
-        <AnimatedSection :delay="200">
-          <CountdownTimer />
         </AnimatedSection>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div v-if="featuredCars.length === 0" class="text-center py-12 bg-white rounded-2xl border border-gray-200">
+        <p class="text-gray-600 text-lg mb-4">No hay remates activos en este momento.</p>
+        <p class="text-gray-500 text-sm">Los autos aparecerán aquí cuando un administrador los envíe a subasta desde el panel de admin.</p>
+      </div>
+      <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <AnimatedSection 
-          v-for="(car, index) in FEATURED_CARS" 
+          v-for="(car, index) in featuredCars" 
           :key="car.id" 
           :delay="index * 150" 
           class="h-full"
@@ -35,9 +36,12 @@
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
               />
               <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                <button class="w-full bg-white text-gray-900 font-bold py-2 rounded shadow hover:bg-brand-orange hover:text-white transition-colors">
+                <NuxtLink
+                  :to="`/remates/${car.id}`"
+                  class="w-full bg-white text-gray-900 font-bold py-2 rounded shadow hover:bg-brand-orange hover:text-white transition-colors text-center block"
+                >
                   Ver Detalles
-                </button>
+                </NuxtLink>
               </div>
             </div>
 
@@ -48,7 +52,7 @@
               <div class="grid grid-cols-3 gap-2 mb-6 text-sm text-gray-600">
                 <div class="flex flex-col items-center gap-1 p-2 bg-gray-50 rounded">
                   <Gauge :size="16" class="text-brand-orange" />
-                  <span>{{ car.km / 1000 }}k km</span>
+                  <span>{{ (car.km / 1000).toFixed(0) }}k km</span>
                 </div>
                 <div class="flex flex-col items-center gap-1 p-2 bg-gray-50 rounded">
                   <Cog :size="16" class="text-brand-orange" />
@@ -80,10 +84,10 @@
         <AnimatedSection :delay="600">
           <div class="inline-flex gap-4">
             <NuxtLink
-              to="/login"
+              to="/remates"
               class="px-8 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition shadow-lg"
             >
-              Ver Todos los Autos (15)
+              Ver remates activos
             </NuxtLink>
             <NuxtLink
               to="/registro"
@@ -99,54 +103,40 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { Gauge, Fuel, Cog } from 'lucide-vue-next'
-import { FEATURED_CARS } from '~/utils/constants'
+import { useImageUrl } from '~/composables/useImageUrl'
 import AnimatedSection from './AnimatedSection.vue'
-import CountdownTimer from './CountdownTimer.vue'
 
-// Función para obtener el próximo viernes
-const getNextFridayDate = () => {
-  const now = new Date()
-  
-  // Obtener fecha actual en Santiago
-  const santiagoParts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Santiago',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  }).formatToParts(now)
-  
-  const year = parseInt(santiagoParts.find(p => p.type === 'year').value)
-  const month = parseInt(santiagoParts.find(p => p.type === 'month').value)
-  const day = parseInt(santiagoParts.find(p => p.type === 'day').value)
-  const hour = parseInt(santiagoParts.find(p => p.type === 'hour').value)
-  
-  const tempDate = new Date(year, month - 1, day)
-  const currentDayOfWeek = tempDate.getDay()
-  
-  let daysToAdd = (5 - currentDayOfWeek + 7) % 7
-  
-  if (currentDayOfWeek === 5 && hour >= 15) {
-    daysToAdd = 7
+const config = useRuntimeConfig()
+const API_BASE = config.public.apiBase || 'http://localhost:5000/api'
+const { getImageUrl } = useImageUrl()
+
+const featuredCars = ref([])
+
+function mapAutoToCard (auto) {
+  const img = auto.imagenes && auto.imagenes[0]
+  return {
+    id: auto.id,
+    title: `${auto.marca || ''} ${auto.modelo || ''}`.trim() || 'Auto',
+    year: auto.anio || '—',
+    km: Number(auto.kilometraje) || 0,
+    transmission: auto.peritaje?.transmision || '—',
+    fuel: auto.peritaje?.combustible || '—',
+    reservePrice: Number(auto.precioBase) || Number(auto.precioActual) || 0,
+    imageUrl: img ? getImageUrl(img) : 'https://picsum.photos/seed/car' + auto.id + '/800/600',
+    inspected: true
   }
-  
-  // JavaScript Date maneja automáticamente el overflow de mes/año
-  return new Date(year, month - 1, day + daysToAdd)
 }
 
-// Formatear la fecha del próximo viernes
-const nextFridayText = computed(() => {
-  const nextFriday = getNextFridayDate()
-  const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-  
-  const day = nextFriday.getDate()
-  const month = months[nextFriday.getMonth()]
-  
-  return `Viernes ${day} ${month}`
+onMounted(async () => {
+  try {
+    const list = await $fetch(`${API_BASE}/autos?estado=en_remate`)
+    const mapped = (Array.isArray(list) ? list : []).map(mapAutoToCard)
+    featuredCars.value = mapped
+  } catch (e) {
+    console.warn('[AuctionPreview] No se pudieron cargar remates activos:', e)
+    featuredCars.value = []
+  }
 })
 </script>

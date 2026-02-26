@@ -115,7 +115,7 @@ import AnimatedSection from './AnimatedSection.vue'
 
 const sellerFeatures = [
   'Inspección profesional incluida',
-  'Venta en 2 horas',
+  'Remates online',
   'Solo pagas si vendes (10%)',
   'Precio justo garantizado'
 ]

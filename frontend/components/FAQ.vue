@@ -1,5 +1,5 @@
 <template>
-  <section class="py-24 bg-white">
+  <section id="faq" class="py-24 bg-white">
     <div class="container mx-auto px-4">
       <AnimatedSection class="text-center mb-16">
         <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Preguntas Frecuentes</h2>
@@ -59,44 +59,48 @@ import AnimatedSection from './AnimatedSection.vue'
 
 const faqs = [
   {
-    question: '¿Cómo funciona el proceso de remate?',
-    answer: 'El proceso es simple y rápido: 1) Inscribes tu auto completando un formulario con la patente y datos básicos, 2) Realizamos una inspección técnica profesional de 60 puntos en nuestros centros certificados, 3) Tu auto se publica y recibes ofertas en vivo de compradores verificados, 4) Aceptas la mejor oferta y recibes el pago inmediato. Todo el proceso se completa en aproximadamente 2 horas.'
+    question: '¿En qué se diferencia AutoRemates de otros remates?',
+    answer: 'AutoRemates se especializa en remates de autos de particulares y empresas, con vehículos en buen estado. No trabajamos con autos chocados, judiciales ni de aseguradora. Ofrecemos inspección profesional de 60 puntos, remates online y pago inmediato. Si el precio no te convence, no vendes.'
   },
   {
-    question: '¿Cuál es la comisión por cada transacción?',
-    answer: 'Tomamos una comisión de cada transacción. La comisión en la mayoría de los casos es del 3-10% y se calcula teniendo en cuenta el historial de automóviles, la condición técnica del automóvil y la demanda actual del mercado.'
+    question: '¿Aceptan autos chocados o de aseguradora?',
+    answer: 'No. En AutoRemates nos enfocamos en vehículos de particulares y empresas, en buen estado y sin daños estructurales. Los remates de autos chocados o de aseguradora son otra modalidad del mercado; nosotros te ayudamos a vender tu auto particular o de flota con transparencia total.'
   },
   {
-    question: '¿Quién paga la comisión de la transacción?',
-    answer: 'La comisión siempre es pagada por el comprador. El precio que verás en los resultados de la subasta ya es menor que la comisión, por lo que como vendedor recibes el monto acordado sin descuentos adicionales.'
+    question: '¿Cómo saber si un auto es de remate?',
+    answer: 'Un auto es de remate cuando fue incautado, embargado, siniestrado o está en poder de aseguradoras, municipalidades o tribunales. Puedes verificarlo en el Registro de Vehículos Motorizados (REVEM) del Ministerio de Transportes o consultando la procedencia del vehículo con el vendedor.'
+  },
+  {
+    question: '¿Cómo funcionan los remates de autos?',
+    answer: 'Los remates de autos son subastas donde los compradores pujan por vehículos. En AutoRemates: 1) El vendedor inscribe su auto, 2) Realizamos una inspección técnica profesional de 60 puntos, 3) El auto se subasta online con compradores verificados, 4) Se acepta la mejor oferta y el pago es inmediato.'
+  },
+  {
+    question: '¿Cómo participar en una subasta de autos online?',
+    answer: 'Debes registrarte como comprador (dealer) en AutoRemates. Una vez verificado, podrás ver los autos disponibles, revisar las inspecciones y pujar en las subastas en vivo. Los remates se realizan cada viernes a las 15:00 hrs. El registro es gratuito.'
+  },
+  {
+    question: '¿Qué es un remate de autos de aseguradora?',
+    answer: 'Son vehículos declarados pérdida total por compañías de seguros. Las aseguradoras los subastan para recuperar parte del valor. Incluyen autos chocados, siniestrados o con daños. Es un tipo de remate distinto al que ofrece AutoRemates, que se especializa en autos de particulares y empresas en buen estado.'
+  },
+  {
+    question: '¿Dónde hay remates de autos en Chile?',
+    answer: 'En AutoRemates realizamos remates online, por lo que puedes participar desde cualquier parte de Chile. Tenemos centros de inspección en Santiago, Concepción e Iquique. Si ganas un remate, podemos entregar el auto en cualquier ciudad (con costo).'
+  },
+  {
+    question: '¿Pueden entregar el auto al comprador si está en otra ciudad?',
+    answer: 'Sí. Cuando se remata un auto, podemos ir a dejarlo al comprador en cualquier ciudad de Chile. Este servicio tiene un costo que se cotiza según la ubicación. Contáctanos para una cotización.'
+  },
+  {
+    question: '¿Cómo funciona el proceso de remate en AutoRemates?',
+    answer: 'El proceso es simple: 1) Inscribes tu auto con la patente y datos básicos, 2) Inspección técnica profesional de 60 puntos en centros certificados, 3) Tu auto se publica y recibes ofertas en vivo en el remate online, 4) Aceptas la mejor oferta y recibes el pago inmediato.'
   },
   {
     question: '¿Qué pasa si el precio no me convence?',
-    answer: 'Si el precio no te conviene, simplemente puedes irte. No tienes que pagar ni firmar nada. Todo es gratis y sin compromiso. Te pediremos que evalúes el servicio y el trabajo del inspector a través de SMS. ¡Siempre estaremos encantados de volver a verte cuando quieras!'
-  },
-  {
-    question: '¿Cómo ganan los compradores en el remate?',
-    answer: 'En el 90% de los casos, el comprador planea revender el coche. Él espera ganar dinero a través de reparaciones, preparación previa a la venta, la diferencia en el costo del automóvil en diferentes regiones, préstamos y seguros. Los compradores son dealers profesionales que conocen el mercado.'
+    answer: 'Si el precio no te conviene, simplemente puedes irte. No tienes que pagar ni firmar nada. Todo es gratis y sin compromiso. Si el precio no te convence, no vendes.'
   },
   {
     question: '¿Qué incluye la inspección profesional?',
-    answer: 'La inspección incluye una revisión técnica exhaustiva de 60 puntos que evalúa: carrocería, chasis, frenos, suspensión, neumáticos, sistema eléctrico, motor, transmisión y más. Esta inspección está incluida sin costo adicional y garantiza transparencia total en la transacción.'
-  },
-  {
-    question: '¿Cuánto tiempo tarda todo el proceso?',
-    answer: 'Compramos cualquier coche en 2 horas al precio de mercado. Desde que inscribes tu auto hasta que recibes el pago, todo el proceso está optimizado para ser rápido y eficiente. La inspección se realiza inmediatamente y el remate comienza de forma automática.'
-  },
-  {
-    question: '¿Necesito registrarme para vender mi auto?',
-    answer: 'Sí, necesitas crear una cuenta gratuita a través del sitio web o puedes llamarnos directamente. El registro es simple, rápido y totalmente gratuito. Una vez registrado, puedes inscribir tu auto en minutos.'
-  },
-  {
-    question: '¿Qué tipos de autos aceptan para remate?',
-    answer: 'Aceptamos todo tipo de vehículos: automóviles, motos y vehículos comerciales. No importa la marca, modelo, año o condición. Todos los autos son evaluados por nuestros inspectores profesionales y tienen la oportunidad de ser vendidos en el remate.'
-  },
-  {
-    question: '¿El pago es inmediato?',
-    answer: 'Sí, el pago es inmediato una vez que aceptas una oferta. No hay esperas ni procesos largos. Recibes el dinero directamente y de forma segura. Es uno de los principales beneficios de nuestro sistema de remates online.'
+    answer: 'La inspección incluye una revisión técnica exhaustiva de 60 puntos: carrocería, chasis, frenos, suspensión, neumáticos, sistema eléctrico, motor y transmisión. Está incluida sin costo adicional y garantiza transparencia total.'
   }
 ]
 
@@ -105,5 +109,26 @@ const openFaqs = ref({})
 const toggleFaq = (index) => {
   openFaqs.value[index] = !openFaqs.value[index]
 }
+
+// Schema.org FAQPage para SEO
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map(f => ({
+          '@type': 'Question',
+          name: f.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: f.answer
+          }
+        }))
+      })
+    }
+  ]
+})
 </script>
 

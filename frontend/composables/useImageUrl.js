@@ -3,40 +3,31 @@ export const useImageUrl = () => {
   const API_BASE = config.public.apiBase || 'http://localhost:5000/api'
 
   const getImageUrl = (imagePath) => {
-    console.log('[useImageUrl] getImageUrl llamado con:', imagePath)
-    
-    if (!imagePath) {
-      console.log('[useImageUrl] imagePath está vacío')
-      return ''
-    }
-    
-    // Si es una URL de R2, usar el proxy del backend para evitar CORS
-    if (imagePath.startsWith('http')) {
-      if (imagePath.includes('r2.dev') || imagePath.includes('r2.cloudflarestorage.com')) {
-        try {
-          // Extraer el path después del dominio de R2
-          const url = new URL(imagePath)
-          const r2Path = url.pathname.substring(1) // Remover el / inicial
-          const proxyUrl = `${API_BASE}/images/${r2Path}`
-          console.log('[useImageUrl] URL de R2 detectada, usando proxy:', {
-            original: imagePath,
-            r2Path: r2Path,
-            proxyUrl: proxyUrl
-          })
-          return proxyUrl
-        } catch (e) {
-          console.error('[useImageUrl] Error parseando URL de R2:', e)
-          return imagePath
+    if (!imagePath || typeof imagePath !== 'string') return ''
+
+    const s = imagePath.trim()
+
+    // Si es URL (http) que apunta a R2 o a nuestra estructura autos/, usar proxy para evitar CORS
+    if (s.startsWith('http')) {
+      try {
+        const url = new URL(s)
+        const pathname = url.pathname.replace(/^\/+/, '')
+        const isR2 = s.includes('r2.dev') || s.includes('r2.cloudflarestorage.com') || pathname.startsWith('autos/')
+        if (isR2 && pathname) {
+          return `${API_BASE}/images/${pathname}`
         }
+      } catch (e) {
+        return s
       }
-      console.log('[useImageUrl] URL HTTP pero no es R2, devolviendo tal cual:', imagePath)
-      return imagePath
+      return s
     }
-    
-    // Si es una ruta relativa, construir la URL completa
-    const localUrl = `${API_BASE.replace('/api', '')}/${imagePath}`
-    console.log('[useImageUrl] Ruta relativa, construyendo URL:', localUrl)
-    return localUrl
+
+    // Ruta relativa tipo "autos/123/1.webp" -> proxy del backend
+    if (s.startsWith('autos/')) {
+      return `${API_BASE}/images/${s}`
+    }
+
+    return `${API_BASE.replace('/api', '')}/${s}`
   }
 
   return { getImageUrl }

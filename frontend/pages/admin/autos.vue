@@ -442,22 +442,20 @@ const startReview = async (id) => {
 }
 
 const sendToAuction = async (id) => {
-  if (!confirm('¿Estás seguro de enviar este auto a subasta? El remate durará 20 minutos.')) return
-  
+  const diasInput = window.prompt('¿Cuántos días de duración tendrá el remate?', '4')
+  if (diasInput == null) return
+  const dias = Math.max(1, Math.min(90, parseInt(diasInput, 10) || 4))
+
+  if (!confirm(`¿Enviar este auto a subasta? El remate durará ${dias} día${dias !== 1 ? 's' : ''}.`)) return
+
   try {
-    // Calcular fecha de fin (20 minutos desde ahora)
-    const fechaFin = new Date()
-    fechaFin.setMinutes(fechaFin.getMinutes() + 20)
-    
     await $fetch(`${API_BASE}/autos/${id}/iniciar-remate`, {
       method: 'PUT',
       headers: getAuthHeaders(),
-      body: { 
-        fechaFinRemate: fechaFin.toISOString()
-      }
+      body: { dias }
     })
-    
-    alert('Auto enviado a subasta exitosamente!')
+
+    alert('Auto enviado a subasta exitosamente.')
     await loadAutos()
     navigateTo('/admin/remates')
   } catch (err) {

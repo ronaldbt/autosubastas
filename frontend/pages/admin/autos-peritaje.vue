@@ -1375,6 +1375,9 @@
 
       <!-- BOTÓN DE ENVÍO -->
       <div class="p-8 bg-white border-t border-slate-200 rounded-lg">
+        <div v-if="pdfError" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-sm">
+          {{ pdfError }}
+        </div>
         <div class="flex items-center justify-between">
           <div class="text-sm text-slate-500">
             <p>Al enviar este formulario, confirma que ha realizado una inspección completa y precisa del vehículo.</p>
@@ -1441,6 +1444,9 @@ import { useRoute, navigateTo } from 'nuxt/app'
 import { useAuth } from '~/composables/useAuth'
 import { ArrowLeft } from 'lucide-vue-next'
 import jsPDF from 'jspdf'
+import { PDF_LAYOUT, IMAGENES_PDF } from '~/utils/peritajePdfConstants'
+import { loadImageFromUrl, imageToDataUrl } from '~/utils/peritajePdfUtils'
+import { usePeritajePdfPreload } from '~/composables/usePeritajePdfPreload'
 
 definePageMeta({
   layout: 'dashboard',
@@ -1453,8 +1459,12 @@ const { getAuthHeaders } = useAuth()
 const config = useRuntimeConfig()
 const API_BASE = config.public.apiBase || 'http://localhost:5000/api'
 
+const preload = usePeritajePdfPreload()
+onMounted(() => { preload.load() })
+
 const isLoading = ref(false)
 const isDownloadingPDF = ref(false)
+const pdfError = ref(null)
 const selectedImages = ref([])
 const fileInput = ref(null)
 const autoInfo = ref(null)
@@ -2085,22 +2095,13 @@ const handleSubmit = async () => {
   }
 }
 
-// Función helper para cargar imagen desde URL
-const loadImageFromUrl = (url) => {
+// Helper: obtener dimensiones de una data URL (para diagramas precargados)
+const getImageDimensionsFromDataUrl = (dataUrl) => {
   return new Promise((resolve, reject) => {
     const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => resolve(img)
-    img.onerror = () => {
-      // Si falla, intentar con proxy
-      const proxyUrl = url.startsWith('http') ? `/api/images/${url.split('/').slice(3).join('/')}` : url
-      const img2 = new Image()
-      img2.crossOrigin = 'anonymous'
-      img2.onload = () => resolve(img2)
-      img2.onerror = () => reject(new Error('No se pudo cargar la imagen'))
-      img2.src = proxyUrl
-    }
-    img.src = url
+    img.onload = () => resolve({ width: img.width, height: img.height })
+    img.onerror = () => reject(new Error('Error al obtener dimensiones'))
+    img.src = dataUrl
   })
 }
 
@@ -2116,8 +2117,10 @@ const generatePDF = async () => {
 
     const pageWidth = doc.internal.pageSize.getWidth()
     const pageHeight = doc.internal.pageSize.getHeight()
-    const margin = 15
-    const contentWidth = pageWidth - (margin * 2)
+    const margin = PDF_LAYOUT.margin
+    const contentWidth = PDF_LAYOUT.getContentWidth(pageWidth)
+    const maxHeightDiagrama = PDF_LAYOUT.maxHeightDiagrama
+    const maxHeightDiagramaSmall = 40
     let yPos = margin
     let currentY = margin
     let rowStartY = margin // Variable para controlar el inicio de filas en layout de 4 columnas
@@ -2209,30 +2212,31 @@ const generatePDF = async () => {
         value = '-'
       }
       
+      const boxHeight = 6.5
       // Cuadro elegante con borde azul sutil
       doc.setFillColor(...lightGrayBg)
-      roundedRect(x, y - 1.5, width, 6, 0.8, 'F')
+      roundedRect(x, y - 1.5, width, boxHeight, 0.8, 'F')
       
-      // Borde superior azul para elegancia
+      // Borde superior azul para elegancia (la etiqueta va debajo, con espacio para no solaparse)
       doc.setFillColor(...mediumBlue)
       doc.rect(x, y - 1.5, width, 0.8, 'F')
       
       // Borde del cuadro
       doc.setDrawColor(...borderGray)
       doc.setLineWidth(0.2)
-      roundedRect(x, y - 1.5, width, 6, 0.8, 'S')
+      roundedRect(x, y - 1.5, width, boxHeight, 0.8, 'S')
       
-      // Label pequeño y elegante
+      // Label con espacio bajo la línea azul para que se lea bien
       doc.setTextColor(...mediumGray)
       doc.setFontSize(5.5)
       doc.setFont('helvetica', 'normal')
-      doc.text(label, x + 1, y + 0.3, { maxWidth: width - 2 })
+      doc.text(label, x + 1, y + 1.4, { maxWidth: width - 2 })
       
-      // Value destacado
+      // Valor del campo
       doc.setTextColor(...darkBlue)
       doc.setFontSize(7.5)
       doc.setFont('helvetica', 'bold')
-      doc.text(String(value), x + 1, y + 4.2, { maxWidth: width - 2 })
+      doc.text(String(value), x + 1, y + 4.6, { maxWidth: width - 2 })
       
       return y + 6.5
     }
@@ -2308,7 +2312,7 @@ const generatePDF = async () => {
     doc.setTextColor(255, 255, 255)
     doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
-    doc.text('AutoBidPRO', margin, 18)
+    doc.text('Autoventas', margin, 18)
     
     // Subtítulo en header
     doc.setFontSize(10)
@@ -2457,23 +2461,24 @@ const generatePDF = async () => {
       doc.text('Diagrama:', margin, currentY)
       currentY += 3
       
-      const imgFrenos = await loadImageFromUrl('/frenos_peritaje.webp')
-      const aspectFrenos = imgFrenos.width / imgFrenos.height
+      let dataUrlFrenos = preload.frenosDataUrl.value
+      let aspectFrenos = 1
+      if (dataUrlFrenos) {
+        const dims = await getImageDimensionsFromDataUrl(dataUrlFrenos)
+        aspectFrenos = dims.width / dims.height
+      } else {
+        const imgFrenos = await loadImageFromUrl(IMAGENES_PDF.frenos)
+        dataUrlFrenos = imageToDataUrl(imgFrenos, 'image/jpeg', 0.9)
+        aspectFrenos = imgFrenos.width / imgFrenos.height
+      }
       const maxWidthFrenos = contentWidth
-      const maxHeightFrenos = 40 // Reducido de 80 a 40
+      const maxHeightFrenos = maxHeightDiagramaSmall
       let pdfWidthFrenos = maxWidthFrenos
       let pdfHeightFrenos = maxWidthFrenos / aspectFrenos
       if (pdfHeightFrenos > maxHeightFrenos) {
         pdfHeightFrenos = maxHeightFrenos
         pdfWidthFrenos = maxHeightFrenos * aspectFrenos
       }
-      // Convertir webp a canvas y luego a imagen para jsPDF
-      const canvasFrenos = document.createElement('canvas')
-      canvasFrenos.width = imgFrenos.width
-      canvasFrenos.height = imgFrenos.height
-      const ctxFrenos = canvasFrenos.getContext('2d')
-      ctxFrenos.drawImage(imgFrenos, 0, 0)
-      const dataUrlFrenos = canvasFrenos.toDataURL('image/jpeg', 0.9)
       doc.addImage(dataUrlFrenos, 'JPEG', margin, currentY, pdfWidthFrenos, pdfHeightFrenos)
       currentY += pdfHeightFrenos + 3
     } catch (error) {
@@ -2534,23 +2539,24 @@ const generatePDF = async () => {
       doc.text('Diagrama:', margin, currentY)
       currentY += 3
       
-      const imgSuspension = await loadImageFromUrl('/suspension_peritaje.webp')
-      const aspectSuspension = imgSuspension.width / imgSuspension.height
+      let dataUrlSuspension = preload.suspensionDataUrl.value
+      let aspectSuspension = 1
+      if (dataUrlSuspension) {
+        const dims = await getImageDimensionsFromDataUrl(dataUrlSuspension)
+        aspectSuspension = dims.width / dims.height
+      } else {
+        const imgSuspension = await loadImageFromUrl(IMAGENES_PDF.suspension)
+        dataUrlSuspension = imageToDataUrl(imgSuspension, 'image/jpeg', 0.9)
+        aspectSuspension = imgSuspension.width / imgSuspension.height
+      }
       const maxWidthSuspension = contentWidth
-      const maxHeightSuspension = 40 // Reducido de 80 a 40
+      const maxHeightSuspension = maxHeightDiagramaSmall
       let pdfWidthSuspension = maxWidthSuspension
       let pdfHeightSuspension = maxWidthSuspension / aspectSuspension
       if (pdfHeightSuspension > maxHeightSuspension) {
         pdfHeightSuspension = maxHeightSuspension
         pdfWidthSuspension = maxHeightSuspension * aspectSuspension
       }
-      // Convertir webp a canvas y luego a imagen para jsPDF
-      const canvasSuspension = document.createElement('canvas')
-      canvasSuspension.width = imgSuspension.width
-      canvasSuspension.height = imgSuspension.height
-      const ctxSuspension = canvasSuspension.getContext('2d')
-      ctxSuspension.drawImage(imgSuspension, 0, 0)
-      const dataUrlSuspension = canvasSuspension.toDataURL('image/jpeg', 0.9)
       doc.addImage(dataUrlSuspension, 'JPEG', margin, currentY, pdfWidthSuspension, pdfHeightSuspension)
       currentY += pdfHeightSuspension + 3
     } catch (error) {
@@ -2618,54 +2624,61 @@ const generatePDF = async () => {
       yPos = await addImageGrid(imagenesPorSeccion.value.inspeccionCarroceria, yPos, contentWidth, 30)
     }
       
-    // DIAGRAMA DE CARROCERÍA CON NÚMEROS (reducido)
-    if (form.carroceriaImagenNumeros && form.carroceriaImagenNumeros.length > 0) {
-      if (yPos > 250) {
-        doc.addPage()
-        yPos = margin
+    // DIAGRAMA DE CARROCERÍA (siempre visible) y números encima si los hay
+    if (yPos > 250) {
+      doc.addPage()
+      yPos = margin
+    }
+    yPos += 2
+    doc.setTextColor(...mediumGray)
+    doc.setFontSize(7)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Diagrama:', margin, yPos)
+    yPos += 3
+    try {
+      let dataUrlCarroceria = preload.carroceriaDataUrl.value
+      let imgAspect = 1
+      if (dataUrlCarroceria) {
+        const dims = await getImageDimensionsFromDataUrl(dataUrlCarroceria)
+        imgAspect = dims.width / dims.height
+      } else {
+        const imgCarroceria = await loadImageFromUrl(IMAGENES_PDF.carroceria)
+        dataUrlCarroceria = imageToDataUrl(imgCarroceria, 'image/png')
+        imgAspect = imgCarroceria.width / imgCarroceria.height
       }
-      yPos += 2
-      doc.setTextColor(...mediumGray)
+      const maxWidth = contentWidth
+      const maxHeight = maxHeightDiagrama
+      let pdfWidth = maxWidth
+      let pdfHeight = maxWidth / imgAspect
+      if (pdfHeight > maxHeight) {
+        pdfHeight = maxHeight
+        pdfWidth = maxHeight * imgAspect
+      }
+      doc.addImage(dataUrlCarroceria, 'PNG', margin, yPos, pdfWidth, pdfHeight)
+      if (form.carroceriaImagenNumeros && form.carroceriaImagenNumeros.length > 0) {
+        form.carroceriaImagenNumeros.forEach((num) => {
+          const x = margin + (num.x / 100) * pdfWidth
+          const y = yPos + (num.y / 100) * pdfHeight
+          const estadoColor = getEstadoColorForPDF(num.numero)
+          doc.setFillColor(...estadoColor)
+          doc.circle(x, y, 3, 'F')
+          doc.setDrawColor(255, 255, 255)
+          doc.setLineWidth(0.5)
+          doc.circle(x, y, 3, 'S')
+          doc.setTextColor(255, 255, 255)
+          doc.setFontSize(7)
+          doc.setFont('helvetica', 'bold')
+          doc.text(String(num.numero), x, y + 1, { align: 'center' })
+        })
+      }
+      yPos += pdfHeight + 3
+    } catch (e) {
+      console.error('Error cargando diagrama carrocería para PDF:', e)
+      doc.setFont('helvetica', 'normal')
       doc.setFontSize(7)
-      doc.setFont('helvetica', 'bold')
-      doc.text('Diagrama:', margin, yPos)
-      yPos += 3
-      
-      const img = new Image()
-      img.crossOrigin = 'anonymous'
-      img.src = '/carroceria_peritaje.png'
-      
-      await new Promise((resolve) => {
-        img.onload = () => {
-          const maxWidth = contentWidth
-          const maxHeight = 40
-          const imgAspect = img.width / img.height
-          let pdfWidth = maxWidth
-          let pdfHeight = maxWidth / imgAspect
-          if (pdfHeight > maxHeight) {
-            pdfHeight = maxHeight
-            pdfWidth = maxHeight * imgAspect
-          }
-          doc.addImage(img, 'PNG', margin, yPos, pdfWidth, pdfHeight)
-          form.carroceriaImagenNumeros.forEach((num) => {
-            const x = margin + (num.x / 100) * pdfWidth
-            const y = yPos + (num.y / 100) * pdfHeight
-            const estadoColor = getEstadoColorForPDF(num.numero)
-            doc.setFillColor(...estadoColor)
-            doc.circle(x, y, 3, 'F')
-            doc.setDrawColor(255, 255, 255)
-            doc.setLineWidth(0.5)
-            doc.circle(x, y, 3, 'S')
-            doc.setTextColor(255, 255, 255)
-            doc.setFontSize(7)
-            doc.setFont('helvetica', 'bold')
-            doc.text(String(num.numero), x, y + 1, { align: 'center' })
-          })
-          yPos += pdfHeight + 3
-          resolve()
-        }
-        img.onerror = () => resolve()
-      })
+      doc.setTextColor(...mediumGray)
+      doc.text('(Diagrama no disponible)', margin, yPos + 3)
+      yPos += 8
     }
 
     // CHASIS - Compacto (solo campos con valores)
@@ -2697,40 +2710,45 @@ const generatePDF = async () => {
     })
     yPos = currentY + 3
 
-    // Imagen por defecto de Chasis (reducida)
+    // Imagen por defecto de Chasis (siempre intentar mostrar diagrama)
+    if (yPos > 250) {
+      doc.addPage()
+      yPos = margin
+    }
+    yPos += 2
+    doc.setTextColor(...mediumGray)
+    doc.setFontSize(7)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Diagrama:', margin, yPos)
+    yPos += 3
     try {
-      if (yPos > 250) {
-        doc.addPage()
-        yPos = margin
+      let dataUrlChasis = preload.chasisDataUrl.value
+      let aspectChasis = 1
+      if (dataUrlChasis) {
+        const dims = await getImageDimensionsFromDataUrl(dataUrlChasis)
+        aspectChasis = dims.width / dims.height
+      } else {
+        const imgChasis = await loadImageFromUrl(IMAGENES_PDF.chasis)
+        dataUrlChasis = imageToDataUrl(imgChasis, 'image/jpeg', 0.9)
+        aspectChasis = imgChasis.width / imgChasis.height
       }
-      yPos += 2
-      doc.setTextColor(...mediumGray)
-      doc.setFontSize(7)
-      doc.setFont('helvetica', 'bold')
-      doc.text('Diagrama:', margin, yPos)
-      yPos += 3
-      
-      const imgChasis = await loadImageFromUrl('/chasis_peritaje.webp')
-      const aspectChasis = imgChasis.width / imgChasis.height
       const maxWidthChasis = contentWidth
-      const maxHeightChasis = 40 // Reducido de 100 a 40
+      const maxHeightChasis = maxHeightDiagrama
       let pdfWidthChasis = maxWidthChasis
       let pdfHeightChasis = maxWidthChasis / aspectChasis
       if (pdfHeightChasis > maxHeightChasis) {
         pdfHeightChasis = maxHeightChasis
         pdfWidthChasis = maxHeightChasis * aspectChasis
       }
-      // Convertir webp a canvas y luego a imagen para jsPDF
-      const canvas2 = document.createElement('canvas')
-      canvas2.width = imgChasis.width
-      canvas2.height = imgChasis.height
-      const ctx2 = canvas2.getContext('2d')
-      ctx2.drawImage(imgChasis, 0, 0)
-      const dataUrl2 = canvas2.toDataURL('image/jpeg', 0.9)
-      doc.addImage(dataUrl2, 'JPEG', margin, yPos, pdfWidthChasis, pdfHeightChasis)
+      doc.addImage(dataUrlChasis, 'JPEG', margin, yPos, pdfWidthChasis, pdfHeightChasis)
       yPos += pdfHeightChasis + 3
     } catch (error) {
-      console.error('Error cargando imagen de chasis:', error)
+      console.error('Error cargando imagen de chasis para PDF:', error)
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(7)
+      doc.setTextColor(...mediumGray)
+      doc.text('(Diagrama no disponible)', margin, yPos + 3)
+      yPos += 8
     }
     
     // Imágenes de Chasis (compactas)
@@ -2805,24 +2823,25 @@ const generatePDF = async () => {
       doc.text('Diagrama:', margin, yPos)
       yPos += 3
       
-      const imgNeumaticos = await loadImageFromUrl('/neumaticos_peritaje.webp')
-      const aspectNeumaticos = imgNeumaticos.width / imgNeumaticos.height
+      let dataUrlNeumaticos = preload.neumaticosDataUrl.value
+      let aspectNeumaticos = 1
+      if (dataUrlNeumaticos) {
+        const dims = await getImageDimensionsFromDataUrl(dataUrlNeumaticos)
+        aspectNeumaticos = dims.width / dims.height
+      } else {
+        const imgNeumaticos = await loadImageFromUrl(IMAGENES_PDF.neumaticos)
+        dataUrlNeumaticos = imageToDataUrl(imgNeumaticos, 'image/jpeg', 0.9)
+        aspectNeumaticos = imgNeumaticos.width / imgNeumaticos.height
+      }
       const maxWidthNeumaticos = contentWidth
-      const maxHeightNeumaticos = 40 // Reducido de 80 a 40
+      const maxHeightNeumaticos = maxHeightDiagramaSmall
       let pdfWidthNeumaticos = maxWidthNeumaticos
       let pdfHeightNeumaticos = maxWidthNeumaticos / aspectNeumaticos
       if (pdfHeightNeumaticos > maxHeightNeumaticos) {
         pdfHeightNeumaticos = maxHeightNeumaticos
         pdfWidthNeumaticos = maxHeightNeumaticos * aspectNeumaticos
       }
-      // Convertir webp a canvas y luego a imagen para jsPDF
-      const canvas = document.createElement('canvas')
-      canvas.width = imgNeumaticos.width
-      canvas.height = imgNeumaticos.height
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(imgNeumaticos, 0, 0)
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
-      doc.addImage(dataUrl, 'JPEG', margin, yPos, pdfWidthNeumaticos, pdfHeightNeumaticos)
+      doc.addImage(dataUrlNeumaticos, 'JPEG', margin, yPos, pdfWidthNeumaticos, pdfHeightNeumaticos)
       yPos += pdfHeightNeumaticos + 3
     } catch (error) {
       console.error('Error cargando imagen de neumáticos:', error)
@@ -2994,7 +3013,7 @@ const generatePDF = async () => {
       doc.setTextColor(...darkBlue)
       doc.setFontSize(10)
       doc.setFont('helvetica', 'bold')
-      doc.text('AutoBidPRO', margin, pageHeight - 8)
+      doc.text('Autoventas', margin, pageHeight - 8)
       
       doc.setTextColor(...mediumGray)
       doc.setFontSize(8)
@@ -3015,14 +3034,15 @@ const generatePDF = async () => {
 
 // Función para descargar el PDF
 const downloadPDF = async () => {
+  pdfError.value = null
   isDownloadingPDF.value = true
-  
   try {
     const doc = await generatePDF()
     const filename = `peritaje-${form.patente || 'documento'}-${Date.now()}.pdf`
     doc.save(filename)
   } catch (error) {
-    alert('Error al generar el PDF. Por favor, intente nuevamente.')
+    pdfError.value = error?.message || 'Error al generar el PDF. Por favor, intente nuevamente.'
+    console.error('Error generando PDF:', error)
   } finally {
     isDownloadingPDF.value = false
   }
@@ -3030,25 +3050,20 @@ const downloadPDF = async () => {
 
 // Función para vista previa del PDF
 const previewPDF = async () => {
+  pdfError.value = null
   isDownloadingPDF.value = true
-  
   try {
     const doc = await generatePDF()
     const pdfBlob = doc.output('blob')
     const pdfUrl = URL.createObjectURL(pdfBlob)
-    
-    // Abrir en nueva ventana
     const newWindow = window.open(pdfUrl, '_blank')
     if (!newWindow) {
-      alert('Por favor, permite las ventanas emergentes para ver la vista previa del PDF.')
+      pdfError.value = 'Permite las ventanas emergentes para ver la vista previa del PDF.'
     }
-    
-    // Limpiar el URL después de un tiempo
-    setTimeout(() => {
-      URL.revokeObjectURL(pdfUrl)
-    }, 1000)
+    setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000)
   } catch (error) {
-    alert('Error al generar la vista previa del PDF. Por favor, intente nuevamente.')
+    pdfError.value = error?.message || 'Error al generar la vista previa del PDF. Por favor, intente nuevamente.'
+    console.error('Error generando PDF:', error)
   } finally {
     isDownloadingPDF.value = false
   }

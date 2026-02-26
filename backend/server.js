@@ -23,9 +23,9 @@ app.use(cors({
       'http://localhost:3000',
       'http://127.0.0.1:3000',
       'http://localhost:3001',
-      'https://autoventas360.cl',
-      'https://www.autoventas360.cl',
-      'https://api.autoventas360.cl'
+      'https://autoremates.cl',
+      'https://www.autoremates.cl',
+      'https://api.autoremates.cl'
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {

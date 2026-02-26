@@ -53,6 +53,7 @@ export default {
     },
   },
   plugins: [
+    require('@tailwindcss/typography'),
     function({ addComponents }) {
       addComponents({
         '.glass-nav': {

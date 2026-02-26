@@ -7,6 +7,9 @@ WORKDIR /app
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
+# Install build deps for native modules (better-sqlite3)
+RUN apk add --no-cache python3 make g++
+
 # Copy package files
 COPY package*.json ./
 

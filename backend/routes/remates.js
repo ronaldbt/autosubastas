@@ -7,6 +7,79 @@ const Usuario = require('../models/Usuario');
 const auth = require('../middleware/auth');
 const { Op } = require('sequelize');
 
+// Store in-memory: autoId -> Map(userId -> lastSeenAt). Solo dealers + admin cuentan como "viendo".
+const VIEWER_TTL_MS = 60 * 1000; // 60 segundos sin heartbeat = ya no cuenta
+
+const viewersByAutoId = new Map();
+
+function cleanupViewers() {
+  const now = Date.now();
+  for (const [autoId, userMap] of viewersByAutoId.entries()) {
+    for (const [userId, lastSeen] of userMap.entries()) {
+      if (now - lastSeen > VIEWER_TTL_MS) userMap.delete(userId);
+    }
+    if (userMap.size === 0) viewersByAutoId.delete(autoId);
+  }
+}
+setInterval(cleanupViewers, 15000);
+
+function getViewersCount(autoId) {
+  cleanupViewers();
+  const userMap = viewersByAutoId.get(String(autoId));
+  return userMap ? userMap.size : 0;
+}
+
+function registerViewer(autoId, userId) {
+  if (!viewersByAutoId.has(String(autoId))) {
+    viewersByAutoId.set(String(autoId), new Map());
+  }
+  viewersByAutoId.get(String(autoId)).set(String(userId), Date.now());
+}
+
+// Middleware: solo dealer o admin
+async function onlyDealerOrAdmin(req, res, next) {
+  try {
+    const usuario = await Usuario.findByPk(req.user.id);
+    if (!usuario || (usuario.rol !== 'dealer' && usuario.rol !== 'admin' && usuario.rol !== 'superadmin')) {
+      return res.status(403).json({ message: 'Acceso denegado. Solo dealers y administradores.' });
+    }
+    next();
+  } catch (err) {
+    res.status(500).json({ message: 'Error al verificar rol' });
+  }
+}
+
+// @route   GET /api/remates/autos/:autoId/viewers
+// @desc    Cantidad de personas (dealers + admin) viendo este remate
+// @access  Private (dealer o admin)
+router.get('/autos/:autoId/viewers', auth, onlyDealerOrAdmin, async (req, res) => {
+  try {
+    const autoId = parseInt(req.params.autoId, 10);
+    if (isNaN(autoId)) return res.status(400).json({ message: 'autoId inválido' });
+    const count = getViewersCount(autoId);
+    res.json({ count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al obtener viewers' });
+  }
+});
+
+// @route   POST /api/remates/autos/:autoId/view
+// @desc    Heartbeat: registro como "viendo" este remate (solo dealer/admin)
+// @access  Private (dealer o admin)
+router.post('/autos/:autoId/view', auth, onlyDealerOrAdmin, async (req, res) => {
+  try {
+    const autoId = parseInt(req.params.autoId, 10);
+    if (isNaN(autoId)) return res.status(400).json({ message: 'autoId inválido' });
+    registerViewer(autoId, req.user.id);
+    const count = getViewersCount(autoId);
+    res.json({ count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al registrar vista' });
+  }
+});
+
 // @route   GET /api/remates
 // @desc    Obtener todos los remates (con filtros)
 // @access  Public

@@ -151,25 +151,25 @@ const events = ref([
   {
     id: 1,
     title: 'Remate: Toyota Corolla',
-    fecha: new Date(2024, 2, 20, 14, 0),
+    fecha: new Date(2026, 2, 20, 14, 0),
     type: 'remate'
   },
   {
     id: 2,
     title: 'Inspección: Honda Civic',
-    fecha: new Date(2024, 2, 20, 10, 0),
+    fecha: new Date(2026, 2, 20, 10, 0),
     type: 'inspeccion'
   },
   {
     id: 3,
     title: 'Remate: Ford Ranger',
-    fecha: new Date(2024, 2, 22, 15, 0),
+    fecha: new Date(2026, 2, 22, 15, 0),
     type: 'remate'
   },
   {
     id: 4,
     title: 'Inspección: Chevrolet Cruze',
-    fecha: new Date(2024, 2, 25, 11, 0),
+    fecha: new Date(2026, 2, 25, 11, 0),
     type: 'inspeccion'
   }
 ])

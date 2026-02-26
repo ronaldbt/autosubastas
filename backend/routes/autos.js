@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult, query } = require('express-validator');
 const { Auto, Usuario, Peritaje } = require('../models');
 const auth = require('../middleware/auth');
-const { upload, processAndUploadToR2, processLocalUpload } = require('../middleware/r2Upload');
+const { upload, processAndUploadToR2, processLocalUpload, reorganizeR2KeysForAuto, BUCKET_NAME } = require('../middleware/r2Upload');
 const { Op } = require('sequelize');
 
 // @route   GET /api/autos/patente-info
@@ -107,10 +107,13 @@ router.get('/', [
   try {
     const { marca, estado, minPrecio, maxPrecio, anio } = req.query;
     
-    // Construir filtro
+    // Construir filtro (estado puede ser "aprobado,en_remate" para listar ambos)
     const where = {};
     if (marca) where.marca = { [Op.iLike]: `%${marca}%` };
-    if (estado) where.estado = estado;
+    if (estado) {
+      const estados = estado.split(',').map(s => s.trim()).filter(Boolean);
+      where.estado = estados.length > 1 ? { [Op.in]: estados } : estados[0];
+    }
     if (anio) where.anio = parseInt(anio);
     if (minPrecio || maxPrecio) {
       where.precioActual = {};
@@ -200,27 +203,35 @@ router.get('/', [
       }
     }
 
-    console.log('[GET /api/autos] Total autos encontrados:', autos.length);
-    if (autos.length > 0) {
-      const primerAuto = autos[0];
-      console.log('[GET /api/autos] Primer auto:', {
-        id: primerAuto.id,
-        marca: primerAuto.marca,
-        modelo: primerAuto.modelo,
-        imagenes: primerAuto.imagenes,
-        imagenesRaw: JSON.stringify(primerAuto.imagenes),
-        imagenesType: typeof primerAuto.imagenes,
-        imagenesIsArray: Array.isArray(primerAuto.imagenes),
-        imagenesLength: primerAuto.imagenes ? primerAuto.imagenes.length : 0,
-        primeraImagen: primerAuto.imagenes && primerAuto.imagenes.length > 0 ? primerAuto.imagenes[0] : 'N/A',
-        dataValues: primerAuto.dataValues ? {
-          imagenes: primerAuto.dataValues.imagenes,
-          imagenesType: typeof primerAuto.dataValues.imagenes
-        } : 'N/A'
+    // Última oferta (max puja activa) por auto en remate
+    const enRemateIds = autos.filter(a => a.estado === 'en_remate').map(a => a.id);
+    let ultimaOfertaPorAuto = {};
+    if (enRemateIds.length > 0) {
+      const RemateModel = require('../models/Remate');
+      const pujas = await RemateModel.findAll({
+        where: { autoId: enRemateIds, estado: 'activa' },
+        attributes: ['autoId', 'monto']
+      });
+      pujas.forEach(p => {
+        const aid = p.autoId;
+        const m = parseFloat(p.monto);
+        if (!ultimaOfertaPorAuto[aid] || m > ultimaOfertaPorAuto[aid]) {
+          ultimaOfertaPorAuto[aid] = m;
+        }
       });
     }
 
-    res.json(autos);
+    const payload = autos.map(a => {
+      const plain = a.get ? a.get({ plain: true }) : a;
+      if (plain.estado === 'en_remate' && ultimaOfertaPorAuto[plain.id] != null) {
+        plain.ultimaOferta = ultimaOfertaPorAuto[plain.id];
+      } else {
+        plain.ultimaOferta = null;
+      }
+      return plain;
+    });
+
+    res.json(payload);
   } catch (error) {
     console.error('Error detallado al obtener autos:', error);
     res.status(500).json({ 
@@ -324,6 +335,17 @@ router.get('/:id', async (req, res) => {
       if (pujaGanadora) {
         auto.dataValues.pujaGanadora = pujaGanadora;
       }
+    }
+
+    // Última oferta si está en remate
+    if (auto.estado === 'en_remate') {
+      const RemateModel = require('../models/Remate');
+      const maxPuja = await RemateModel.findOne({
+        where: { autoId: auto.id, estado: 'activa' },
+        order: [['monto', 'DESC']],
+        attributes: ['monto']
+      });
+      auto.dataValues.ultimaOferta = maxPuja ? parseFloat(maxPuja.monto) : null;
     }
 
     res.json(auto);
@@ -482,6 +504,20 @@ router.post('/', auth, upload.array('imagenes', 70), processAndUploadToR2, proce
       creadoPor: req.user.id,
       peritajeId: req.body.peritajeId || null
     });
+
+    // Reorganizar en R2: carpeta por auto (autos/{id}/1.webp, 2.webp, ...) para distinguir fotos de cada auto
+    if (BUCKET_NAME && req.uploadedKeys && req.uploadedKeys.length > 0 && imagenes.length > 0) {
+      try {
+        const newUrls = await reorganizeR2KeysForAuto(req.uploadedKeys, auto.id);
+        if (newUrls.length > 0) {
+          await auto.update({ imagenes: newUrls });
+          await auto.reload();
+          console.log('[POST /api/autos] Imágenes reorganizadas en R2 bajo autos/' + auto.id);
+        }
+      } catch (reorgError) {
+        console.error('[POST /api/autos] Error reorganizando imágenes en R2 (se mantienen URLs originales):', reorgError.message);
+      }
+    }
 
     console.log('[POST /api/autos] Auto creado exitosamente con ID:', auto.id);
     console.log('[POST /api/autos] Auto creado - imagenes guardadas:', auto.imagenes);
@@ -785,7 +821,7 @@ router.put('/:id/revisar', auth, async (req, res) => {
 });
 
 // @route   PUT /api/autos/:id/iniciar-remate
-// @desc    Iniciar remate de un auto (20 minutos)
+// @desc    Iniciar remate de un auto. Duración por defecto 4 días (regulable por admin).
 // @access  Private (Admin)
 router.put('/:id/iniciar-remate', auth, async (req, res) => {
   try {
@@ -804,11 +840,16 @@ router.put('/:id/iniciar-remate', auth, async (req, res) => {
       return res.status(400).json({ message: 'Solo se pueden enviar a subasta autos aprobados o disponibles' });
     }
 
-    // Calcular fecha de fin (20 minutos desde ahora si no se proporciona)
+    // Duración: body.dias (por defecto 4) o body.fechaFinRemate explícita
     const fechaInicio = new Date();
-    const fechaFin = req.body.fechaFinRemate 
-      ? new Date(req.body.fechaFinRemate)
-      : new Date(fechaInicio.getTime() + 20 * 60 * 1000); // 20 minutos
+    let fechaFin;
+    if (req.body.fechaFinRemate) {
+      fechaFin = new Date(req.body.fechaFinRemate);
+    } else {
+      const dias = Math.max(1, Math.min(90, parseInt(req.body.dias, 10) || 4));
+      fechaFin = new Date(fechaInicio);
+      fechaFin.setDate(fechaFin.getDate() + dias);
+    }
 
     auto.estado = 'en_remate';
     auto.fechaInicioRemate = fechaInicio;

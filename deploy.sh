@@ -33,6 +33,6 @@ echo "📋 Mostrando logs recientes..."
 docker compose logs --tail=50
 
 echo "✅ Deployment completado!"
-echo "🌐 Frontend: https://autoventas360.cl"
-echo "🔧 Backend API: https://api.autoventas360.cl"
-echo "📊 Traefik Dashboard: https://traefik.autoventas360.cl"
+echo "🌐 Frontend: https://autoremates.cl"
+echo "🔧 Backend API: https://api.autoremates.cl"
+echo "📊 Traefik Dashboard: https://traefik.autoremates.cl"

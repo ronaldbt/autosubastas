@@ -14,7 +14,7 @@ fi
 echo "📁 Creating directories..."
 mkdir -p backup
 mkdir -p traefik
-mkdir -p backend/uploads
+mkdir -p backend/uploads backend/uploads/temp
 mkdir -p frontend/.output
 
 # Set permissions

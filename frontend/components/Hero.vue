@@ -4,7 +4,7 @@
     <div class="absolute inset-0 z-0">
       <img 
         src="https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=2636&auto=format&fit=crop" 
-        alt="Remate de autos usados en Chile - RematAuto" 
+        alt="Remate de autos usados en Chile - AutoRemates" 
         class="w-full h-full object-cover opacity-40"
       />
       <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-transparent"></div>
@@ -24,10 +24,10 @@
 
           <AnimatedSection :delay="100">
             <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
-              Vende tu Auto Usado en <span class="text-brand-orange inline-block transform hover:scale-105 transition-transform duration-300">2 Horas</span>
+              Remate de Autos de Particulares y Empresas – <span class="text-brand-orange inline-block transform hover:scale-105 transition-transform duration-300">Remates Online</span>
             </h1>
             <p class="text-xl text-gray-300 mt-4 leading-relaxed max-w-xl">
-              El primer remate online de autos en Chile con <strong class="text-white">inspección profesional incluida</strong>. Si el precio no te gusta no lo vendes. Tienes la palabra final.
+              Remate de autos de particulares y empresas en Chile. Remates online, vehículos inspeccionados, en buen estado. Cuando vendes, podemos ir a dejar el auto al comprador a cualquier ciudad de Chile (tiene un costo). <strong class="text-white">Inspección profesional incluida</strong>. Si el precio no te convence, no vendes.
             </p>
           </AnimatedSection>
 

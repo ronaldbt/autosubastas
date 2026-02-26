@@ -28,7 +28,7 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: admin@autoventas360.com
+      email: admin@autoremates.cl
       storage: /letsencrypt/acme.json
       tlsChallenge: {}
 

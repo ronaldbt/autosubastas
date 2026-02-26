@@ -185,9 +185,9 @@ docker exec autoventas-backend npx sequelize-cli db:seed:all
 - Traefik Dashboard: http://localhost:8080
 
 **Production:**
-- Frontend: https://autoventas360.com
-- Backend API: https://api.autoventas360.com
-- Traefik Dashboard: https://traefik.autoventas360.com
+- Frontend: https://autoremates.cl
+- Backend API: https://api.autoremates.cl
+- Traefik Dashboard: https://traefik.autoremates.cl
 
 ### Key Docker Files
 

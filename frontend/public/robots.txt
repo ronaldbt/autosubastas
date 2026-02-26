@@ -6,4 +6,4 @@ Disallow: /vendedor/
 Disallow: /dealer/
 Disallow: /perito/
 
-Sitemap: https://rematauto.cl/sitemap.xml
+Sitemap: https://autoremates.cl/sitemap.xml

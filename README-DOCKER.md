@@ -45,9 +45,9 @@ docker compose up -d --build
 - **PostgreSQL**: localhost:5432
 
 ### Producción
-- **Frontend**: https://autoventas360.cl
-- **Backend API**: https://api.autoventas360.cl
-- **Traefik Dashboard**: https://traefik.autoventas360.cl
+- **Frontend**: https://autoremates.cl
+- **Backend API**: https://api.autoremates.cl
+- **Traefik Dashboard**: https://traefik.autoremates.cl
 
 ## 🗄️ Base de Datos
 
@@ -117,6 +117,14 @@ DOMAIN=tu-dominio.com
 
 # Autenticación Traefik Dashboard
 TRAEFIK_AUTH=admin:$2y$10$hash_bcrypt_aqui
+
+# R2 Cloudflare (subida de fotos en producción) — ver backend/R2_SETUP.md
+R2_BUCKET_NAME=subastas
+R2_ACCOUNT_ID=...
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
+R2_ENDPOINT=...
+R2_PUBLIC_URL=...
 ```
 
 ### Generar hash para Traefik:

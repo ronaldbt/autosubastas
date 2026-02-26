@@ -3,11 +3,20 @@
     <!-- Main Content -->
     <main>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Countdown al próximo remate (viernes 15:00) -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+          <div class="text-center">
+            <p class="text-sm text-slate-500 font-semibold mb-1">Próximo remate</p>
+            <p class="text-xl font-black text-slate-900 mb-4">{{ nextFridayText }} · 15:00 hrs</p>
+            <CountdownTimer />
+          </div>
+        </div>
+
         <header class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <h2 class="text-3xl font-black text-slate-900 mb-1">Explorar Autos</h2>
             <p class="text-sm text-slate-500">
-              Busca y encuentra el auto perfecto para ti
+              Autos aprobados para el próximo remate y en remate ahora
             </p>
           </div>
         </header>
@@ -71,8 +80,20 @@
             @click="viewAuto(auto)"
           >
             <div class="h-40 bg-slate-100 relative overflow-hidden">
-              <div class="w-full h-full flex items-center justify-center">
+              <img
+                v-if="auto.imagenes && auto.imagenes[0]"
+                :src="getImageUrl(auto.imagenes[0])"
+                :alt="auto.marca + ' ' + auto.modelo"
+                class="w-full h-full object-cover"
+              />
+              <div v-else class="w-full h-full flex items-center justify-center">
                 <Car :size="40" class="text-slate-400" />
+              </div>
+              <div v-if="auto.estado === 'aprobado'" class="absolute top-3 left-3 z-10 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">
+                Próximo remate
+              </div>
+              <div v-else-if="auto.estado === 'en_remate'" class="absolute top-3 left-3 z-10 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">
+                En remate
               </div>
               <button
                 @click.stop="toggleFavorite(auto)"
@@ -105,7 +126,8 @@
               </div>
               <div class="flex items-center justify-between text-[10px] text-slate-500 mb-3">
                 <span class="font-semibold">{{ auto.totalPujas || 0 }} pujas</span>
-                <span v-if="auto.fechaFinRemate">Termina: {{ formatDate(auto.fechaFinRemate) }}</span>
+                <span v-if="auto.estado === 'en_remate' && auto.fechaFinRemate">Termina: {{ formatDate(auto.fechaFinRemate) }}</span>
+                <span v-else-if="auto.estado === 'aprobado'" class="text-amber-600 font-semibold">Próximo remate {{ nextFridayText }}</span>
               </div>
               <div class="flex gap-2">
                 <button
@@ -115,18 +137,22 @@
                   Ver Detalles
                 </button>
                 <button
+                  v-if="auto.estado === 'en_remate'"
                   @click.stop="pujar(auto)"
                   class="flex-1 px-3 py-2.5 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-xs font-bold"
                 >
                   Pujar
                 </button>
+                <span v-else class="flex-1 px-3 py-2.5 border-2 border-slate-200 text-slate-400 rounded-lg text-xs font-bold text-center">
+                  Puja el viernes
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         <div v-if="!loading && !error && filteredAutos.length === 0" class="text-center py-12">
-          <p class="text-slate-400 font-medium text-xs">No se encontraron autos en remate</p>
+          <p class="text-slate-400 font-medium text-xs">No hay autos aprobados ni en remate</p>
         </div>
 
         <!-- Paginación -->
@@ -144,9 +170,14 @@
 import { ref, computed, onMounted } from 'vue'
 import { Car, Heart } from 'lucide-vue-next'
 import { useAuth } from '~/composables/useAuth'
+import { useImageUrl } from '~/composables/useImageUrl'
+import { useNextFridayRemate } from '~/composables/useNextFridayRemate'
+import CountdownTimer from '~/components/CountdownTimer.vue'
 import { navigateTo } from 'nuxt/app'
 
 const { getAuthHeaders } = useAuth()
+const { getImageUrl } = useImageUrl()
+const { nextFridayText } = useNextFridayRemate()
 const config = useRuntimeConfig()
 const API_BASE = config.public.apiBase || 'http://localhost:5000/api'
 
@@ -168,26 +199,24 @@ const loadAutos = async () => {
   loading.value = true
   error.value = null
   try {
-    const response = await $fetch(`${API_BASE}/autos?estado=en_remate`, {
-      headers: getAuthHeaders()
-    })
-    
-    autos.value = response.map(auto => ({
-      ...auto,
-      esFavorito: false,
-      totalPujas: 0 // Se puede obtener de las pujas si es necesario
-    }))
-    
-    // Extraer marcas únicas para el filtro
+    const headers = getAuthHeaders()
+    const [enRemate, aprobados] = await Promise.all([
+      $fetch(`${API_BASE}/autos?estado=en_remate`, { headers }),
+      $fetch(`${API_BASE}/autos?estado=aprobado`, { headers })
+    ])
+    const merged = [
+      ...enRemate.map(a => ({ ...a, esFavorito: false, totalPujas: 0 })),
+      ...aprobados.map(a => ({ ...a, esFavorito: false, totalPujas: 0 }))
+    ]
+    autos.value = merged
+
     const marcasSet = new Set(autos.value.map(a => a.marca).filter(Boolean))
     marcas.value = Array.from(marcasSet).sort()
-    
-    // Cargar total de pujas para cada auto
+
     for (const auto of autos.value) {
+      if (auto.estado !== 'en_remate') continue
       try {
-        const pujas = await $fetch(`${API_BASE}/remates?autoId=${auto.id}`, {
-          headers: getAuthHeaders()
-        })
+        const pujas = await $fetch(`${API_BASE}/remates?autoId=${auto.id}`, { headers })
         auto.totalPujas = pujas.length
       } catch (err) {
         console.error('Error cargando pujas:', err)

@@ -1,15 +1,16 @@
 const multer = require('multer');
 const path = require('path');
 const sharp = require('sharp');
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand, CopyObjectCommand } = require('@aws-sdk/client-s3');
 const fs = require('fs').promises;
+const fsSync = require('fs');
 
 // Configurar cliente S3 para Cloudflare R2
 // Soporta tanto R2_* como NUXT_PUBLIC_R2_* (para compatibilidad)
 const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || process.env.NUXT_PUBLIC_R2_ACCOUNT_ID;
 const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || process.env.NUXT_PUBLIC_R2_ACCESS_KEY_ID;
 const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || process.env.NUXT_PUBLIC_R2_SECRET_ACCESS_KEY;
-const BUCKET_NAME = process.env.R2_BUCKET_NAME || process.env.NUXT_PUBLIC_R2_BUCKET;
+const BUCKET_NAME = process.env.R2_BUCKET_NAME || process.env.NUXT_PUBLIC_R2_BUCKET || 'subastas';
 const R2_ENDPOINT = process.env.R2_ENDPOINT || process.env.NUXT_PUBLIC_R2_ENDPOINT;
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || `https://pub-${R2_ACCOUNT_ID}.r2.dev`;
 
@@ -23,15 +24,27 @@ const s3Client = new S3Client({
 });
 
 // Configuración de almacenamiento temporal (para procesar antes de subir)
+const tempDir = path.join(process.cwd(), 'uploads', 'temp');
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/temp/');
+    try {
+      fsSync.mkdirSync(tempDir, { recursive: true });
+      cb(null, tempDir);
+    } catch (err) {
+      cb(err);
+    }
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, 'temp-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
+
+// Resolver path temporal de forma absoluta para lectura posterior
+const getTempPath = (filePath) => {
+  if (path.isAbsolute(filePath)) return filePath;
+  return path.join(process.cwd(), filePath);
+};
 
 // Filtro de archivos
 const fileFilter = (req, file, cb) => {
@@ -65,7 +78,8 @@ const uploadToR2 = async (filePath, key, contentType = 'image/webp') => {
       publicUrlBase: R2_PUBLIC_URL
     });
     
-    const fileContent = await fs.readFile(filePath);
+    const absolutePath = getTempPath(filePath);
+    const fileContent = await fs.readFile(absolutePath);
     console.log('[uploadToR2] Archivo leído, tamaño:', fileContent.length, 'bytes');
     
     const command = new PutObjectCommand({
@@ -109,6 +123,47 @@ const deleteFromR2 = async (key) => {
   }
 };
 
+// Función para copiar objeto dentro del mismo bucket (reorganizar a carpeta por auto)
+const copyInR2 = async (sourceKey, destKey) => {
+  try {
+    const copySource = encodeURIComponent(`${BUCKET_NAME}/${sourceKey}`);
+    const command = new CopyObjectCommand({
+      Bucket: BUCKET_NAME,
+      CopySource: copySource,
+      Key: destKey,
+      ContentType: 'image/webp',
+    });
+    await s3Client.send(command);
+    return `${R2_PUBLIC_URL}/${destKey}`;
+  } catch (error) {
+    console.error('[copyInR2] Error copiando en R2:', { sourceKey, destKey, error: error.message });
+    throw error;
+  }
+};
+
+/**
+ * Reorganiza las imágenes subidas en R2 a una carpeta por auto: autos/{autoId}/1.webp, 2.webp, ...
+ * Copia cada key a autos/{autoId}/{index}.webp, elimina el objeto antiguo y retorna las nuevas URLs.
+ */
+const reorganizeR2KeysForAuto = async (uploadedKeys, autoId) => {
+  if (!uploadedKeys || uploadedKeys.length === 0) return [];
+  const prefix = `autos/${autoId}`;
+  const newUrls = [];
+  for (let i = 0; i < uploadedKeys.length; i++) {
+    const oldKey = uploadedKeys[i];
+    const newKey = `${prefix}/${i + 1}.webp`;
+    const newUrl = await copyInR2(oldKey, newKey);
+    newUrls.push(newUrl);
+    try {
+      await deleteFromR2(oldKey);
+    } catch (e) {
+      console.warn('[reorganizeR2KeysForAuto] No se pudo eliminar key antigua:', oldKey, e.message);
+    }
+  }
+  console.log('[r2Upload] Reorganizado en R2:', prefix, 'URLs:', newUrls.length);
+  return newUrls;
+};
+
 // Middleware para convertir y subir imágenes a R2
 const processAndUploadToR2 = async (req, res, next) => {
   if (!req.files || req.files.length === 0) {
@@ -122,15 +177,15 @@ const processAndUploadToR2 = async (req, res, next) => {
   }
 
   try {
-    // Asegurar que existe el directorio temp
-    await fs.mkdir('uploads/temp', { recursive: true });
+    // Asegurar que existe el directorio temp (por si multer usó otra cwd)
+    await fs.mkdir(tempDir, { recursive: true });
 
     const uploadedFiles = [];
     const uploadedFilesByField = {}; // Mapear fieldname -> URLs
     const tipo = req.body.tipo || 'autos'; // 'autos' o 'peritajes'
     
     for (const file of req.files) {
-      const tempPath = file.path;
+      const tempPath = getTempPath(file.path);
       const originalExt = path.extname(file.originalname).toLowerCase();
       
       let finalPath;
@@ -145,7 +200,7 @@ const processAndUploadToR2 = async (req, res, next) => {
       } else {
         // Convertir a WebP
         const webpFilename = file.filename.replace(/\.(jpg|jpeg|png|gif)$/i, '.webp');
-        webpPath = path.join('uploads/temp', webpFilename);
+        webpPath = path.join(tempDir, webpFilename);
         
         await sharp(tempPath)
           .webp({ quality: 85 })
@@ -234,22 +289,23 @@ const processLocalUpload = async (req, res, next) => {
   }
 
   try {
-    await fs.mkdir('uploads', { recursive: true });
-    await fs.mkdir('uploads/temp', { recursive: true });
+    const uploadsDir = path.join(process.cwd(), 'uploads');
+    await fs.mkdir(uploadsDir, { recursive: true });
+    await fs.mkdir(tempDir, { recursive: true });
 
     for (const file of req.files) {
-      const tempPath = file.path;
+      const tempPath = getTempPath(file.path);
       const originalExt = path.extname(file.originalname).toLowerCase();
       
       if (originalExt === '.webp') {
         // Si ya es WebP, mover directamente
-        const finalPath = path.join('uploads', file.filename);
+        const finalPath = path.join(uploadsDir, file.filename);
         await fs.rename(tempPath, finalPath);
         file.path = finalPath;
       } else {
         // Convertir a WebP
         const webpFilename = file.filename.replace(/\.(jpg|jpeg|png|gif)$/i, '.webp');
-        const webpPath = path.join('uploads', webpFilename);
+        const webpPath = path.join(uploadsDir, webpFilename);
 
         await sharp(tempPath)
           .webp({ quality: 85 })
@@ -276,6 +332,10 @@ module.exports = {
   processLocalUpload,
   uploadToR2,
   deleteFromR2,
-  s3Client
+  copyInR2,
+  reorganizeR2KeysForAuto,
+  s3Client,
+  BUCKET_NAME,
+  tempDir
 };
 

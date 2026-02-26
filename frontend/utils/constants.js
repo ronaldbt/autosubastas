@@ -39,7 +39,7 @@ export const TESTIMONIALS = [
     id: 't1',
     name: 'María González',
     role: 'Toyota Corolla 2017 • Vendido en $8.9M',
-    text: 'Llevaba 3 meses tratando de vender mi Corolla por Chileautos. En RematAuto lo vendí en 2 horas y recibí $400.000 más de lo que me ofrecían.',
+    text: 'Llevaba 3 meses tratando de vender mi Corolla por Chileautos. En AutoRemates lo vendí por remate online y recibí $400.000 más de lo que me ofrecían.',
     rating: 5,
     image: 'https://picsum.photos/seed/user1/100/100',
   },

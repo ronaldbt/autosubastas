@@ -10,12 +10,13 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxtjs/seo',
-    '@nuxtjs/sitemap'
+    '@nuxtjs/sitemap',
+    '@nuxt/content'
   ],
   site: {
-    url: process.env.NUXT_PUBLIC_SITE_URL || 'https://autoventas360.cl',
-    name: 'AutoVentas360',
-    description: 'El primer remate online de autos en Chile con inspección profesional incluida. Vende tu auto en 2 horas con seguridad, rapidez y transparencia.',
+    url: process.env.NUXT_PUBLIC_SITE_URL || 'https://autoremates.cl',
+    name: 'AutoRemates',
+    description: 'Remate de autos y subasta de autos online en Chile. Remates de autos en Santiago, Concepción e Iquique. Autos chocados, usados, de aseguradora. Inspección profesional incluida.',
     defaultLocale: 'es-CL'
   },
   typescript: {
@@ -23,8 +24,13 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.autoventas360.cl/api',
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://autoventas360.cl'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.autoremates.cl/api',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://autoremates.cl'
+    }
+  },
+  content: {
+    database: {
+      type: 'sqlite'
     }
   },
   nitro: {
@@ -33,7 +39,7 @@ export default defineNuxtConfig({
     }
   },
   sitemap: {
-    hostname: process.env.NUXT_PUBLIC_SITE_URL || 'https://autoventas360.cl',
+    hostname: process.env.NUXT_PUBLIC_SITE_URL || 'https://autoremates.cl',
     exclude: [
       '/admin/**',
       '/superadmin/**',

@@ -154,20 +154,20 @@ definePageMeta({
 })
 
 const config = useRuntimeConfig()
-const siteUrl = config.public.siteUrl || 'https://rematauto.cl'
+const siteUrl = config.public.siteUrl || 'https://autoremates.cl'
 const route = useRoute()
 
 // SEO Meta Tags
 useSeoMeta({
-  title: 'Registro - Crea tu Cuenta en RematAuto Chile',
-  description: 'Regístrate en RematAuto Chile para vender o comprar autos en remate. Crea tu cuenta gratis y participa en nuestros remates online con inspección profesional incluida.',
-  keywords: 'registro rematauto, crear cuenta remate autos, registrarse vender auto chile, cuenta gratis remate autos',
-  ogTitle: 'Registro - Crea tu Cuenta en RematAuto Chile',
-  ogDescription: 'Regístrate en RematAuto Chile para vender o comprar autos en remate. Crea tu cuenta gratis.',
+  title: 'Registro - Crea tu Cuenta en AutoRemates Chile',
+  description: 'Regístrate en AutoRemates Chile para vender o comprar autos en remate. Crea tu cuenta gratis y participa en nuestros remates online con inspección profesional incluida.',
+  keywords: 'registro autoremates, crear cuenta remate autos, registrarse vender auto chile, cuenta gratis remate autos',
+  ogTitle: 'Registro - Crea tu Cuenta en AutoRemates Chile',
+  ogDescription: 'Regístrate en AutoRemates Chile para vender o comprar autos en remate. Crea tu cuenta gratis.',
   ogImage: siteUrl + '/subasta.png',
   ogImageWidth: 1200,
   ogImageHeight: 630,
-  ogImageAlt: 'Registro - RematAuto Chile',
+  ogImageAlt: 'Registro - AutoRemates Chile',
   ogUrl: siteUrl + route.path,
   ogType: 'website'
 })
