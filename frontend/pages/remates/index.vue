@@ -45,7 +45,6 @@
               </div>
 
               <div class="divide-y divide-gray-100">
-                <!-- Tipo auto -->
                 <FilterSection v-model:open="filterOpen.tipoAuto" title="Tipo auto">
                   <label
                     v-for="opt in filterOptions.tipoAuto"
@@ -62,8 +61,6 @@
                     <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
                   </label>
                 </FilterSection>
-
-                <!-- Marca -->
                 <FilterSection v-model:open="filterOpen.marca" title="Marca">
                   <div class="max-h-48 overflow-y-auto">
                     <label
@@ -82,8 +79,6 @@
                     </label>
                   </div>
                 </FilterSection>
-
-                <!-- Modelo -->
                 <FilterSection v-model:open="filterOpen.modelo" title="Modelo">
                   <div class="max-h-48 overflow-y-auto">
                     <label
@@ -102,8 +97,6 @@
                     </label>
                   </div>
                 </FilterSection>
-
-                <!-- Año -->
                 <FilterSection v-model:open="filterOpen.anio" title="Año">
                   <div class="max-h-48 overflow-y-auto">
                     <label
@@ -122,8 +115,6 @@
                     </label>
                   </div>
                 </FilterSection>
-
-                <!-- Combustible -->
                 <FilterSection v-model:open="filterOpen.combustible" title="Combustible">
                   <label
                     v-for="opt in filterOptions.combustible"
@@ -140,8 +131,6 @@
                     <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
                   </label>
                 </FilterSection>
-
-                <!-- Tracción -->
                 <FilterSection v-model:open="filterOpen.traccion" title="Tracción">
                   <label
                     v-for="opt in filterOptions.traccion"
@@ -159,8 +148,6 @@
                   </label>
                   <p v-if="filterOptions.traccion.length === 0" class="px-4 py-2 text-gray-400 text-sm">Sin datos</p>
                 </FilterSection>
-
-                <!-- Transmisión -->
                 <FilterSection v-model:open="filterOpen.transmision" title="Transmisión">
                   <label
                     v-for="opt in filterOptions.transmision"
@@ -178,7 +165,6 @@
                   </label>
                 </FilterSection>
               </div>
-
               <div class="p-4 border-t border-gray-100">
                 <button
                   @click="clearFilters"
@@ -191,18 +177,13 @@
             </div>
           </aside>
 
-          <!-- Contenido principal (derecha) -->
           <div class="flex-1 min-w-0">
             <p class="mb-4 text-gray-600 text-sm">Cada remate tiene su propio plazo. Inicia sesión como comprador para pujar.</p>
-
-            <!-- Grid de autos -->
             <div v-if="loading" class="flex justify-center py-20">
               <div class="animate-spin w-12 h-12 border-4 border-brand-orange border-t-transparent rounded-full" />
             </div>
-
             <template v-else>
               <p class="text-gray-600 mb-6 font-semibold">{{ filteredCars.length }} Resultados</p>
-
               <div v-if="filteredCars.length === 0" class="text-center py-16 bg-gray-50 rounded-2xl">
                 <p class="text-gray-600 text-lg">
                   {{ activeFiltersCount > 0 ? 'No hay autos disponibles con los filtros seleccionados.' : 'No hay remates activos en este momento.' }}
@@ -216,7 +197,6 @@
                   Limpiar filtros
                 </button>
               </div>
-
               <div v-else class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 <div
                   v-for="car in filteredCars"
@@ -258,36 +238,37 @@
                       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
                     />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                      <NuxtLink
-                        :to="`/remates/${car.id}`"
-                        class="w-full bg-white text-gray-900 font-bold py-2 rounded-lg shadow hover:bg-brand-orange hover:text-white transition-colors text-center block text-sm"
-                      >
-                        Ver detalles y pujar
-                      </NuxtLink>
-                    </div>
                   </div>
                   <div class="p-4 flex-1 flex flex-col">
                     <h3 class="text-lg font-bold text-gray-900 mb-1">{{ car.title }}</h3>
-                    <p class="text-gray-500 text-sm mb-3">{{ car.year }} · {{ car.fuelLabel }}</p>
-                    <div class="flex flex-wrap gap-1.5 mb-4">
+                    <p class="text-gray-500 text-sm mb-3">
+                      {{ car.year }} · {{ car.fuelLabel }}<template v-if="car.km != null && car.km > 0"> · {{ formatKilometrajeChile(car.km) }}</template>
+                    </p>
+                    <div class="flex flex-wrap gap-1.5 mb-3">
                       <span v-if="car.transmission && car.transmission !== '—'" class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded uppercase">
                         {{ car.transmission }}
                       </span>
-                      <span v-if="car.km < 50000" class="text-xs font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">POCO KILOMETRAJE</span>
                     </div>
                     <div v-if="car.ultimaOferta != null" class="mb-3 p-2.5 bg-amber-50 rounded-lg flex items-center justify-between gap-2">
                       <span class="text-xs font-semibold text-amber-800 flex items-center gap-1.5">
                         <Wrench :size="14" />
                         Última oferta
                       </span>
-                      <span class="text-base font-bold text-gray-900">${{ (car.ultimaOferta / 1000).toLocaleString('es-CL') }}</span>
+                      <span class="text-base font-bold text-gray-900">${{ formatPriceChile(car.ultimaOferta) }}</span>
                     </div>
-                    <div class="mt-auto pt-3 border-t border-gray-100">
-                      <span class="text-xs text-gray-500">Mín</span>
-                      <p class="text-xl font-bold text-gray-900">
-                        ${{ (car.reservePrice / 1000).toLocaleString('es-CL') }}
-                      </p>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex flex-wrap items-end justify-between gap-3">
+                      <div>
+                        <span class="text-xs text-gray-500">Mín</span>
+                        <p class="text-xl font-bold text-gray-900">
+                          ${{ formatPriceChile(car.reservePrice) }}
+                        </p>
+                      </div>
+                      <NuxtLink
+                        :to="`/dealer/remates-live-${String(car.id)}`"
+                        class="bg-brand-orange hover:bg-orange-600 text-white font-bold py-2.5 px-5 rounded-lg text-center text-sm transition-colors shrink-0 inline-block"
+                      >
+                        Ver detalles y pujar
+                      </NuxtLink>
                     </div>
                   </div>
                 </div>
@@ -296,7 +277,6 @@
           </div>
         </div>
 
-        <!-- CTA -->
         <section class="mt-16 bg-gray-50 rounded-2xl p-8 text-center">
           <h2 class="text-2xl font-bold text-gray-900 mb-4">¿Quieres comprar en el remate?</h2>
           <p class="text-gray-600 mb-6 max-w-xl mx-auto">
@@ -325,6 +305,7 @@ import Footer from '~/components/Footer.vue'
 import FilterSection from '~/components/FilterSection.vue'
 import RemateCountdownBadge from '~/components/RemateCountdownBadge.vue'
 import { useImageUrl } from '~/composables/useImageUrl'
+import { formatPriceChile, formatKilometrajeChile } from '~/utils/format'
 
 const config = useRuntimeConfig()
 const API_BASE = config.public.apiBase || 'http://localhost:5000/api'
@@ -348,7 +329,7 @@ function toggleFavorite(id) {
 }
 
 function shareCar(car) {
-  const url = `${siteUrl}/remates/${car.id}`
+  const url = `${siteUrl}/dealer/remates-live-${car.id}`
   const text = `${car.title} ${car.year} – Remate AutoRemates`
   if (navigator.share) {
     navigator.share({ title: text, url, text }).catch(() => {})
@@ -433,7 +414,6 @@ function buildFilterOptions(cars) {
     }
   })
   const tipoAuto = Object.entries(tipoCounts).map(([value, count]) => ({ value, label: value, count }))
-
   const marcaCounts = {}
   cars.forEach(c => {
     const v = c.marca || c.title?.split(' ')[0]
@@ -443,7 +423,6 @@ function buildFilterOptions(cars) {
     }
   })
   const marca = Object.entries(marcaCounts).map(([value, count]) => ({ value, label: value, count })).sort((a, b) => b.count - a.count)
-
   const modeloCounts = {}
   cars.forEach(c => {
     const v = c.modelo || c.title
@@ -465,14 +444,13 @@ function buildFilterOptions(cars) {
     if (v) combCounts[v] = (combCounts[v] || 0) + 1
   })
   const combustible = Object.entries(combCounts).map(([value, count]) => ({ value, label: value, count })).sort((a, b) => b.count - a.count)
-  const traccion = [] // no hay datos
+  const traccion = []
   const transCounts = {}
   cars.forEach(c => {
     const v = c.transmission
     if (v && v !== '—') transCounts[v] = (transCounts[v] || 0) + 1
   })
   const transmision = Object.entries(transCounts).map(([value, count]) => ({ value, label: value, count })).sort((a, b) => b.count - a.count)
-
   return { tipoAuto, marca, modelo, anio, combustible, traccion, transmision }
 }
 
@@ -480,29 +458,13 @@ const filterOptions = computed(() => buildFilterOptions(allCars.value))
 
 const filteredCars = computed(() => {
   let list = [...allCars.value]
-
-  if (filters.tipoAuto.length) {
-    list = list.filter(c => filters.tipoAuto.includes(c.tipoLabel || TIPO_LABELS[c.tipoTransporte]))
-  }
-  if (filters.marca.length) {
-    list = list.filter(c => c.marca && filters.marca.includes(c.marca))
-  }
-  if (filters.modelo.length) {
-    list = list.filter(c => filters.modelo.includes(c.modelo || c.title))
-  }
-  if (filters.anio.length) {
-    list = list.filter(c => filters.anio.includes(String(c.year)))
-  }
-  if (filters.combustible.length) {
-    list = list.filter(c => filters.combustible.includes(c.fuelLabel))
-  }
-  if (filters.traccion.length) {
-    list = list.filter(c => c.traccion && filters.traccion.includes(c.traccion))
-  }
-  if (filters.transmision.length) {
-    list = list.filter(c => c.transmission && filters.transmision.includes(c.transmission))
-  }
-
+  if (filters.tipoAuto.length) list = list.filter(c => filters.tipoAuto.includes(c.tipoLabel || TIPO_LABELS[c.tipoTransporte]))
+  if (filters.marca.length) list = list.filter(c => c.marca && filters.marca.includes(c.marca))
+  if (filters.modelo.length) list = list.filter(c => filters.modelo.includes(c.modelo || c.title))
+  if (filters.anio.length) list = list.filter(c => filters.anio.includes(String(c.year)))
+  if (filters.combustible.length) list = list.filter(c => filters.combustible.includes(c.fuelLabel))
+  if (filters.traccion.length) list = list.filter(c => c.traccion && filters.traccion.includes(c.traccion))
+  if (filters.transmision.length) list = list.filter(c => c.transmission && filters.transmision.includes(c.transmission))
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase()
     list = list.filter(c =>
@@ -511,12 +473,10 @@ const filteredCars = computed(() => {
       String(c.year).includes(q)
     )
   }
-
   if (sortBy.value === 'precio-asc') list.sort((a, b) => a.reservePrice - b.reservePrice)
   else if (sortBy.value === 'precio-desc') list.sort((a, b) => b.reservePrice - a.reservePrice)
   else if (sortBy.value === 'anio-desc') list.sort((a, b) => (b.year || 0) - (a.year || 0))
   else if (sortBy.value === 'anio-asc') list.sort((a, b) => (a.year || 0) - (b.year || 0))
-
   return list
 })
 
@@ -532,7 +492,6 @@ async function fetchCars() {
     const mapped = (Array.isArray(list) ? list : []).map(mapAutoToCard)
     allCars.value = mapped
   } catch (e) {
-    console.warn('[remates] Error cargando autos:', e)
     allCars.value = []
   } finally {
     loading.value = false

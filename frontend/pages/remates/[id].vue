@@ -40,16 +40,12 @@
               <span class="bg-brand-orange text-white text-xs font-bold px-2 py-1 rounded uppercase">En remate</span>
             </div>
             <h1 class="text-3xl font-extrabold text-gray-900 mb-2">{{ auto.marca }} {{ auto.modelo }}</h1>
-            <p class="text-gray-500 text-lg mb-6">{{ auto.anio }} · {{ fuelLabel }}</p>
+            <p class="text-gray-500 text-lg mb-6">{{ auto.anio }} · {{ fuelLabel }}<template v-if="auto.kilometraje != null && auto.kilometraje > 0"> · {{ formatKilometrajeChile(auto.kilometraje) }}</template></p>
 
             <div class="grid grid-cols-2 gap-4 mb-6">
               <div class="p-4 bg-gray-50 rounded-xl">
-                <p class="text-xs text-gray-500 uppercase font-semibold">Kilometraje</p>
-                <p class="text-lg font-bold text-gray-900">{{ formatNumber(auto.kilometraje) }} km</p>
-              </div>
-              <div class="p-4 bg-gray-50 rounded-xl">
                 <p class="text-xs text-gray-500 uppercase font-semibold">Precio mínimo</p>
-                <p class="text-lg font-bold text-gray-900">${{ formatNumber(auto.precioBase || auto.precioActual) }}</p>
+                <p class="text-lg font-bold text-gray-900">${{ formatPriceChile(auto.precioBase || auto.precioActual) }}</p>
               </div>
             </div>
 
@@ -58,7 +54,7 @@
                 <Wrench :size="20" />
                 Última oferta
               </span>
-              <span class="text-2xl font-bold text-gray-900">${{ formatNumber(auto.ultimaOferta) }}</span>
+              <span class="text-2xl font-bold text-gray-900">${{ formatPriceChile(auto.ultimaOferta) }}</span>
             </div>
 
             <p class="text-gray-600 mb-8">{{ auto.descripcion || 'Vehículo inspeccionado, en buen estado. Participa en el remate pujando por este auto.' }}</p>
@@ -92,6 +88,14 @@ import Header from '~/components/Header.vue'
 import Footer from '~/components/Footer.vue'
 import RemateCountdownBadge from '~/components/RemateCountdownBadge.vue'
 import { useImageUrl } from '~/composables/useImageUrl'
+import { formatPriceChile, formatKilometrajeChile } from '~/utils/format'
+
+// Página pública: ver detalle del remate sin login; para pujar se pide login en la misma página
+definePageMeta({ auth: false })
+
+if (typeof window !== 'undefined') {
+  console.log('[Remates Detalle] Script setup ejecutado (página /remates/[id])')
+}
 
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -113,22 +117,23 @@ const fuelLabel = computed(() => {
   return map[c] || c || '—'
 })
 
-function formatNumber(num) {
-  if (num == null) return '0'
-  return new Intl.NumberFormat('es-CL').format(num)
-}
-
 onMounted(async () => {
   const id = route.params.id
+  console.log('[Remates Detalle] onMounted route.params=', route.params, 'id=', id, 'path=', route.path, 'API_BASE=', API_BASE)
   if (!id) {
     error.value = 'ID no válido'
     loading.value = false
+    console.warn('[Remates Detalle] ID no válido')
     return
   }
   try {
-    auto.value = await $fetch(`${API_BASE}/autos/${id}`)
+    const url = `${API_BASE}/autos/${id}`
+    console.log('[Remates Detalle] Fetching', url)
+    auto.value = await $fetch(url)
+    console.log('[Remates Detalle] Auto cargado OK', auto.value?.id, auto.value?.marca, auto.value?.modelo)
   } catch (e) {
-    error.value = e.data?.message || 'No se pudo cargar el remate'
+    console.error('[Remates Detalle] Error fetch', e)
+    error.value = e.data?.message || e.message || 'No se pudo cargar el remate'
   } finally {
     loading.value = false
   }

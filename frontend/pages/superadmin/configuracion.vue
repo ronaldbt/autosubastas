@@ -243,8 +243,8 @@ const sections = [
 ]
 
 const config = ref({
-  nombreSistema: 'Autoventas',
-  emailContacto: 'contacto@autoventas.com',
+  nombreSistema: 'AutoRemates',
+  emailContacto: 'contacto@autoremates.cl',
   telefonoContacto: '+56912345678',
   zonaHoraria: 'America/Santiago',
   duracionMinima: 7,

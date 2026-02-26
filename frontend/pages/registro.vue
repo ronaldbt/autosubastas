@@ -3,7 +3,7 @@
     <div class="max-w-md w-full">
       <!-- Logo/Header -->
       <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">Autoventas</h1>
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">AutoRemates</h1>
         <p class="text-gray-600">Crea tu cuenta</p>
       </div>
 

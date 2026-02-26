@@ -2312,7 +2312,7 @@ const generatePDF = async () => {
     doc.setTextColor(255, 255, 255)
     doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
-    doc.text('Autoventas', margin, 18)
+    doc.text('AutoRemates', margin, 18)
     
     // Subtítulo en header
     doc.setFontSize(10)
@@ -3013,7 +3013,7 @@ const generatePDF = async () => {
       doc.setTextColor(...darkBlue)
       doc.setFontSize(10)
       doc.setFont('helvetica', 'bold')
-      doc.text('Autoventas', margin, pageHeight - 8)
+      doc.text('AutoRemates', margin, pageHeight - 8)
       
       doc.setTextColor(...mediumGray)
       doc.setFontSize(8)

@@ -185,12 +185,13 @@
             </div>
           </div>
           <div class="flex flex-col space-y-2 ml-4">
-            <button
-              @click="viewRemate(auto.id)"
-              class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm"
+            <NuxtLink
+              :to="`/admin/remates/${auto.id}`"
+              class="inline-block text-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium"
+              @click="(e) => { console.log('[Admin Remates] Ver Remate click, auto.id=', auto.id, 'href=', `/admin/remates/${auto.id}`) }"
             >
               Ver Remate
-            </button>
+            </NuxtLink>
             <button
               v-if="auto.estado === 'en_remate'"
               @click="endRemate(auto.id)"
@@ -213,7 +214,6 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { navigateTo } from 'nuxt/app'
 import { Gavel, Clock, HandCoins, DollarSign, Car } from 'lucide-vue-next'
 import { useAuth } from '~/composables/useAuth'
 import { useImageUrl } from '~/composables/useImageUrl'
@@ -364,13 +364,14 @@ const getTimeRemaining = (fechaFin) => {
   const ahora = new Date()
   const fin = new Date(fechaFin)
   const diff = fin - ahora
-  
   if (diff <= 0) return 'Finalizado'
-  
-  const minutos = Math.floor(diff / 60000)
-  const segundos = Math.floor((diff % 60000) / 1000)
-  
-  return `${minutos}:${segundos.toString().padStart(2, '0')}`
+  const d = Math.floor(diff / (24 * 60 * 60 * 1000))
+  const h = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000))
+  const m = Math.floor((diff % (60 * 60 * 1000)) / 60000)
+  const s = Math.floor((diff % 60000) / 1000)
+  if (d > 0) return `${d}d ${h}h ${m}m`
+  if (h > 0) return `${h}h ${m}m ${s}s`
+  return `${m}:${s.toString().padStart(2, '0')}`
 }
 
 const getTimeRemainingClass = (fechaFin) => {
@@ -378,17 +379,18 @@ const getTimeRemainingClass = (fechaFin) => {
   const ahora = new Date()
   const fin = new Date(fechaFin)
   const diff = fin - ahora
-  const minutos = Math.floor(diff / 60000)
-  
+  const horas = diff / (60 * 60 * 1000)
   if (diff <= 0) return 'text-red-600 font-bold'
-  if (minutos < 5) return 'text-red-600 font-bold'
-  if (minutos < 10) return 'text-orange-600 font-semibold'
+  if (horas < 1 / 60) return 'text-red-600 font-bold'
+  if (horas < 1) return 'text-orange-600 font-semibold'
   return 'text-green-600'
 }
 
-const loadRemates = async () => {
-  loading.value = true
-  error.value = null
+const loadRemates = async (isRefresh = false) => {
+  if (!isRefresh) {
+    loading.value = true
+    error.value = null
+  }
   try {
     // Traer autos que estén en remate O que hayan sido vendidos (que hayan tenido remate)
     // Hacer dos peticiones separadas ya que el endpoint solo acepta un estado a la vez
@@ -450,16 +452,13 @@ const loadRemates = async () => {
     }
     
     remates.value = uniqueAutos
+    console.log('[Admin Remates] loadRemates OK, count=', uniqueAutos.length, 'ids=', uniqueAutos.map(a => a.id))
   } catch (err) {
     console.error('Error cargando remates:', err)
-    error.value = err.data?.message || 'Error al cargar remates'
+    if (!isRefresh) error.value = err.data?.message || 'Error al cargar remates'
   } finally {
     loading.value = false
   }
-}
-
-const viewRemate = (autoId) => {
-  navigateTo(`/admin/remates/${autoId}`)
 }
 
 const endRemate = async (autoId) => {
@@ -479,21 +478,21 @@ const endRemate = async (autoId) => {
 }
 
 onMounted(() => {
-  loadRemates()
-  // Actualizar cada 3 segundos solo si hay remates activos
+  console.log('[Admin Remates] Página montada, cargando remates')
+  loadRemates(false)
+  // Actualizar cada 5 segundos solo si hay remates activos (sin poner loading para no bloquear clics)
   updateInterval = setInterval(() => {
-    // Solo actualizar si hay remates en estado 'en_remate' y que aún no hayan terminado
     const hayRematesActivos = remates.value.some(a => {
       if (a.estado !== 'en_remate') return false
       if (a.fechaFinRemate) {
         const ahora = new Date()
         const fin = new Date(a.fechaFinRemate)
-        return fin > ahora // Solo activo si aún no ha terminado
+        return fin > ahora
       }
       return true
     })
     if (hayRematesActivos) {
-      loadRemates()
+      loadRemates(true)
     } else {
       // Si no hay remates activos, detener actualizaciones
       if (updateInterval) {

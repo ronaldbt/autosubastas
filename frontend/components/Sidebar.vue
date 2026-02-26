@@ -14,7 +14,7 @@
           <Car :size="20" class="text-white" />
         </div>
         <span class="text-xl font-black text-slate-900 tracking-tighter">
-          Auto<span class="text-blue-600">ventas</span>
+          Auto<span class="text-blue-600">remates</span>
         </span>
       </div>
       <div v-else class="flex justify-center w-full">

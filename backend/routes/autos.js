@@ -840,7 +840,7 @@ router.put('/:id/iniciar-remate', auth, async (req, res) => {
       return res.status(400).json({ message: 'Solo se pueden enviar a subasta autos aprobados o disponibles' });
     }
 
-    // Duración: body.dias (por defecto 4) o body.fechaFinRemate explícita
+    // Duración: body.dias (por defecto 4) o body.fechaFinRemate explícita. Se usa fin de día para que la cuenta regresiva muestre "X días" correctamente.
     const fechaInicio = new Date();
     let fechaFin;
     if (req.body.fechaFinRemate) {
@@ -849,6 +849,8 @@ router.put('/:id/iniciar-remate', auth, async (req, res) => {
       const dias = Math.max(1, Math.min(90, parseInt(req.body.dias, 10) || 4));
       fechaFin = new Date(fechaInicio);
       fechaFin.setDate(fechaFin.getDate() + dias);
+      // Fijar hora a fin de día (23:59:59) para que el remate dure exactamente N días completos y la cuenta regresiva sea correcta
+      fechaFin.setHours(23, 59, 59, 999);
     }
 
     auto.estado = 'en_remate';

@@ -7,6 +7,10 @@
 </template>
 
 <script setup>
+// Log de versión para confirmar que el contenedor/front es el último desplegado
+if (typeof window !== 'undefined') {
+  console.log('[AutoRemates] Frontend build 2026-02-26-debug – si ves este mensaje, el contenedor está actualizado')
+}
 useHead({
   htmlAttrs: {
     lang: 'es-CL'

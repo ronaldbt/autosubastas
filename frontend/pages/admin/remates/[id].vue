@@ -327,17 +327,18 @@ const getImageUrl = (imagePath) => {
 }
 
 const getTimeRemaining = (fechaFin) => {
-  if (!fechaFin) return '00:00'
+  if (!fechaFin) return '—'
   const ahora = new Date()
   const fin = new Date(fechaFin)
   const diff = fin - ahora
-  
-  if (diff <= 0) return '00:00'
-  
-  const minutos = Math.floor(diff / 60000)
-  const segundos = Math.floor((diff % 60000) / 1000)
-  
-  return `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`
+  if (diff <= 0) return 'Finalizado'
+  const d = Math.floor(diff / (24 * 60 * 60 * 1000))
+  const h = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000))
+  const m = Math.floor((diff % (60 * 60 * 1000)) / 60000)
+  const s = Math.floor((diff % 60000) / 1000)
+  if (d > 0) return `${d}d ${h}h ${m}m ${s}s`
+  if (h > 0) return `${h}h ${m}m ${s}s`
+  return `${m}m ${s}s`
 }
 
 const getTimeRemainingClass = (fechaFin) => {
@@ -345,11 +346,10 @@ const getTimeRemainingClass = (fechaFin) => {
   const ahora = new Date()
   const fin = new Date(fechaFin)
   const diff = fin - ahora
-  const minutos = Math.floor(diff / 60000)
-  
+  const horas = diff / (60 * 60 * 1000)
   if (diff <= 0) return 'text-red-600'
-  if (minutos < 5) return 'text-red-600 animate-pulse'
-  if (minutos < 10) return 'text-orange-600'
+  if (horas < 1 / 60) return 'text-red-600 animate-pulse'
+  if (horas < 1) return 'text-orange-600'
   return 'text-green-600'
 }
 
@@ -365,19 +365,25 @@ const formatDateTime = (date) => {
   })
 }
 
-const loadAuto = async () => {
-  loading.value = true
-  error.value = null
+const loadAuto = async (isRefresh = false) => {
+  if (!isRefresh) {
+    loading.value = true
+    error.value = null
+  }
   try {
     const autoId = route.params.id
     const response = await $fetch(`${API_BASE}/autos/${autoId}`, {
       headers: getAuthHeaders()
     })
-    auto.value = response
+    if (isRefresh && auto.value) {
+      Object.assign(auto.value, response)
+    } else {
+      auto.value = response
+    }
     await loadPujas()
   } catch (err) {
     console.error('Error cargando auto:', err)
-    error.value = err.data?.message || 'Error al cargar el auto'
+    if (!isRefresh) error.value = err.data?.message || 'Error al cargar el auto'
   } finally {
     loading.value = false
   }
@@ -438,27 +444,25 @@ const realizarPuja = async () => {
 onMounted(() => {
   loadAuto()
   
-  // Actualizar pujas cada 2 segundos solo si el remate está activo
+  // Actualizar pujas cada 5 segundos solo si el remate está activo (sin bloquear la UI)
   updateInterval = setInterval(() => {
     if (auto.value && auto.value.estado === 'en_remate' && !isFinished.value) {
       loadPujas()
     } else {
-      // Si el remate terminó, detener actualizaciones
       if (updateInterval) {
         clearInterval(updateInterval)
         updateInterval = null
       }
     }
-  }, 2000)
+  }, 5000)
   
-  // Actualizar contador cada segundo solo si el remate está activo
+  // Comprobar cada 2 segundos si el remate terminó (sin recargar todo el tiempo)
   countdownInterval = setInterval(() => {
     if (auto.value && auto.value.fechaFinRemate && auto.value.estado === 'en_remate') {
       const ahora = new Date()
       const fin = new Date(auto.value.fechaFinRemate)
       if (fin <= ahora) {
-        // El remate terminó, recargar una vez para ver estado actualizado y luego detener
-        loadAuto().then(() => {
+        loadAuto(true).then(() => {
           if (countdownInterval) {
             clearInterval(countdownInterval)
             countdownInterval = null
@@ -466,13 +470,12 @@ onMounted(() => {
         })
       }
     } else if (auto.value && auto.value.estado === 'vendido') {
-      // Si ya está vendido, detener actualizaciones
       if (countdownInterval) {
         clearInterval(countdownInterval)
         countdownInterval = null
       }
     }
-  }, 1000)
+  }, 2000)
 })
 
 onUnmounted(() => {

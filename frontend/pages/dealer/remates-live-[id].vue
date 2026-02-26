@@ -19,8 +19,8 @@
         </div>
       </Transition>
 
-      <button
-        @click="navigateTo('/dealer/remates-live')"
+      <NuxtLink
+        :to="user ? '/dealer/remates-live' : '/remates'"
         class="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors mb-6 group font-bold"
       >
         <svg
@@ -36,8 +36,8 @@
             stroke-linejoin="round"
           />
         </svg>
-        VOLVER AL PANEL
-      </button>
+        {{ user ? 'VOLVER AL PANEL' : 'VOLVER A REMATES' }}
+      </NuxtLink>
 
       <!-- Skeleton mientras carga la primera vez: misma estructura que el contenido, sin texto "Cargando..." -->
       <div v-if="loading && !auction" class="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-pulse">
@@ -343,7 +343,7 @@
                 </div>
               </div>
 
-              <div class="space-y-3 mb-6">
+              <div v-if="user" class="space-y-3 mb-6">
                 <div class="grid grid-cols-2 gap-3">
                   <button
                     @click="handleUserBid(50000)"
@@ -399,8 +399,19 @@
                   </button>
                 </div>
               </div>
+              <div v-else class="mb-6 p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 text-center">
+                <p class="text-slate-700 font-bold mb-4">Inicia sesión para pujar en este remate</p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                  <NuxtLink to="/login" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors">
+                    Iniciar sesión
+                  </NuxtLink>
+                  <NuxtLink to="/registro" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-3 px-6 rounded-xl transition-colors">
+                    Registrarme
+                  </NuxtLink>
+                </div>
+              </div>
 
-              <p class="text-[10px] text-center text-slate-400 font-bold uppercase leading-tight">
+              <p v-if="user" class="text-[10px] text-center text-slate-400 font-bold uppercase leading-tight">
                 ⚠️ Cada puja en el último minuto añade 10s extra de tiempo al reloj.
               </p>
             </div>
@@ -471,14 +482,14 @@ import { UrgencyLevel } from '~/utils/auctionConstants'
 import { useAuth } from '~/composables/useAuth'
 import { useImageUrl } from '~/composables/useImageUrl'
 
+// Página pública: cualquiera puede ver el remate en vivo; para pujar hace falta estar logueado (dealer)
 definePageMeta({
   layout: 'dashboard',
-  middleware: ['auth', 'role'],
-  allowedRoles: ['dealer']
+  auth: false
 })
 
 const route = useRoute()
-const { getAuthHeaders, user } = useAuth()
+const { getAuthHeaders, user, checkAuth } = useAuth()
 const config = useRuntimeConfig()
 const API_BASE = config.public.apiBase || 'http://localhost:5000/api'
 
@@ -1041,8 +1052,8 @@ watch([isFinished, () => auction.value?.estado], ([finished, estado]) => {
   }
 }, { immediate: true })
 
-onMounted(() => {
-  console.log('[remates-live-[id]] Componente montado, route completo:', route)
+onMounted(async () => {
+  if (process.client) await checkAuth()
   loadAuction()
 
   // Actualizar pujas cada 2 segundos solo si el remate está activo y no ha terminado
@@ -1063,9 +1074,9 @@ onMounted(() => {
   }, 2000)
 })
 
-// Iniciar conteo de viewers cuando el remate esté cargado (dealers + admin, datos reales)
-watch(auction, (a) => {
-  if (a?.id) startViewerTracking()
+// Iniciar conteo de viewers cuando el remate esté cargado (solo si hay usuario logueado)
+watch([auction, user], ([a, u]) => {
+  if (a?.id && u) startViewerTracking()
 }, { immediate: true })
 
 onUnmounted(() => {
