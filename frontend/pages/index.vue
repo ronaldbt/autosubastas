@@ -1,5 +1,5 @@
 <template>
-  <div class="font-sans text-gray-900 bg-white">
+  <div class="font-sans text-slate-900 bg-slate-50 min-h-screen">
     <!-- Redirigir a login si no está autenticado -->
     <Header />
     
@@ -8,21 +8,21 @@
       <Hero />
       
       <!-- Modern How It Works Section -->
-      <section id="como-funciona" class="py-24 bg-white">
-        <div class="container mx-auto px-4">
+      <section id="como-funciona" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4">
           <AnimatedSection class="text-center mb-16">
-            <h2 class="text-4xl font-extrabold text-gray-900 mb-4">¿Cómo Funciona?</h2>
-            <p class="text-gray-500 text-lg max-w-2xl mx-auto">Vende tu auto de forma segura, rápida y al mejor precio del mercado en 4 simples pasos.</p>
+            <h2 class="text-4xl font-black text-slate-900 mb-4">¿Cómo Funciona?</h2>
+            <p class="text-slate-500 text-lg max-w-2xl mx-auto">Vende tu auto de forma segura, rápida y al mejor precio del mercado en 4 simples pasos.</p>
           </AnimatedSection>
           
           <!-- Timeline Animado -->
           <div class="max-w-4xl mx-auto">
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8">
+            <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-6 md:p-8">
               <div class="relative">
                 <!-- Línea de progreso animada -->
-                <div class="absolute top-10 left-10 right-10 h-0.5 bg-gray-200 z-0 hidden md:block rounded-full overflow-hidden">
+                <div class="absolute top-10 left-10 right-10 h-0.5 bg-slate-200 z-0 hidden md:block rounded-full overflow-hidden">
                   <div 
-                    class="h-full bg-gradient-to-r from-brand-orange via-orange-400 to-orange-500 transition-all duration-1000 ease-out rounded-full"
+                    class="h-full bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 transition-all duration-1000 ease-out rounded-full"
                     :style="{ width: activeStep >= howItWorksSteps.length - 1 ? '100%' : `${(activeStep / (howItWorksSteps.length - 1)) * 100}%` }"
                   ></div>
                 </div>
@@ -41,7 +41,7 @@
                       <!-- Anillo animado cuando está activo o hover -->
                       <div 
                         v-if="index <= activeStep || hoveredStep === index"
-                        class="absolute inset-0 rounded-full animate-ping bg-brand-orange"
+                        class="absolute inset-0 rounded-full animate-ping bg-blue-600"
                         style="animation-duration: 2s; opacity: 0.25;"
                       ></div>
                       
@@ -49,8 +49,8 @@
                         :class="[
                           'w-16 h-16 rounded-full flex items-center justify-center border-2 transition-all duration-500 transform',
                           index <= activeStep 
-                            ? 'bg-brand-orange border-brand-orange shadow-md scale-105' 
-                            : 'bg-white border-gray-200 group-hover:border-brand-orange group-hover:scale-100',
+                            ? 'bg-blue-600 border-blue-600 shadow-md scale-105' 
+                            : 'bg-white border-slate-200 group-hover:border-blue-600 group-hover:scale-100',
                           hoveredStep === index ? 'shadow-lg scale-110' : ''
                         ]"
                       >
@@ -59,7 +59,7 @@
                           :size="28"
                           :class="[
                             'transition-all duration-300',
-                            index <= activeStep ? 'text-white' : 'text-gray-400 group-hover:text-brand-orange'
+                            index <= activeStep ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'
                           ]"
                         />
                         
@@ -79,7 +79,7 @@
                         v-if="index > activeStep"
                         :class="[
                           'absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs border-2 border-white shadow-sm transition-all duration-300',
-                          hoveredStep === index ? 'bg-brand-orange text-white scale-110' : 'bg-gray-200 text-gray-600'
+                          hoveredStep === index ? 'bg-blue-600 text-white scale-110' : 'bg-slate-200 text-slate-600'
                         ]"
                       >
                         {{ index + 1 }}
@@ -91,7 +91,7 @@
                       <h3 
                         :class="[
                           'text-base font-bold mb-1.5 transition-colors duration-300',
-                          index <= activeStep || hoveredStep === index ? 'text-brand-orange' : 'text-gray-900 group-hover:text-brand-orange'
+                          index <= activeStep || hoveredStep === index ? 'text-blue-600' : 'text-slate-900 group-hover:text-blue-600'
                         ]"
                       >
                         {{ step.title }}
@@ -99,7 +99,7 @@
                       <p 
                         :class="[
                           'text-xs leading-relaxed transition-all duration-300',
-                          hoveredStep === index ? 'text-gray-700 scale-105' : 'text-gray-500'
+                          hoveredStep === index ? 'text-slate-700 scale-105' : 'text-slate-500'
                         ]"
                       >
                         {{ step.desc }}
@@ -107,13 +107,13 @@
                     </div>
                     
                     <!-- Línea conectora en móvil -->
-                    <div 
+                      <div 
                       v-if="index < howItWorksSteps.length - 1"
-                      class="md:hidden w-0.5 h-10 bg-gray-200 my-3 relative overflow-hidden"
+                      class="md:hidden w-0.5 h-10 bg-slate-200 my-3 relative overflow-hidden"
                     >
                       <div 
                         v-if="index < activeStep"
-                        class="absolute top-0 left-0 w-full bg-brand-orange transition-all duration-500"
+                        class="absolute top-0 left-0 w-full bg-blue-600 transition-all duration-500"
                         :style="{ height: '100%' }"
                       ></div>
                     </div>
@@ -121,13 +121,13 @@
                 </div>
                 
                 <!-- Mensaje sobre no estar obligado a vender -->
-                <div class="mt-8 pt-6 border-t border-gray-100">
+                <div class="mt-8 pt-6 border-t border-slate-100">
                   <div class="flex items-start justify-center gap-3 text-center">
                     <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p class="text-sm text-gray-700 leading-relaxed max-w-2xl">
-                      <span class="font-semibold text-gray-900">Si el precio no te convence, no vendes.</span> No pagas nada, Tienes la palabra final.
+                    <p class="text-sm text-slate-700 leading-relaxed max-w-2xl">
+                      <span class="font-semibold text-slate-900">Si el precio no te convence, no vendes.</span> No pagas nada, Tienes la palabra final.
                     </p>
                   </div>
                 </div>
@@ -144,29 +144,29 @@
       <Testimonials />
       
       <!-- Blog Preview Section -->
-      <section class="py-20 bg-gray-50">
-        <div class="container mx-auto px-4">
-          <h2 class="text-3xl font-bold mb-10 text-center">Guías y Consejos</h2>
+      <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+          <h2 class="text-3xl font-black mb-10 text-center text-slate-900">Guías y Consejos</h2>
           <div class="grid md:grid-cols-3 gap-8">
             <NuxtLink
               v-for="(post, i) in blogPosts"
               :key="i"
               :to="post.slug ? `/blog/${post.slug}` : '/blog'"
-              class="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition-shadow block group"
+              class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition-shadow block group"
             >
               <img :src="post.img" :alt="post.title" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
               <div class="p-6">
-                <span class="text-xs font-bold text-brand-orange uppercase mb-2 block">Blog</span>
-                <h3 class="text-lg font-bold mb-2 group-hover:text-brand-orange transition-colors">{{ post.title }}</h3>
-                <p class="text-sm text-gray-500">Aprende los mejores trucos para comprar y vender autos en Chile de forma segura.</p>
-                <span class="text-brand-orange font-semibold text-sm mt-4 inline-block group-hover:underline">Leer más →</span>
+                <span class="text-xs font-bold text-blue-600 uppercase mb-2 block">Blog</span>
+                <h3 class="text-lg font-bold mb-2 group-hover:text-blue-600 transition-colors text-slate-900">{{ post.title }}</h3>
+                <p class="text-sm text-slate-500">Aprende los mejores trucos para comprar y vender autos en Chile de forma segura.</p>
+                <span class="text-blue-600 font-semibold text-sm mt-4 inline-block group-hover:underline">Leer más →</span>
               </div>
             </NuxtLink>
           </div>
           <div class="text-center mt-10">
             <NuxtLink
               to="/blog"
-              class="inline-flex items-center gap-2 bg-brand-orange hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold transition-colors"
+              class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-colors"
             >
               Ver todos los artículos
               <ArrowRight :size="18" />
@@ -178,20 +178,20 @@
       <FAQ />
       
       <!-- Final CTA -->
-      <section class="py-20 bg-gray-900 text-white text-center">
-        <div class="container mx-auto px-4">
-          <h2 class="text-3xl md:text-5xl font-extrabold mb-6">¿Listo para Vender?</h2>
-          <p class="text-xl text-gray-400 mb-8">Cada remate tiene su propio plazo. Inscribe tu auto y participa cuando quieras.</p>
+      <section class="py-20 bg-slate-900 text-white text-center">
+        <div class="max-w-7xl mx-auto px-4">
+          <h2 class="text-3xl md:text-5xl font-black mb-6">¿Listo para Vender?</h2>
+          <p class="text-xl text-slate-400 mb-8">Cada remate tiene su propio plazo. Inscribe tu auto y participa cuando quieras.</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <NuxtLink
               to="/registro"
-              class="bg-brand-orange hover:bg-orange-600 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-transform text-center"
+              class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-transform text-center text-white"
             >
               Inscribir mi Auto Gratis
             </NuxtLink>
             <NuxtLink
               to="/login"
-              class="bg-transparent border border-gray-600 hover:bg-gray-800 px-8 py-4 rounded-xl font-bold text-lg transition-colors text-center"
+              class="bg-transparent border-2 border-slate-500 hover:bg-slate-800 px-8 py-4 rounded-xl font-bold text-lg transition-colors text-center"
             >
               Iniciar Sesión
             </NuxtLink>
@@ -315,7 +315,7 @@ useHead({
 
 const howItWorksSteps = [
   { title: 'Inscribe', desc: 'Completa el formulario con la patente y datos básicos del vehículo.', icon: FileText, color: 'bg-blue-50 text-blue-600' },
-  { title: 'Inspecciona', desc: 'Revisión técnica de 60 puntos en nuestros centros certificados.', icon: Wrench, color: 'bg-orange-50 text-orange-600' },
+  { title: 'Inspecciona', desc: 'Revisión técnica de 60 puntos en nuestros centros certificados.', icon: Wrench, color: 'bg-blue-50 text-blue-600' },
   { title: 'Remata', desc: 'Tu auto se publica y recibes ofertas en vivo de compradores.', icon: Gavel, color: 'bg-purple-50 text-purple-600' },
   { title: 'Cobra', desc: 'Aceptas la mejor oferta y recibes el pago inmediato.', icon: DollarSign, color: 'bg-green-50 text-green-600' },
 ]

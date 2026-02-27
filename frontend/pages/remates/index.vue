@@ -1,12 +1,12 @@
 <template>
-  <div class="font-sans text-gray-900 bg-white min-h-screen">
+  <div class="font-sans text-slate-900 bg-slate-50 min-h-screen">
     <Header />
     <main class="pt-24 pb-16">
-      <div class="container mx-auto px-4">
+      <div class="max-w-7xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Remates Activos de Autos</h1>
-          <p class="text-xl text-gray-600 max-w-3xl">
+          <h1 class="text-4xl font-black text-slate-900 mb-4 tracking-tighter">Remates Activos de Autos</h1>
+          <p class="text-xl text-slate-600 max-w-3xl">
             Remates online de autos de particulares y empresas en Chile. Vehículos inspeccionados, en buen estado.
           </p>
         </div>
@@ -18,15 +18,15 @@
               v-model="searchQuery"
               type="text"
               placeholder="¿Qué estás buscando?"
-              class="w-full px-4 py-3 pl-12 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none"
+              class="w-full px-4 py-3 pl-12 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
             />
-            <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-sm font-medium text-gray-600">Ordenar por</span>
+            <span class="text-sm font-medium text-slate-600">Ordenar por</span>
             <select
               v-model="sortBy"
-              class="px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none bg-white"
+              class="px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white"
             >
               <option value="precio-asc">Precio: menor a mayor</option>
               <option value="precio-desc">Precio: mayor a menor</option>
@@ -39,9 +39,9 @@
         <div class="flex flex-col lg:flex-row gap-8">
           <!-- Sidebar filtros (izquierda) -->
           <aside class="lg:w-72 flex-shrink-0">
-            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden sticky top-24">
-              <div class="p-4 border-b border-gray-100">
-                <h2 class="text-lg font-bold text-brand-orange">Filtros ({{ activeFiltersCount }})</h2>
+            <div class="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden sticky top-24 shadow-sm">
+              <div class="p-4 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-blue-600">Filtros ({{ activeFiltersCount }})</h2>
               </div>
 
               <div class="divide-y divide-gray-100">
@@ -49,16 +49,16 @@
                   <label
                     v-for="opt in filterOptions.tipoAuto"
                     :key="opt.value"
-                    class="flex items-center gap-3 py-2 px-4 hover:bg-gray-50 cursor-pointer"
+                    class="flex items-center gap-3 py-2 px-4 hover:bg-slate-50 cursor-pointer"
                   >
                     <input
                       v-model="filters.tipoAuto"
                       type="checkbox"
                       :value="opt.value"
-                      class="rounded border-gray-300 text-brand-orange focus:ring-brand-orange"
+                      class="rounded border-slate-300 text-blue-600 focus:ring-blue-600"
                     />
-                    <span class="text-gray-700">{{ opt.label }}</span>
-                    <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
+                    <span class="text-slate-700">{{ opt.label }}</span>
+                    <span class="text-slate-400 text-sm ml-auto">({{ opt.count }})</span>
                   </label>
                 </FilterSection>
                 <FilterSection v-model:open="filterOpen.marca" title="Marca">
@@ -66,16 +66,16 @@
                     <label
                       v-for="opt in filterOptions.marca"
                       :key="opt.value"
-                      class="flex items-center gap-3 py-2 px-4 hover:bg-gray-50 cursor-pointer"
+                      class="flex items-center gap-3 py-2 px-4 hover:bg-slate-50 cursor-pointer"
                     >
                       <input
                         v-model="filters.marca"
                         type="checkbox"
                         :value="opt.value"
-                        class="rounded border-gray-300 text-brand-orange focus:ring-brand-orange"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-600"
                       />
-                      <span class="text-gray-700">{{ opt.label }}</span>
-                      <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
+                      <span class="text-slate-700">{{ opt.label }}</span>
+                      <span class="text-slate-400 text-sm ml-auto">({{ opt.count }})</span>
                     </label>
                   </div>
                 </FilterSection>
@@ -84,16 +84,16 @@
                     <label
                       v-for="opt in filterOptions.modelo"
                       :key="opt.value"
-                      class="flex items-center gap-3 py-2 px-4 hover:bg-gray-50 cursor-pointer"
+                      class="flex items-center gap-3 py-2 px-4 hover:bg-slate-50 cursor-pointer"
                     >
                       <input
                         v-model="filters.modelo"
                         type="checkbox"
                         :value="opt.value"
-                        class="rounded border-gray-300 text-brand-orange focus:ring-brand-orange"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-600"
                       />
-                      <span class="text-gray-700">{{ opt.label }}</span>
-                      <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
+                      <span class="text-slate-700">{{ opt.label }}</span>
+                      <span class="text-slate-400 text-sm ml-auto">({{ opt.count }})</span>
                     </label>
                   </div>
                 </FilterSection>
@@ -102,16 +102,16 @@
                     <label
                       v-for="opt in filterOptions.anio"
                       :key="opt.value"
-                      class="flex items-center gap-3 py-2 px-4 hover:bg-gray-50 cursor-pointer"
+                      class="flex items-center gap-3 py-2 px-4 hover:bg-slate-50 cursor-pointer"
                     >
                       <input
                         v-model="filters.anio"
                         type="checkbox"
                         :value="opt.value"
-                        class="rounded border-gray-300 text-brand-orange focus:ring-brand-orange"
+                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-600"
                       />
-                      <span class="text-gray-700">{{ opt.label }}</span>
-                      <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
+                      <span class="text-slate-700">{{ opt.label }}</span>
+                      <span class="text-slate-400 text-sm ml-auto">({{ opt.count }})</span>
                     </label>
                   </div>
                 </FilterSection>
@@ -119,56 +119,56 @@
                   <label
                     v-for="opt in filterOptions.combustible"
                     :key="opt.value"
-                    class="flex items-center gap-3 py-2 px-4 hover:bg-gray-50 cursor-pointer"
+                    class="flex items-center gap-3 py-2 px-4 hover:bg-slate-50 cursor-pointer"
                   >
                     <input
                       v-model="filters.combustible"
                       type="checkbox"
                       :value="opt.value"
-                      class="rounded border-gray-300 text-brand-orange focus:ring-brand-orange"
+                      class="rounded border-slate-300 text-blue-600 focus:ring-blue-600"
                     />
-                    <span class="text-gray-700">{{ opt.label }}</span>
-                    <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
+                    <span class="text-slate-700">{{ opt.label }}</span>
+                    <span class="text-slate-400 text-sm ml-auto">({{ opt.count }})</span>
                   </label>
                 </FilterSection>
                 <FilterSection v-model:open="filterOpen.traccion" title="Tracción">
                   <label
                     v-for="opt in filterOptions.traccion"
                     :key="opt.value"
-                    class="flex items-center gap-3 py-2 px-4 hover:bg-gray-50 cursor-pointer"
+                    class="flex items-center gap-3 py-2 px-4 hover:bg-slate-50 cursor-pointer"
                   >
                     <input
                       v-model="filters.traccion"
                       type="checkbox"
                       :value="opt.value"
-                      class="rounded border-gray-300 text-brand-orange focus:ring-brand-orange"
+                      class="rounded border-slate-300 text-blue-600 focus:ring-blue-600"
                     />
-                    <span class="text-gray-700">{{ opt.label }}</span>
-                    <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
+                    <span class="text-slate-700">{{ opt.label }}</span>
+                    <span class="text-slate-400 text-sm ml-auto">({{ opt.count }})</span>
                   </label>
-                  <p v-if="filterOptions.traccion.length === 0" class="px-4 py-2 text-gray-400 text-sm">Sin datos</p>
+                  <p v-if="filterOptions.traccion.length === 0" class="px-4 py-2 text-slate-400 text-sm">Sin datos</p>
                 </FilterSection>
                 <FilterSection v-model:open="filterOpen.transmision" title="Transmisión">
                   <label
                     v-for="opt in filterOptions.transmision"
                     :key="opt.value"
-                    class="flex items-center gap-3 py-2 px-4 hover:bg-gray-50 cursor-pointer"
+                    class="flex items-center gap-3 py-2 px-4 hover:bg-slate-50 cursor-pointer"
                   >
                     <input
                       v-model="filters.transmision"
                       type="checkbox"
                       :value="opt.value"
-                      class="rounded border-gray-300 text-brand-orange focus:ring-brand-orange"
+                      class="rounded border-slate-300 text-blue-600 focus:ring-blue-600"
                     />
-                    <span class="text-gray-700">{{ opt.label }}</span>
-                    <span class="text-gray-400 text-sm ml-auto">({{ opt.count }})</span>
+                    <span class="text-slate-700">{{ opt.label }}</span>
+                    <span class="text-slate-400 text-sm ml-auto">({{ opt.count }})</span>
                   </label>
                 </FilterSection>
               </div>
-              <div class="p-4 border-t border-gray-100">
+              <div class="p-4 border-t border-slate-100">
                 <button
                   @click="clearFilters"
-                  class="flex items-center gap-2 text-brand-orange font-semibold hover:underline text-sm"
+                  class="flex items-center gap-2 text-blue-600 font-semibold hover:underline text-sm"
                 >
                   <Menu class="w-4 h-4" />
                   Menos filtros
@@ -178,21 +178,21 @@
           </aside>
 
           <div class="flex-1 min-w-0">
-            <p class="mb-4 text-gray-600 text-sm">Cada remate tiene su propio plazo. Inicia sesión como comprador para pujar.</p>
+            <p class="mb-4 text-slate-600 text-sm">Cada remate tiene su propio plazo. Inicia sesión como comprador para pujar.</p>
             <div v-if="loading" class="flex justify-center py-20">
-              <div class="animate-spin w-12 h-12 border-4 border-brand-orange border-t-transparent rounded-full" />
+              <div class="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full" />
             </div>
             <template v-else>
-              <p class="text-gray-600 mb-6 font-semibold">{{ filteredCars.length }} Resultados</p>
-              <div v-if="filteredCars.length === 0" class="text-center py-16 bg-gray-50 rounded-2xl">
-                <p class="text-gray-600 text-lg">
+              <p class="text-slate-600 mb-6 font-semibold">{{ filteredCars.length }} Resultados</p>
+              <div v-if="filteredCars.length === 0" class="text-center py-16 bg-slate-50 rounded-2xl">
+                <p class="text-slate-600 text-lg">
                   {{ activeFiltersCount > 0 ? 'No hay autos disponibles con los filtros seleccionados.' : 'No hay remates activos en este momento.' }}
                 </p>
-                <p v-if="activeFiltersCount === 0" class="text-gray-500 text-sm mt-2">Los autos aparecerán aquí cuando un administrador los envíe a subasta desde el panel de admin.</p>
+                <p v-if="activeFiltersCount === 0" class="text-slate-500 text-sm mt-2">Los autos aparecerán aquí cuando un administrador los envíe a subasta desde el panel de admin.</p>
                 <button
                   v-if="activeFiltersCount > 0"
                   @click="clearFilters"
-                  class="mt-4 text-brand-orange font-semibold hover:underline"
+                  class="mt-4 text-blue-600 font-semibold hover:underline"
                 >
                   Limpiar filtros
                 </button>
@@ -201,9 +201,9 @@
                 <div
                   v-for="car in filteredCars"
                   :key="car.id"
-                  class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col group"
+                  class="bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-200 flex flex-col group"
                 >
-                  <div class="relative h-48 overflow-hidden bg-gray-100">
+                  <div class="relative h-48 overflow-hidden bg-slate-100">
                     <div class="absolute top-3 left-3 z-10 flex flex-col gap-2">
                       <div class="bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1 w-fit">
                         <Check class="w-3 h-3" />
@@ -220,7 +220,7 @@
                       >
                         <Heart
                           :size="18"
-                          :class="isFavorite(car.id) ? 'text-red-500 fill-red-500' : 'text-gray-600'"
+                          :class="isFavorite(car.id) ? 'text-red-500 fill-red-500' : 'text-slate-600'"
                         />
                       </button>
                       <button
@@ -229,7 +229,7 @@
                         class="w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center transition"
                         title="Compartir"
                       >
-                        <Share2 :size="18" class="text-gray-600" />
+                        <Share2 :size="18" class="text-slate-600" />
                       </button>
                     </div>
                     <img
@@ -240,12 +240,12 @@
                     />
                   </div>
                   <div class="p-4 flex-1 flex flex-col">
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">{{ car.title }}</h3>
-                    <p class="text-gray-500 text-sm mb-3">
+                    <h3 class="text-lg font-bold text-slate-900 mb-1">{{ car.title }}</h3>
+                    <p class="text-slate-500 text-sm mb-3">
                       {{ car.year }} · {{ car.fuelLabel }}<template v-if="car.km != null && car.km > 0"> · {{ formatKilometrajeChile(car.km) }}</template>
                     </p>
                     <div class="flex flex-wrap gap-1.5 mb-3">
-                      <span v-if="car.transmission && car.transmission !== '—'" class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded uppercase">
+                      <span v-if="car.transmission && car.transmission !== '—'" class="text-xs font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded uppercase">
                         {{ car.transmission }}
                       </span>
                     </div>
@@ -254,18 +254,18 @@
                         <Wrench :size="14" />
                         Última oferta
                       </span>
-                      <span class="text-base font-bold text-gray-900">${{ formatPriceChile(car.ultimaOferta) }}</span>
+                      <span class="text-base font-bold text-slate-900">${{ formatPriceChile(car.ultimaOferta) }}</span>
                     </div>
-                    <div class="mt-auto pt-3 border-t border-gray-100 flex flex-wrap items-end justify-between gap-3">
+                    <div class="mt-auto pt-3 border-t border-slate-100 flex flex-wrap items-end justify-between gap-3">
                       <div>
-                        <span class="text-xs text-gray-500">Mín</span>
-                        <p class="text-xl font-bold text-gray-900">
+                        <span class="text-xs text-slate-500">Mín</span>
+                        <p class="text-xl font-bold text-slate-900">
                           ${{ formatPriceChile(car.reservePrice) }}
                         </p>
                       </div>
                       <NuxtLink
                         :to="`/dealer/remates-live-${String(car.id)}`"
-                        class="bg-brand-orange hover:bg-orange-600 text-white font-bold py-2.5 px-5 rounded-lg text-center text-sm transition-colors shrink-0 inline-block"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg text-center text-sm transition-colors shrink-0 inline-block"
                       >
                         Ver detalles y pujar
                       </NuxtLink>
@@ -277,16 +277,16 @@
           </div>
         </div>
 
-        <section class="mt-16 bg-gray-50 rounded-2xl p-8 text-center">
-          <h2 class="text-2xl font-bold text-gray-900 mb-4">¿Quieres comprar en el remate?</h2>
-          <p class="text-gray-600 mb-6 max-w-xl mx-auto">
+        <section class="mt-16 bg-slate-50 rounded-2xl p-8 text-center">
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">¿Quieres comprar en el remate?</h2>
+          <p class="text-slate-600 mb-6 max-w-xl mx-auto">
             Regístrate como comprador (dealer) para participar en las subastas online. Es gratuito.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <NuxtLink to="/registro" class="bg-brand-orange hover:bg-orange-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors">
+            <NuxtLink to="/registro" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors">
               Registrarme como comprador
             </NuxtLink>
-            <NuxtLink to="/login" class="bg-white border-2 border-gray-300 hover:border-brand-orange text-gray-900 px-8 py-4 rounded-xl font-bold text-lg transition-colors">
+            <NuxtLink to="/login" class="bg-white border-2 border-slate-300 hover:border-blue-600 text-slate-900 px-8 py-4 rounded-xl font-bold text-lg transition-colors">
               Ya tengo cuenta
             </NuxtLink>
           </div>

@@ -72,9 +72,17 @@ const calculateTime = () => {
 }
 
 const formatTime = () => {
-  const minutes = Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((timeLeft.value % (1000 * 60)) / 1000)
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  const t = Math.max(0, timeLeft.value)
+  const d = Math.floor(t / (24 * 60 * 60 * 1000))
+  const h = Math.floor((t % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000))
+  const m = Math.floor((t % (60 * 60 * 1000)) / (60 * 1000))
+  const s = Math.floor((t % (60 * 1000)) / 1000)
+  const parts = []
+  if (d > 0) parts.push(`${d}d`)
+  parts.push(`${h}h`)
+  parts.push(`${m}m`)
+  parts.push(`${s}s`)
+  return parts.join(' ')
 }
 
 const getStyles = () => {

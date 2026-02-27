@@ -2,9 +2,9 @@
   <section id="tipos-de-remates" class="py-24 bg-white">
     <div class="container mx-auto px-4">
       <AnimatedSection class="text-center mb-12">
-        <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Tipos de Remates de Autos en Chile</h2>
-        <p class="text-gray-500 text-lg max-w-2xl mx-auto mb-4">
-          Existen diversos tipos de remates de autos: chocados, de aseguradora, judiciales, municipales y más. <strong class="text-gray-700">AutoRemates se especializa en remates de particulares y empresas, con vehículos en buen estado.</strong>
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Tipos de Remates de Autos en Chile</h2>
+        <p class="text-slate-500 text-lg max-w-2xl mx-auto mb-4">
+          Existen diversos tipos de remates de autos: chocados, de aseguradora, judiciales, municipales y más. <strong class="text-slate-700">AutoRemates se especializa en remates de particulares y empresas, con vehículos en buen estado.</strong>
         </p>
       </AnimatedSection>
 
@@ -15,15 +15,15 @@
           :delay="index * 80"
           class="group"
         >
-          <div class="bg-gray-50 hover:bg-brand-orange/5 border border-gray-100 hover:border-brand-orange/20 rounded-xl p-6 transition-all duration-300 h-full">
-            <div class="w-12 h-12 rounded-lg bg-brand-orange/10 flex items-center justify-center mb-4 group-hover:bg-brand-orange/20 transition-colors">
-              <component :is="tipo.icon" :size="24" class="text-brand-orange" />
+          <div class="bg-slate-50 hover:bg-blue-600/5 border border-slate-200 hover:border-blue-600/20 rounded-xl p-6 transition-all duration-300 h-full">
+            <div class="w-12 h-12 rounded-lg bg-blue-600/10 flex items-center justify-center mb-4 group-hover:bg-blue-600/20 transition-colors">
+              <component :is="tipo.icon" :size="24" class="text-blue-600" />
             </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ tipo.title }}</h3>
-            <p class="text-sm text-gray-600 leading-relaxed">{{ tipo.desc }}</p>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">{{ tipo.title }}</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">{{ tipo.desc }}</p>
             <NuxtLink
               :to="`/blog/remates-${tipo.slug}`"
-              class="inline-flex items-center gap-1 mt-4 text-brand-orange font-semibold text-sm hover:underline"
+              class="inline-flex items-center gap-1 mt-4 text-blue-600 font-semibold text-sm hover:underline"
             >
               Leer más
               <ArrowRight :size="14" />

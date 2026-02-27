@@ -1,9 +1,9 @@
 <template>
-  <section id="remates-por-ciudad" class="py-24 bg-gray-50">
+  <section id="remates-por-ciudad" class="py-24 bg-slate-50">
     <div class="container mx-auto px-4">
       <AnimatedSection class="text-center mb-16">
-        <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Remates de Autos por Ciudad</h2>
-        <p class="text-gray-500 text-lg max-w-2xl mx-auto">
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Remates de Autos por Ciudad</h2>
+        <p class="text-slate-500 text-lg max-w-2xl mx-auto">
           Encuentra remates de autos en las principales ciudades de Chile. Santiago, Concepción, Iquique, Valparaíso y más.
         </p>
       </AnimatedSection>
@@ -16,18 +16,18 @@
         >
           <NuxtLink
             :to="`/remates?ciudad=${ciudad.slug}`"
-            class="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-100 hover:border-brand-orange/30 hover:shadow-lg transition-all group"
+            class="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-blue-600/30 hover:shadow-lg transition-all group"
           >
-            <div class="w-10 h-10 rounded-lg bg-brand-orange/10 flex items-center justify-center group-hover:bg-brand-orange/20 transition-colors flex-shrink-0">
-              <MapPin :size="20" class="text-brand-orange" />
+            <div class="w-10 h-10 rounded-lg bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors flex-shrink-0">
+              <MapPin :size="20" class="text-blue-600" />
             </div>
             <div>
-              <h3 class="font-bold text-gray-900 group-hover:text-brand-orange transition-colors">
+              <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
                 Remates en {{ ciudad.nombre }}
               </h3>
-              <p class="text-sm text-gray-500">{{ ciudad.desc }}</p>
+              <p class="text-sm text-slate-500">{{ ciudad.desc }}</p>
             </div>
-            <ArrowRight :size="16" class="text-gray-400 group-hover:text-brand-orange group-hover:translate-x-1 transition-all ml-auto" />
+            <ArrowRight :size="16" class="text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all ml-auto" />
           </NuxtLink>
         </AnimatedSection>
       </div>

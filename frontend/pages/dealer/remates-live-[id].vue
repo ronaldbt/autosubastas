@@ -5,7 +5,8 @@
       urgency === UrgencyLevel.FINAL_CALL ? 'bg-red-50/50' : 'bg-slate-50'
     ]"
   >
-    <div class="max-w-7xl mx-auto px-4 py-6">
+    <Header />
+    <div class="max-w-7xl mx-auto px-4 pt-24 pb-6">
       <!-- Notificación flotante -->
       <Transition name="bounce">
         <div
@@ -484,7 +485,7 @@ import { useImageUrl } from '~/composables/useImageUrl'
 
 // Página pública: cualquiera puede ver el remate en vivo; para pujar hace falta estar logueado (dealer)
 definePageMeta({
-  layout: 'dashboard',
+  layout: false, // Página pública: usamos Header público en lugar del layout dashboard
   auth: false
 })
 

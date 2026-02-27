@@ -1,19 +1,19 @@
 <template>
-  <section id="remates" class="py-24 bg-gray-50">
+  <section id="remates" class="py-24 bg-slate-50">
     <div class="container mx-auto px-4">
       <div class="text-center max-w-3xl mx-auto mb-12">
         <AnimatedSection>
-          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">
             Remates activos
           </h2>
-          <p class="text-gray-600 mb-6">Cada auto tiene su propio plazo. Participa en las subastas en curso.</p>
-          <div class="w-24 h-1 bg-brand-orange mx-auto mb-6"></div>
+          <p class="text-slate-600 mb-6">Cada auto tiene su propio plazo. Participa en las subastas en curso.</p>
+          <div class="w-24 h-1 bg-blue-600 mx-auto mb-6 rounded-full"></div>
         </AnimatedSection>
       </div>
 
-      <div v-if="featuredCars.length === 0" class="text-center py-12 bg-white rounded-2xl border border-gray-200">
-        <p class="text-gray-600 text-lg mb-4">No hay remates activos en este momento.</p>
-        <p class="text-gray-500 text-sm">Los autos aparecerán aquí cuando un administrador los envíe a subasta desde el panel de admin.</p>
+      <div v-if="featuredCars.length === 0" class="text-center py-12 bg-white rounded-2xl border border-slate-200">
+        <p class="text-slate-600 text-lg mb-4">No hay remates activos en este momento.</p>
+        <p class="text-slate-500 text-sm">Los autos aparecerán aquí cuando un administrador los envíe a subasta desde el panel de admin.</p>
       </div>
       <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <AnimatedSection 
@@ -41,12 +41,12 @@
             </div>
 
             <div class="p-6 flex-1 flex flex-col">
-              <h3 class="text-xl font-bold text-gray-900 mb-1">{{ car.title }}</h3>
-              <p class="text-gray-500 text-sm mb-3">
+              <h3 class="text-xl font-bold text-slate-900 mb-1">{{ car.title }}</h3>
+              <p class="text-slate-500 text-sm mb-3">
                 {{ car.year }} · {{ car.fuel }}<template v-if="car.km != null && car.km > 0"> · {{ formatKilometrajeChile(car.km) }}</template>
               </p>
               <div class="flex flex-wrap gap-1.5 mb-3">
-                <span v-if="car.transmission && car.transmission !== '—'" class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded uppercase">
+                <span v-if="car.transmission && car.transmission !== '—'" class="text-xs font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded uppercase">
                   {{ car.transmission }}
                 </span>
               </div>
@@ -56,19 +56,19 @@
                   <Wrench :size="14" />
                   Última oferta
                 </span>
-                <span class="text-base font-bold text-gray-900">${{ formatPriceChile(car.ultimaOferta) }}</span>
+                <span class="text-base font-bold text-slate-900">${{ formatPriceChile(car.ultimaOferta) }}</span>
               </div>
 
-              <div class="mt-auto pt-4 border-t border-gray-100 flex flex-wrap items-end justify-between gap-3">
+              <div class="mt-auto pt-4 border-t border-slate-100 flex flex-wrap items-end justify-between gap-3">
                 <div>
-                  <span class="text-xs text-gray-500 uppercase font-semibold">Mín</span>
-                  <p class="text-xl font-bold text-gray-900">
+                  <span class="text-xs text-slate-500 uppercase font-semibold">Mín</span>
+                  <p class="text-xl font-bold text-slate-900">
                     ${{ formatPriceChile(car.reservePrice) }}
                   </p>
                 </div>
                 <NuxtLink
                   :to="`/dealer/remates-live-${car.id}`"
-                  class="bg-brand-orange hover:bg-orange-600 text-white font-bold py-2.5 px-5 rounded-lg text-center text-sm transition-colors shrink-0"
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg text-center text-sm transition-colors shrink-0"
                 >
                   Ver detalles y pujar
                 </NuxtLink>
@@ -83,13 +83,13 @@
           <div class="inline-flex gap-4">
             <NuxtLink
               to="/remates"
-              class="px-8 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition shadow-lg"
+              class="px-8 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition shadow-lg"
             >
               Ver remates activos
             </NuxtLink>
             <NuxtLink
               to="/registro"
-              class="px-8 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition"
+              class="px-8 py-3 bg-white border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition"
             >
               Registrarme para Comprar
             </NuxtLink>

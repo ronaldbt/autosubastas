@@ -2,8 +2,8 @@
   <section id="faq" class="py-24 bg-white">
     <div class="container mx-auto px-4">
       <AnimatedSection class="text-center mb-16">
-        <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Preguntas Frecuentes</h2>
-        <p class="text-gray-500 text-lg max-w-2xl mx-auto">Todo lo que necesitas saber sobre nuestro sistema de remates de autos</p>
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Preguntas Frecuentes</h2>
+        <p class="text-slate-500 text-lg max-w-2xl mx-auto">Todo lo que necesitas saber sobre nuestro sistema de remates de autos</p>
       </AnimatedSection>
 
       <div class="max-w-4xl mx-auto space-y-4">
@@ -12,16 +12,16 @@
           :key="index"
           :delay="index * 50"
         >
-          <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+          <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <button
               @click="toggleFaq(index)"
-              class="w-full px-6 py-5 text-left flex items-center justify-between bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-inset"
+              class="w-full px-6 py-5 text-left flex items-center justify-between bg-white hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-inset"
             >
-              <h3 class="text-lg font-bold text-gray-900 pr-8">{{ faq.question }}</h3>
+              <h3 class="text-lg font-bold text-slate-900 pr-8">{{ faq.question }}</h3>
               <div class="flex-shrink-0">
                 <svg
                   :class="[
-                    'w-6 h-6 text-brand-orange transition-transform duration-300',
+                    'w-6 h-6 text-blue-600 transition-transform duration-300',
                     openFaqs[index] ? 'rotate-180' : ''
                   ]"
                   fill="none"
@@ -41,8 +41,8 @@
               leave-to-class="opacity-0 max-h-0"
             >
               <div v-if="openFaqs[index]" class="overflow-hidden">
-                <div class="px-6 py-5 bg-gray-50 border-t border-gray-200">
-                  <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ faq.answer }}</p>
+                <div class="px-6 py-5 bg-slate-50 border-t border-slate-200">
+                  <p class="text-slate-700 leading-relaxed whitespace-pre-line">{{ faq.answer }}</p>
                 </div>
               </div>
             </Transition>
