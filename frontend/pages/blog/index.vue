@@ -19,8 +19,8 @@
           >
             <div class="h-48 bg-gray-100 overflow-hidden">
               <img
-                v-if="post.image"
-                :src="post.image.startsWith('http') ? post.image : (post.image.startsWith('/') ? siteUrl + post.image : post.image)"
+                v-if="safeImage(post.image)"
+                :src="safeImage(post.image)"
                 :alt="post.title"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -33,7 +33,7 @@
               <h2 class="text-xl font-bold mb-2 group-hover:text-brand-orange transition-colors">
                 {{ post.title || post.path }}
               </h2>
-              <p class="text-gray-500 text-sm line-clamp-2">{{ post.description || '' }}</p>
+              <p class="text-gray-500 text-sm line-clamp-2">{{ safeDescription(post) }}</p>
               <span class="text-brand-orange font-semibold text-sm mt-4 inline-block group-hover:underline">Leer más →</span>
             </div>
           </NuxtLink>
@@ -53,17 +53,56 @@
 import Header from '~/components/Header.vue'
 import Footer from '~/components/Footer.vue'
 
-const { data: postsData } = await useAsyncData('blog-list', () => {
-  return $fetch('/api/blog')
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl || 'https://autoremates.cl'
+
+const { data: postsData } = await useAsyncData('blog-list', async () => {
+  try {
+    const data = await $fetch('/api/blog')
+    if (typeof window !== 'undefined') {
+      console.log('[Blog] API retornó', data?.length, 'posts')
+      data?.forEach((p, i) => {
+        console.log(`[Blog] Post ${i}: title="${p?.title?.slice(0, 40)}" image=${p?.image ? 'SI(' + p.image.substring(0, 50) + '...)' : 'NO'} descLen=${p?.description?.length || 0}`)
+      })
+    }
+    return data
+  } catch (e) {
+    console.error('[Blog] Error fetching posts:', e)
+    return []
+  }
 }, { default: () => [] })
 const posts = computed(() => postsData.value ?? [])
 
+onMounted(() => {
+  const list = postsData.value ?? []
+  console.log('[Blog] onMounted - posts:', list?.length)
+  list?.forEach((p, i) => {
+    console.log(`[Blog] Post ${i}: "${p?.title?.slice(0, 35)}" image=${p?.image ? 'SI' : 'NO'} desc=${(p?.description?.length || 0)}chars`)
+  })
+})
+
 function getPostPath (post) {
-  const p = (post.path || post._path || '').toString()
-  return p || '/blog'
+  const p = (post.path || post._path || '').toString().trim()
+  if (!p) return '/blog'
+  return p.startsWith('/') ? p : '/' + p
 }
-const config = useRuntimeConfig()
-const siteUrl = config.public.siteUrl || 'https://autoremates.cl'
+
+function safeDescription (post) {
+  const d = post?.description
+  if (typeof d === 'string' && d && d !== '[object Object]') return d
+  if (d && typeof d === 'object') {
+    const v = d.value ?? d.text ?? d.default ?? d.content ?? ''
+    if (typeof v === 'string' && v !== '[object Object]') return v
+  }
+  return ''
+}
+
+function safeImage (img) {
+  if (!img) return ''
+  const url = typeof img === 'string' ? img : (img?.url ?? img?.src ?? '')
+  if (!url || typeof url !== 'string') return ''
+  return url.startsWith('http') ? url : (url.startsWith('/') ? siteUrl + url : url)
+}
 
 useSeoMeta({
   title: 'Blog | AutoRemates Chile - Guías sobre remates de autos',

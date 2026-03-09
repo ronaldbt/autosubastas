@@ -4,7 +4,7 @@
       <AnimatedSection class="text-center mb-12">
         <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Tipos de Remates de Autos en Chile</h2>
         <p class="text-slate-500 text-lg max-w-2xl mx-auto mb-4">
-          Existen diversos tipos de remates de autos: chocados, de aseguradora, judiciales, municipales y más. <strong class="text-slate-700">AutoRemates se especializa en remates de particulares y empresas, con vehículos en buen estado.</strong>
+          Existen diversos tipos de remates de autos: remate de autos embargados, remate de autos embargados Chile, remate siniestrados, remate autos siniestrados, chocados, de aseguradora, judiciales, municipales y más. <strong class="text-slate-700">AutoRemates se especializa en remates de particulares y empresas, con vehículos en buen estado.</strong>
         </p>
       </AnimatedSection>
 
@@ -43,7 +43,7 @@ const tipos = [
   {
     slug: 'chocados',
     title: 'Remates de autos chocados',
-    desc: 'Vehículos con daño por accidente. Incluye inspección técnica. Ideal para reparación o repuestos.',
+    desc: 'Compra de vehículos chocados para reparación o repuestos. Vehículos con daño por accidente. Incluye inspección técnica.',
     icon: Car
   },
   {
@@ -78,14 +78,14 @@ const tipos = [
   },
   {
     slug: 'siniestrados',
-    title: 'Remates siniestrados',
-    desc: 'Autos con pérdida total declarada. De aseguradoras y liquidadores. Requieren revisión técnica.',
+    title: 'Remate autos siniestrados',
+    desc: 'Remate siniestrados: autos con pérdida total declarada. De aseguradoras y liquidadores. Requieren revisión técnica.',
     icon: AlertTriangle
   },
   {
     slug: 'embargados',
-    title: 'Remates embargados',
-    desc: 'Vehículos con embargo por deudas. Remates judiciales. Documentación verificada.',
+    title: 'Remate de autos embargados',
+    desc: 'Remate de autos embargados en Chile. Vehículos con embargo por deudas. Remates judiciales. Documentación verificada.',
     icon: FileWarning
   }
 ]

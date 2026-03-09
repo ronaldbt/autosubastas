@@ -27,7 +27,7 @@
               Remate de Autos de Particulares y Empresas – <span class="text-blue-400 inline-block transform hover:scale-105 transition-transform duration-300">Remates Online</span>
             </h1>
             <p class="text-xl text-slate-300 mt-4 leading-relaxed max-w-xl">
-              Remate de autos de particulares y empresas en Chile. Remates online, vehículos inspeccionados, en buen estado. Cuando vendes, podemos ir a dejar el auto al comprador a cualquier ciudad de Chile (tiene un costo). <strong class="text-white">Inspección profesional incluida</strong>. Si el precio no te convence, no vendes.
+              Remate de autos y remate de vehículos de particulares y empresas en Chile. Remates de autos online, remate auto con inspección incluida. Vehículos inspeccionados, en buen estado. Cuando vendes, podemos ir a dejar el auto al comprador a cualquier ciudad de Chile (tiene un costo). <strong class="text-white">Inspección profesional incluida</strong>. Si el precio no te convence, no vendes.
             </p>
           </AnimatedSection>
 

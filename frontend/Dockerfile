@@ -40,6 +40,8 @@ RUN npm install --only=production
 
 # Copy built application from builder stage
 COPY --from=builder /app/.output ./
+# Copy content for blog API fallback (reads frontmatter from files)
+COPY --from=builder /app/content ./content
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs

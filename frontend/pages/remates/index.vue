@@ -197,11 +197,11 @@
                   Limpiar filtros
                 </button>
               </div>
-              <div v-else class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div
                   v-for="car in filteredCars"
                   :key="car.id"
-                  class="bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-200 flex flex-col group"
+                  class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border-2 border-slate-200 flex flex-col group"
                 >
                   <div class="relative h-48 overflow-hidden bg-slate-100">
                     <div class="absolute top-3 left-3 z-10 flex flex-col gap-2">
@@ -265,7 +265,7 @@
                       </div>
                       <NuxtLink
                         :to="`/dealer/remates-live-${String(car.id)}`"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg text-center text-sm transition-colors shrink-0 inline-block"
+                        class="bg-slate-900 hover:bg-blue-600 text-white font-black py-3 px-5 rounded-xl text-center text-sm transition-colors shrink-0 inline-block w-full"
                       >
                         Ver detalles y pujar
                       </NuxtLink>

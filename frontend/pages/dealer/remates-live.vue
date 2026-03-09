@@ -12,7 +12,7 @@
               </svg>
             </div>
             <span class="text-2xl font-black text-slate-900 tracking-tighter">
-              Auto<span class="text-blue-600">ventas</span>
+              Auto<span class="text-blue-600">Remates</span>
             </span>
           </div>
 
@@ -181,7 +181,7 @@ const loadAuctions = async (isRefresh = false) => {
       headers: getAuthHeaders()
     })
 
-    // Enriquecer con pujas
+    // Enriquecer con pujas y con cantidad real de viewers
     for (const auto of response) {
       try {
         const pujas = await $fetch(`${API_BASE}/remates?autoId=${auto.id}`, {
@@ -201,6 +201,14 @@ const loadAuctions = async (isRefresh = false) => {
         console.warn(`Error cargando pujas para auto ${auto.id}:`, err)
         auto.totalPujas = 0
         auto.miPuja = null
+      }
+      try {
+        const viewersRes = await $fetch(`${API_BASE}/remates/autos/${auto.id}/viewers`, {
+          headers: getAuthHeaders()
+        })
+        if (typeof viewersRes?.count === 'number') auto.viewersCount = viewersRes.count
+      } catch (_) {
+        // Sin auth o error: no mostrar número ficticio
       }
     }
 

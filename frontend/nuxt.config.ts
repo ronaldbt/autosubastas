@@ -40,6 +40,7 @@ export default defineNuxtConfig({
   },
   sitemap: {
     hostname: process.env.NUXT_PUBLIC_SITE_URL || 'https://autoremates.cl',
+    sources: ['/api/__sitemap__/urls'],
     exclude: [
       '/admin/**',
       '/superadmin/**',

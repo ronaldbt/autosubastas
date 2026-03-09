@@ -1,6 +1,6 @@
 <template>
   <section id="remates" class="py-24 bg-slate-50">
-    <div class="container mx-auto px-4">
+    <div class="max-w-7xl mx-auto px-4">
       <div class="text-center max-w-3xl mx-auto mb-12">
         <AnimatedSection>
           <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">
@@ -15,14 +15,14 @@
         <p class="text-slate-600 text-lg mb-4">No hay remates activos en este momento.</p>
         <p class="text-slate-500 text-sm">Los autos aparecerán aquí cuando un administrador los envíe a subasta desde el panel de admin.</p>
       </div>
-      <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <AnimatedSection 
           v-for="(car, index) in featuredCars" 
           :key="car.id" 
           :delay="index * 150" 
           class="h-full"
         >
-          <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 h-full flex flex-col group">
+          <div class="bg-white rounded-3xl overflow-hidden shadow-sm border-2 border-slate-200 hover:shadow-xl transition-all duration-300 h-full flex flex-col group">
             <div class="relative h-56 overflow-hidden">
               <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
                 <div class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-md w-fit">
@@ -68,7 +68,7 @@
                 </div>
                 <NuxtLink
                   :to="`/dealer/remates-live-${car.id}`"
-                  class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg text-center text-sm transition-colors shrink-0"
+                  class="bg-slate-900 hover:bg-blue-600 text-white font-black py-3 px-5 rounded-xl text-center text-sm transition-colors shrink-0 inline-block w-full"
                 >
                   Ver detalles y pujar
                 </NuxtLink>

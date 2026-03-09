@@ -66,9 +66,9 @@
             </div>
           </div>
           <div class="text-right">
-            <div class="flex items-center gap-1 text-slate-400 text-xs font-bold justify-end">
+            <div v-if="typeof auction.viewersCount === 'number'" class="flex items-center gap-1 text-slate-400 text-xs font-bold justify-end">
               <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span>
-              {{ auction.views || Math.floor(Math.random() * 50) + 10 }} VIENDO
+              {{ auction.viewersCount }} VIENDO
             </div>
             <div class="text-xs font-bold text-blue-600 mt-1">{{ auction.totalPujas || 0 }} PUJAS</div>
           </div>

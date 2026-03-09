@@ -202,19 +202,6 @@
     
     <Footer />
     <ScrollToTop />
-    
-    <!-- Floating Assistant Button -->
-    <button 
-      @click="openWhatsApp"
-      class="fixed bottom-24 right-6 z-50 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 font-bold animate-float transition-colors group"
-    >
-      <MessageCircle :size="24" class="group-hover:rotate-12 transition-transform" />
-      <span class="text-sm md:text-base">Asistente en línea</span>
-      <span class="relative flex h-3 w-3">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
-      </span>
-    </button>
   </div>
 </template>
 
@@ -239,7 +226,7 @@ const route = useRoute()
 useSeoMeta({
   title: 'AutoRemates Chile - Remate de Autos de Particulares y Empresas | Remates Online',
   description: 'Remate de autos de particulares y empresas en Chile. Remates online. Podemos entregar el auto al comprador en cualquier ciudad de Chile. Inspección profesional incluida. Si el precio no te convence, no vendes.',
-  keywords: 'remate de autos particulares, remate de autos empresas, remate de autos chile, subasta de autos, remates de autos en santiago, remates de autos en concepcion, remates de autos en iquique, remate autos buen estado, remates de autos online, como saber si un auto es de remate, remate autos particulares chile',
+  keywords: 'remate de autos, remates de autos, remate auto, remate autos, remate vehiculos, remate de autos santiago, remates de autos en santiago, remate siniestrados, remate autos siniestrados, remate de autos embargados, remate de autos embargados chile, compra vehiculos chocados, remate de autos particulares, remate de autos empresas, remate de autos chile, subasta de autos, remates online',
   ogTitle: 'AutoRemates Chile - Remate de Autos de Particulares y Empresas',
   ogDescription: 'Remate de autos de particulares y empresas en Chile. Remates online, vehículos inspeccionados, en buen estado. Inspección profesional incluida.',
   ogImage: siteUrl + '/subasta.png',
@@ -411,7 +398,4 @@ const nextFridayText = computed(() => {
   return `Viernes ${day} ${month}`
 })
 
-const openWhatsApp = () => {
-  window.open('https://wa.me/56979796841', '_blank')
-}
 </script>

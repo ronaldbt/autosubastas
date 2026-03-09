@@ -3,6 +3,9 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+    <ClientOnly>
+      <OnlineAssistant />
+    </ClientOnly>
   </div>
 </template>
 
