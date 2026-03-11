@@ -87,6 +87,7 @@
               <option value="aprobado">Aprobado</option>
               <option value="rechazado">Rechazado</option>
               <option value="disponible">Disponible</option>
+              <option value="vendido">Vendido</option>
             </select>
           </div>
           <div>
@@ -232,6 +233,13 @@
                 class="px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
               >
                 Enviar a Subasta
+              </button>
+              <button
+                v-if="auto.estado === 'vendido'"
+                @click="resendToAuction(auto.id)"
+                class="px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
+              >
+                Reenviar a Subasta
               </button>
             </div>
           </div>
@@ -461,6 +469,34 @@ const sendToAuction = async (id) => {
   } catch (err) {
     console.error('Error enviando a subasta:', err)
     error.value = err.data?.message || 'Error al enviar auto a subasta'
+    alert(error.value)
+  }
+}
+
+const resendToAuction = async (id) => {
+  if (!confirm('¿Reenviar este auto a subasta? (Se pondrá de nuevo en remate. Úsalo si la venta no se concretó.)')) return
+
+  const diasInput = window.prompt('¿Cuántos días de duración tendrá el remate?', '4')
+  if (diasInput == null) return
+  const dias = Math.max(1, Math.min(90, parseInt(diasInput, 10) || 4))
+
+  try {
+    await $fetch(`${API_BASE}/autos/${id}/estado`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: { estado: 'aprobado' }
+    })
+    await $fetch(`${API_BASE}/autos/${id}/iniciar-remate`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: { dias }
+    })
+    alert('Auto reenviado a subasta exitosamente.')
+    await loadAutos()
+    navigateTo('/admin/remates')
+  } catch (err) {
+    console.error('Error reenviando a subasta:', err)
+    error.value = err.data?.message || 'Error al reenviar auto a subasta'
     alert(error.value)
   }
 }

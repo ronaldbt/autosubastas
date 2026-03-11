@@ -4,14 +4,13 @@
     <Header />
     
     <main>
-      <h1 class="sr-only">Remate de Autos de Particulares y Empresas en Chile - Remates Online</h1>
       <Hero />
       
       <!-- Modern How It Works Section -->
       <section id="como-funciona" class="py-24 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4">
           <AnimatedSection class="text-center mb-16">
-            <h2 class="text-4xl font-black text-slate-900 mb-4">¿Cómo Funciona?</h2>
+            <h2 class="text-4xl font-black text-slate-900 mb-4">Cómo funcionan los remates de autos</h2>
             <p class="text-slate-500 text-lg max-w-2xl mx-auto">Vende tu auto de forma segura, rápida y al mejor precio del mercado en 4 simples pasos.</p>
           </AnimatedSection>
           
@@ -146,7 +145,7 @@
       <!-- Blog Preview Section -->
       <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4">
-          <h2 class="text-3xl font-black mb-10 text-center text-slate-900">Guías y Consejos</h2>
+          <h2 class="text-3xl font-black mb-10 text-center text-slate-900">Guías y consejos sobre remate de autos</h2>
           <div class="grid md:grid-cols-3 gap-8">
             <NuxtLink
               v-for="(post, i) in blogPosts"
@@ -180,7 +179,7 @@
       <!-- Final CTA -->
       <section class="py-20 bg-slate-900 text-white text-center">
         <div class="max-w-7xl mx-auto px-4">
-          <h2 class="text-3xl md:text-5xl font-black mb-6">¿Listo para Vender?</h2>
+          <h2 class="text-3xl md:text-5xl font-black mb-6">¿Listo para vender tu auto en remate?</h2>
           <p class="text-xl text-slate-400 mb-8">Cada remate tiene su propio plazo. Inscribe tu auto y participa cuando quieras.</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <NuxtLink

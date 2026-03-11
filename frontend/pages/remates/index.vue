@@ -1,14 +1,21 @@
 <template>
   <div class="font-sans text-slate-900 bg-slate-50 min-h-screen">
     <Header />
-    <main class="pt-24 pb-16">
-      <div class="max-w-7xl mx-auto px-4">
+    <main class="pt-32 pb-16">
+      <div class="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         <!-- Header -->
         <div class="mb-8">
           <h1 class="text-4xl font-black text-slate-900 mb-4 tracking-tighter">Remates Activos de Autos</h1>
-          <p class="text-xl text-slate-600 max-w-3xl">
+          <p class="text-xl text-slate-600 mb-6">
             Remates online de autos de particulares y empresas en Chile. Vehículos inspeccionados, en buen estado.
           </p>
+
+          <section class="mb-10">
+            <h2 class="text-2xl font-bold text-slate-900 mb-3">Remates de autos online en Chile</h2>
+            <p class="text-slate-600 leading-relaxed max-w-full">
+              En esta página encuentras los <strong>remates activos de autos</strong> y las <strong>subastas de autos</strong> en curso. Todos los vehículos pasan por inspección profesional antes del remate. Puedes filtrar por marca, modelo, año y combustible. Cada remate tiene su propio plazo; inicia sesión como comprador para pujar en las <strong>subastas de autos online</strong>. Si buscas <strong>próximos remates de autos</strong> o <strong>remate de autos usados</strong> en Santiago, Concepción, Iquique o el resto de Chile, aquí verás las ofertas actuales.
+            </p>
+          </section>
         </div>
 
         <!-- Barra búsqueda + Ordenar -->
@@ -39,9 +46,9 @@
         <div class="flex flex-col lg:flex-row gap-8">
           <!-- Sidebar filtros (izquierda) -->
           <aside class="lg:w-72 flex-shrink-0">
-            <div class="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden sticky top-24 shadow-sm">
+            <div class="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden sticky top-28 shadow-sm">
               <div class="p-4 border-b border-slate-100">
-                <h2 class="text-lg font-bold text-blue-600">Filtros ({{ activeFiltersCount }})</h2>
+                <p class="text-lg font-bold text-blue-600">Filtros ({{ activeFiltersCount }})</p>
               </div>
 
               <div class="divide-y divide-gray-100">
@@ -183,6 +190,7 @@
               <div class="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full" />
             </div>
             <template v-else>
+              <h2 class="text-xl font-bold text-slate-900 mb-4">Vehículos en remate</h2>
               <p class="text-slate-600 mb-6 font-semibold">{{ filteredCars.length }} Resultados</p>
               <div v-if="filteredCars.length === 0" class="text-center py-16 bg-slate-50 rounded-2xl">
                 <p class="text-slate-600 text-lg">
@@ -277,8 +285,19 @@
           </div>
         </div>
 
+        <!-- Cómo participar -->
+        <section class="mt-16 bg-white rounded-2xl border border-slate-200 p-8 md:p-10">
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">Cómo participar en una subasta de autos online</h2>
+          <p class="text-slate-600 mb-4 leading-relaxed">
+            Para pujar en nuestros <strong>remates de autos online</strong> debes registrarte como comprador (dealer). El proceso es gratuito. Una vez verificado, podrás ver todos los <strong>remates activos de autos</strong>, revisar el informe de inspección de cada vehículo y ofertar en vivo. En Chile, <strong>cómo funcionan los remates de autos</strong> en AutoRemates: cada auto tiene su propia fecha de cierre; cuando llega la hora, la mejor puja gana. Todos los autos están inspeccionados y en buen estado —nos especializamos en <strong>remate de autos de particulares y empresas</strong>, no en autos chocados ni de aseguradora.
+          </p>
+          <p class="text-slate-600 leading-relaxed">
+            Si te preguntas <strong>dónde hay remates de autos en Chile</strong>, aquí puedes participar desde cualquier ciudad. Realizamos <strong>subastas de autos</strong> con entrega posible a todo el país. Revisa los vehículos en remate arriba y regístrate para comprar.
+          </p>
+        </section>
+
         <section class="mt-16 bg-slate-50 rounded-2xl p-8 text-center">
-          <h2 class="text-2xl font-bold text-slate-900 mb-4">¿Quieres comprar en el remate?</h2>
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">Participa en remates de autos online</h2>
           <p class="text-slate-600 mb-6 max-w-xl mx-auto">
             Regístrate como comprador (dealer) para participar en las subastas online. Es gratuito.
           </p>
@@ -289,6 +308,51 @@
             <NuxtLink to="/login" class="bg-white border-2 border-slate-300 hover:border-blue-600 text-slate-900 px-8 py-4 rounded-xl font-bold text-lg transition-colors">
               Ya tengo cuenta
             </NuxtLink>
+          </div>
+        </section>
+
+        <!-- Preguntas frecuentes remates -->
+        <section id="faq-remates" class="mt-16 bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div class="p-8 md:p-10 border-b border-slate-100 text-center">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Preguntas frecuentes sobre remates de autos</h2>
+            <p class="text-slate-600 max-w-2xl mx-auto">Todo lo que necesitas saber para participar en remates y subastas de autos en Chile.</p>
+          </div>
+          <div class="divide-y divide-slate-100 max-w-3xl mx-auto">
+            <div
+              v-for="(faq, index) in faqsRemates"
+              :key="index"
+              class="border-slate-100"
+            >
+              <button
+                type="button"
+                @click="toggleFaqRemates(index)"
+                class="w-full px-6 md:px-8 py-5 text-left flex items-center justify-between bg-white hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-inset"
+              >
+                <h3 class="text-lg font-bold text-slate-900 pr-8">{{ faq.question }}</h3>
+                <svg
+                  :class="['w-6 h-6 text-blue-600 transition-transform duration-300 flex-shrink-0', openFaqRemates[index] ? 'rotate-180' : '']"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <Transition
+                enter-active-class="transition-all duration-300 ease-out"
+                enter-from-class="opacity-0 max-h-0"
+                enter-to-class="opacity-100 max-h-[500px]"
+                leave-active-class="transition-all duration-300 ease-in"
+                leave-from-class="opacity-100 max-h-[500px]"
+                leave-to-class="opacity-0 max-h-0"
+              >
+                <div v-if="openFaqRemates[index]" class="overflow-hidden">
+                  <div class="px-6 md:px-8 py-5 bg-slate-50 border-t border-slate-100 text-center md:text-left">
+                    <p class="text-slate-700 leading-relaxed whitespace-pre-line max-w-2xl mx-auto">{{ faq.answer }}</p>
+                  </div>
+                </div>
+              </Transition>
+            </div>
           </div>
         </section>
       </div>
@@ -509,6 +573,35 @@ function clearFilters() {
   searchQuery.value = ''
 }
 
+const faqsRemates = [
+  {
+    question: '¿Cómo participar en una subasta de autos online?',
+    answer: 'Debes registrarte como comprador (dealer) en AutoRemates. Una vez verificado, podrás ver los autos en remate, revisar las inspecciones y pujar en las subastas en vivo. Cada remate tiene su propio plazo. El registro es gratuito.'
+  },
+  {
+    question: '¿Cómo funcionan los remates de autos?',
+    answer: 'Los remates de autos son subastas donde los compradores pujan por vehículos. En AutoRemates: el vendedor inscribe su auto, realizamos inspección técnica de 60 puntos, el auto se subasta online con compradores verificados y se acepta la mejor oferta con pago inmediato.'
+  },
+  {
+    question: '¿Dónde hay remates de autos en Chile?',
+    answer: 'En AutoRemates realizamos remates online, por lo que puedes participar desde cualquier parte de Chile. Tenemos centros de inspección y los vehículos en remate pueden entregarse en distintas ciudades. Revisa los remates activos en esta página.'
+  },
+  {
+    question: '¿Los autos en remate están inspeccionados?',
+    answer: 'Sí. Todos los autos que aparecen en remates activos pasan por una inspección profesional de 60 puntos antes de subastarse. Puedes revisar el informe técnico de cada vehículo antes de pujar.'
+  },
+  {
+    question: '¿Cuándo son los próximos remates de autos?',
+    answer: 'Cada auto tiene su propia fecha de cierre de remate. En la ficha de cada vehículo verás la cuenta regresiva. Los remates en vivo se realizan según el calendario publicado; regístrate como comprador para recibir información y pujar.'
+  }
+]
+
+const openFaqRemates = ref({})
+
+function toggleFaqRemates(index) {
+  openFaqRemates.value[index] = !openFaqRemates.value[index]
+}
+
 onMounted(() => fetchCars())
 
 useSeoMeta({
@@ -520,6 +613,20 @@ useSeoMeta({
 })
 
 useHead({
-  link: [{ rel: 'canonical', href: siteUrl + '/remates' }]
+  link: [{ rel: 'canonical', href: siteUrl + '/remates' }],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqsRemates.map(f => ({
+          '@type': 'Question',
+          name: f.question,
+          acceptedAnswer: { '@type': 'Answer', text: f.answer }
+        }))
+      })
+    }
+  ]
 })
 </script>

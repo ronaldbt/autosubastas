@@ -2,7 +2,7 @@
   <section id="faq" class="py-24 bg-white">
     <div class="container mx-auto px-4">
       <AnimatedSection class="text-center mb-16">
-        <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Preguntas Frecuentes</h2>
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Preguntas frecuentes sobre remate de autos</h2>
         <p class="text-slate-500 text-lg max-w-2xl mx-auto">Todo lo que necesitas saber sobre nuestro sistema de remates de autos</p>
       </AnimatedSection>
 

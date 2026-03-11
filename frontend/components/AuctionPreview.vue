@@ -4,7 +4,7 @@
       <div class="text-center max-w-3xl mx-auto mb-12">
         <AnimatedSection>
           <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">
-            Remates activos
+            Remates de autos online
           </h2>
           <p class="text-slate-600 mb-6">Cada auto tiene su propio plazo. Participa en las subastas en curso.</p>
           <div class="w-24 h-1 bg-blue-600 mx-auto mb-6 rounded-full"></div>

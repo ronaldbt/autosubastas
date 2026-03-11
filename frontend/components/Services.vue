@@ -59,7 +59,7 @@
               SERVICIO ADICIONAL
             </div>
             <h2 class="text-4xl font-extrabold text-slate-900 mb-6 leading-tight">
-              ¿Vas a comprar a un particular? <span class="text-purple-600">No te arriesgues.</span>
+              Comprar en remate de autos: inspección para no arriesgarte
             </h2>
             <p class="text-lg text-slate-600 mb-8 leading-relaxed">
               Hazlo inspeccionar por los mismos expertos que revisan 60 autos al mes en nuestros remates. Evita estafas y compra tranquilo.

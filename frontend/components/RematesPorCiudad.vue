@@ -2,7 +2,7 @@
   <section id="remates-por-ciudad" class="py-24 bg-slate-50">
     <div class="container mx-auto px-4">
       <AnimatedSection class="text-center mb-16">
-        <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Remates de Autos por Ciudad</h2>
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Remates de autos por ciudad</h2>
         <p class="text-slate-500 text-lg max-w-2xl mx-auto">
           Remate de autos Santiago y remates de autos en Santiago, Concepción, Iquique, Valparaíso y más. Encuentra remates de autos en las principales ciudades de Chile.
         </p>
@@ -23,7 +23,7 @@
             </div>
             <div>
               <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                Remates en {{ ciudad.nombre }}
+                Remates de autos en {{ ciudad.nombre }}
               </h3>
               <p class="text-sm text-slate-500">{{ ciudad.desc }}</p>
             </div>
