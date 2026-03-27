@@ -148,7 +148,42 @@ useSeoMeta({
   ogUrl: () => siteUrl + route.path
 })
 
-useHead({
-  link: () => [{ rel: 'canonical', href: siteUrl + route.path }]
+useHead(() => {
+  const a = auto.value
+  const scripts = []
+  scripts.push({
+    type: 'application/ld+json',
+    children: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Remates Activos', item: siteUrl + '/remates' },
+        ...(a ? [{ '@type': 'ListItem', position: 3, name: `${a.marca} ${a.modelo}`.trim(), item: siteUrl + route.path }] : [])
+      ]
+    })
+  })
+  if (a) {
+    const img = a.imagenes?.length ? getImageUrl(a.imagenes[0]) : undefined
+    scripts.push({
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Vehicle',
+        name: `${a.marca || ''} ${a.modelo || ''}`.trim() || 'Auto',
+        brand: a.marca ? { '@type': 'Brand', name: a.marca } : undefined,
+        vehicleModelDate: a.anio,
+        mileageFromOdometer: a.kilometraje ? { '@type': 'QuantitativeValue', value: a.kilometraje, unitCode: 'KMT' } : undefined,
+        fuelType: a.peritaje?.combustible || undefined,
+        image: img,
+        url: siteUrl + route.path,
+        description: a.descripcion || `Remate de ${a.marca} ${a.modelo} ${a.anio}. Vehículo inspeccionado.`
+      })
+    })
+  }
+  return {
+    link: [{ rel: 'canonical', href: siteUrl + route.path }],
+    script: scripts
+  }
 })
 </script>

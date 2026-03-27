@@ -63,7 +63,7 @@ Los requisitos cambian según si el remate es judicial, institucional (Dicrep, A
 
 **Restricciones importantes:** Los funcionarios del Servicio Nacional de Aduanas no pueden participar en subastas aduaneras, ni directa ni indirectamente por terceros.
 
-### Remates privados de autos (AutoRemates)
+### Remates privados de autos ([AutoRemates](/))
 
 **Quién puede ser postor:** Compradores verificados (dealers, empresas, particulares) que cumplan el proceso de verificación y depositen la garantía.
 
@@ -152,4 +152,4 @@ Sí. Debes inscribirte y depositar la garantía correspondiente en cada uno, sal
 
 **Quién puede ser postor en un remate:** Toda persona natural o jurídica, chilena o extranjera, con capacidad legal para contratar, que cumpla inscripción, garantía (cuando aplique) y requisitos técnicos en remates online. Las restricciones dependen del tipo de remate (por ejemplo, funcionarios de Aduana en subastas aduaneras).
 
-Si quieres ser postor en remates de autos con inspección incluida y compradores verificados, AutoRemates te permite participar depositando $200.000 CLP de garantía. Revisa las bases, regístrate y puja en el próximo remate.
+Si quieres ser postor en remates de autos con inspección incluida y compradores verificados, [AutoRemates](/) te permite participar depositando $200.000 CLP de garantía. [Revisa los remates activos](/remates), regístrate y puja en el próximo remate.

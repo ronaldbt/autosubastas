@@ -1,14 +1,14 @@
 <template>
   <div class="min-h-screen bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div class="mb-10 flex justify-between items-center">
+      <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <div>
-          <h1 class="text-4xl font-black text-slate-900 mb-2">Autos Pendientes</h1>
-          <p class="text-slate-500">Revisa y aprueba los autos en espera de publicación</p>
+          <h1 class="text-2xl sm:text-4xl font-black text-slate-900 mb-2">Autos Pendientes</h1>
+          <p class="text-slate-500 text-sm sm:text-base">Revisa y aprueba los autos en espera de publicación</p>
         </div>
         <button
           @click="navigateTo('/admin/autos-nuevo')"
-          class="px-5 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl active:scale-95 flex items-center space-x-2 font-semibold"
+          class="w-full sm:w-auto shrink-0 px-5 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl active:scale-95 flex items-center justify-center gap-2 font-semibold"
         >
           <PlusCircle :size="20" />
           <span>Nuevo Auto</span>
@@ -16,47 +16,47 @@
       </div>
 
       <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Pendientes</p>
-              <p class="text-3xl font-black text-slate-900">{{ stats.pendientes }}</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-10">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-6">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <p class="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-wide mb-1 leading-tight">Pendientes</p>
+              <p class="text-2xl md:text-3xl font-black text-slate-900">{{ stats.pendientes }}</p>
             </div>
-            <div class="bg-yellow-50 p-3 rounded-xl">
+            <div class="bg-yellow-50 p-2 md:p-3 rounded-lg md:rounded-xl shrink-0">
               <Clock :size="24" class="text-yellow-600" />
             </div>
           </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Aprobados Hoy</p>
-              <p class="text-3xl font-black text-slate-900">{{ stats.aprobadosHoy }}</p>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-6">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <p class="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-wide mb-1 leading-tight">Aprobados Hoy</p>
+              <p class="text-2xl md:text-3xl font-black text-slate-900">{{ stats.aprobadosHoy }}</p>
             </div>
-            <div class="bg-green-50 p-3 rounded-xl">
+            <div class="bg-green-50 p-2 md:p-3 rounded-lg md:rounded-xl shrink-0">
               <CheckCircle :size="24" class="text-green-600" />
             </div>
           </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Rechazados Hoy</p>
-              <p class="text-3xl font-black text-slate-900">{{ stats.rechazadosHoy }}</p>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-6">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <p class="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-wide mb-1 leading-tight">Rechazados Hoy</p>
+              <p class="text-2xl md:text-3xl font-black text-slate-900">{{ stats.rechazadosHoy }}</p>
             </div>
-            <div class="bg-red-50 p-3 rounded-xl">
+            <div class="bg-red-50 p-2 md:p-3 rounded-lg md:rounded-xl shrink-0">
               <XCircle :size="24" class="text-red-600" />
             </div>
           </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">En Revisión</p>
-              <p class="text-3xl font-black text-slate-900">{{ stats.enRevision }}</p>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-6">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <p class="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-wide mb-1 leading-tight">En Revisión</p>
+              <p class="text-2xl md:text-3xl font-black text-slate-900">{{ stats.enRevision }}</p>
             </div>
-            <div class="bg-blue-50 p-3 rounded-xl">
+            <div class="bg-blue-50 p-2 md:p-3 rounded-lg md:rounded-xl shrink-0">
               <Eye :size="24" class="text-blue-600" />
             </div>
           </div>
@@ -128,9 +128,9 @@
           :key="auto.id"
           class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg transition-shadow overflow-hidden"
         >
-          <div class="flex items-start gap-6 p-6">
+          <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-6 p-4 sm:p-6">
             <!-- Imagen -->
-            <div class="w-48 h-32 bg-slate-100 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div class="w-full md:w-48 h-44 md:h-32 bg-slate-100 rounded-xl flex items-center justify-center overflow-hidden shrink-0 mx-auto md:mx-0 max-w-md md:max-w-none">
               <img
                 v-if="auto.imagenes && auto.imagenes.length > 0"
                 :src="getImageUrl(auto.imagenes[0])"
@@ -142,71 +142,70 @@
               <Car v-else :size="48" class="text-slate-400" />
             </div>
 
-            <!-- Información -->
-            <div class="flex-1 min-w-0">
-              <div class="flex items-start justify-between mb-4">
-                <div class="flex-1">
-                  <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-xl font-black text-slate-900">
+            <div class="flex flex-col lg:flex-row flex-1 min-w-0 gap-4 lg:gap-6 w-full">
+              <!-- Información -->
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                  <div class="min-w-0 flex-1">
+                    <h3 class="text-lg sm:text-xl font-black text-slate-900 break-words">
                       {{ auto.marca }} {{ auto.modelo }} {{ auto.anio }}
                     </h3>
-                    <span
-                      :class="[
-                        'px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wide',
-                        getStatusBadgeClass(auto.estado)
-                      ]"
-                    >
-                      {{ formatStatus(auto.estado) }}
-                    </span>
                   </div>
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                    <div>
-                      <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Kilometraje</p>
-                      <p class="text-sm font-semibold text-slate-900">{{ formatNumber(auto.kilometraje) }} km</p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Precio Base</p>
-                      <p class="text-sm font-semibold text-slate-900">${{ formatPrice(auto.precioBase) }}</p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Vendedor</p>
-                      <p class="text-sm font-semibold text-slate-900">{{ auto.creador?.nombre || 'N/A' }}</p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Fecha Solicitud</p>
-                      <p class="text-sm font-semibold text-slate-900">{{ formatDate(auto.createdAt) }}</p>
-                    </div>
+                  <span
+                    :class="[
+                      'px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wide shrink-0 self-start',
+                      getStatusBadgeClass(auto.estado)
+                    ]"
+                  >
+                    {{ formatStatus(auto.estado) }}
+                  </span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-2">
+                  <div class="min-w-0">
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Kilometraje</p>
+                    <p class="text-sm font-semibold text-slate-900 break-words">{{ formatNumber(auto.kilometraje) }} km</p>
                   </div>
-                  <div v-if="auto.peritaje" class="mt-3">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-600 uppercase tracking-wide">
-                      <ClipboardCheck :size="14" class="mr-1.5" />
-                      Tiene Peritaje
-                    </span>
+                  <div class="min-w-0">
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Precio Base</p>
+                    <p class="text-sm font-semibold text-slate-900 break-words">${{ formatPrice(auto.precioBase) }}</p>
                   </div>
-                  <div v-else class="mt-3">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-50 text-yellow-600 uppercase tracking-wide">
-                      <svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      Sin Peritaje
-                    </span>
+                  <div class="min-w-0">
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Vendedor</p>
+                    <p class="text-sm font-semibold text-slate-900 break-words">{{ auto.creador?.nombre || 'N/A' }}</p>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wide mb-1">Fecha Solicitud</p>
+                    <p class="text-sm font-semibold text-slate-900 break-words">{{ formatDate(auto.createdAt) }}</p>
                   </div>
                 </div>
+                <div v-if="auto.peritaje" class="mt-3">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-600 uppercase tracking-wide">
+                    <ClipboardCheck :size="14" class="mr-1.5 shrink-0" />
+                    Tiene Peritaje
+                  </span>
+                </div>
+                <div v-else class="mt-3">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-50 text-yellow-600 uppercase tracking-wide">
+                    <svg class="w-3 h-3 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Sin Peritaje
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <!-- Acciones -->
-            <div class="flex flex-col gap-2 min-w-[140px]">
+              <!-- Acciones -->
+              <div class="flex flex-row flex-wrap gap-2 w-full lg:w-auto lg:min-w-[140px] lg:flex-col lg:flex-nowrap">
               <button
                 @click="viewAuto(auto.id)"
-                class="px-4 py-2.5 bg-slate-50 text-slate-700 rounded-xl hover:bg-slate-100 transition-all active:scale-95 text-sm font-semibold border border-slate-200"
+                class="flex-1 min-w-[calc(50%-0.25rem)] lg:flex-none lg:w-full px-4 py-2.5 bg-slate-50 text-slate-700 rounded-xl hover:bg-slate-100 transition-all active:scale-95 text-sm font-semibold border border-slate-200"
               >
                 Ver Detalles
               </button>
               <button
                 v-if="!auto.peritaje && (auto.estado === 'pendiente' || auto.estado === 'en_revision' || auto.estado === 'aprobado')"
                 @click="startReview(auto.id)"
-                class="px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all active:scale-95 text-sm font-semibold shadow-lg flex items-center justify-center gap-2"
+                class="flex-1 min-w-[calc(50%-0.25rem)] lg:flex-none lg:w-full px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all active:scale-95 text-sm font-semibold shadow-lg flex items-center justify-center gap-2"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -216,28 +215,28 @@
               <button
                 v-if="auto.estado === 'pendiente' || auto.estado === 'en_revision'"
                 @click="approveAuto(auto.id)"
-                class="px-4 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
+                class="flex-1 min-w-[calc(50%-0.25rem)] lg:flex-none lg:w-full px-4 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
               >
                 Aprobar
               </button>
               <button
                 v-if="auto.estado === 'pendiente' || auto.estado === 'en_revision'"
                 @click="rejectAuto(auto.id)"
-                class="px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
+                class="flex-1 min-w-[calc(50%-0.25rem)] lg:flex-none lg:w-full px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
               >
                 Rechazar
               </button>
               <button
                 v-if="auto.estado === 'aprobado' || auto.estado === 'disponible'"
                 @click="sendToAuction(auto.id)"
-                class="px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
+                class="flex-1 min-w-full sm:min-w-[calc(50%-0.25rem)] lg:flex-none lg:w-full px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
               >
                 Enviar a Subasta
               </button>
               <button
                 v-if="auto.estado === 'vendido'"
                 @click="resendToAuction(auto.id)"
-                class="px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
+                class="flex-1 min-w-full sm:min-w-[calc(50%-0.25rem)] lg:flex-none lg:w-full px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all active:scale-95 text-sm font-semibold shadow-lg"
               >
                 Reenviar a Subasta
               </button>
@@ -246,6 +245,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

@@ -6,7 +6,7 @@
           <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">
             Remates de autos online
           </h2>
-          <p class="text-slate-600 mb-6">Cada auto tiene su propio plazo. Participa en las subastas en curso.</p>
+          <p class="text-slate-600 mb-6">Cada auto tiene su propio plazo. Participa en las subastas en curso. <NuxtLink to="/remates" class="text-blue-600 font-semibold hover:underline">Ver todos los remates activos</NuxtLink>.</p>
           <div class="w-24 h-1 bg-blue-600 mx-auto mb-6 rounded-full"></div>
         </AnimatedSection>
       </div>
@@ -15,7 +15,7 @@
         <p class="text-slate-600 text-lg mb-4">No hay remates activos en este momento.</p>
         <p class="text-slate-500 text-sm">Los autos aparecerán aquí cuando un administrador los envíe a subasta desde el panel de admin.</p>
       </div>
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div v-else class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-8">
         <AnimatedSection 
           v-for="(car, index) in featuredCars" 
           :key="car.id" 
@@ -23,7 +23,7 @@
           class="h-full"
         >
           <div class="bg-white rounded-3xl overflow-hidden shadow-sm border-2 border-slate-200 hover:shadow-xl transition-all duration-300 h-full flex flex-col group">
-            <div class="relative h-56 overflow-hidden">
+            <div class="relative h-36 sm:h-56 overflow-hidden">
               <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
                 <div class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-md w-fit">
                   <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -40,9 +40,9 @@
               />
             </div>
 
-            <div class="p-6 flex-1 flex flex-col">
-              <h3 class="text-xl font-bold text-slate-900 mb-1">{{ car.title }}</h3>
-              <p class="text-slate-500 text-sm mb-3">
+            <div class="p-3 sm:p-6 flex-1 flex flex-col">
+              <h3 class="text-sm sm:text-xl font-bold text-slate-900 mb-1 line-clamp-2">{{ car.title }}</h3>
+              <p class="text-slate-500 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
                 {{ car.year }} · {{ car.fuel }}<template v-if="car.km != null && car.km > 0"> · {{ formatKilometrajeChile(car.km) }}</template>
               </p>
               <div class="flex flex-wrap gap-1.5 mb-3">
@@ -62,13 +62,13 @@
               <div class="mt-auto pt-4 border-t border-slate-100 flex flex-wrap items-end justify-between gap-3">
                 <div>
                   <span class="text-xs text-slate-500 uppercase font-semibold">Mín</span>
-                  <p class="text-xl font-bold text-slate-900">
+                  <p class="text-base sm:text-xl font-bold text-slate-900">
                     ${{ formatPriceChile(car.reservePrice) }}
                   </p>
                 </div>
                 <NuxtLink
                   :to="`/dealer/remates-live-${car.id}`"
-                  class="bg-slate-900 hover:bg-blue-600 text-white font-black py-3 px-5 rounded-xl text-center text-sm transition-colors shrink-0 inline-block w-full"
+                  class="bg-slate-900 hover:bg-blue-600 text-white font-black py-2 px-3 sm:py-3 sm:px-5 rounded-lg sm:rounded-xl text-center text-xs sm:text-sm transition-colors shrink-0 inline-block w-full"
                 >
                   Ver detalles y pujar
                 </NuxtLink>

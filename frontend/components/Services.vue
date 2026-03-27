@@ -8,7 +8,7 @@
           <!-- Vendedores -->
           <AnimatedSection class="relative rounded-3xl overflow-hidden shadow-2xl group">
             <div class="absolute inset-0 bg-slate-900/90 z-10 transition-colors group-hover:bg-slate-900/80"></div>
-            <img src="https://images.unsplash.com/photo-1560250056-07ba64664864?auto=format&fit=crop&q=80" alt="Vender" class="absolute inset-0 w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1560250056-07ba64664864?auto=format&fit=crop&q=80&w=800" alt="Vender" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
             <div class="relative z-20 p-10 h-full flex flex-col items-start text-white">
               <span class="bg-blue-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">Para Vendedores</span>
               <h3 class="text-3xl font-bold mb-4">¿Quieres Vender tu Auto?</h3>
@@ -29,7 +29,7 @@
           <!-- Compradores -->
           <AnimatedSection :delay="200" class="relative rounded-3xl overflow-hidden shadow-2xl group">
             <div class="absolute inset-0 bg-brand-blue/90 z-10 transition-colors group-hover:bg-brand-blue/80"></div>
-            <img src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?auto=format&fit=crop&q=80" alt="Comprar" class="absolute inset-0 w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?auto=format&fit=crop&q=80&w=800" alt="Comprar" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
             <div class="relative z-20 p-10 h-full flex flex-col items-start text-white">
               <span class="bg-white/20 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">Para Compradores</span>
               <h3 class="text-3xl font-bold mb-4">¿Buscas Auto con Garantía?</h3>
@@ -59,10 +59,10 @@
               SERVICIO ADICIONAL
             </div>
             <h2 class="text-4xl font-extrabold text-slate-900 mb-6 leading-tight">
-              Comprar en remate de autos: inspección para no arriesgarte
+              Comprar en remate de autos: revisar auto antes de comprar
             </h2>
             <p class="text-lg text-slate-600 mb-8 leading-relaxed">
-              Hazlo inspeccionar por los mismos expertos que revisan 60 autos al mes en nuestros remates. Evita estafas y compra tranquilo.
+              Revisar el auto antes de comprar evita sorpresas. Hazlo inspeccionar por los mismos expertos que revisan 60 autos al mes en nuestros remates. Evita estafas y compra tranquilo.
             </p>
 
             <div class="space-y-6">
@@ -92,7 +92,9 @@
             <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
             
             <img 
-              src="https://images.unsplash.com/photo-1626074961596-cab914d9392e?auto=format&fit=crop&q=80" 
+              src="https://images.unsplash.com/photo-1626074961596-cab914d9392e?auto=format&fit=crop&q=80&w=800"
+              loading="lazy"
+              decoding="async" 
               alt="Mecánico inspeccionando auto" 
               class="relative rounded-3xl shadow-2xl z-10 w-full transform hover:scale-[1.02] transition-transform duration-500"
             />

@@ -53,7 +53,8 @@ const SLUG_TO_IMAGE = {
   'quien-puede-ser-postor-remate': 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=800',
   'subasta-vs-remate': 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=800',
   'tipos-de-remates-chile': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800',
-  'fases-etapas-remate': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800'
+  'fases-etapas-remate': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800',
+  'mejor-pagina-comprar-autos-usados-chile': 'https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=800'
 }
 
 function getSlugFromPost (p) {
@@ -159,6 +160,12 @@ export default defineEventHandler(async (event) => {
       console.log('[API blog] Primer post raw - stem:', first?.stem, 'path:', first?.path, 'title:', first?.title, 'imgType:', typeof first?.image, 'imgVal:', JSON.stringify(first?.image)?.slice(0, 100))
     }
     const result = raw.map(normalizePost).filter(Boolean)
+    // Ordenar por fecha descendente (más nuevos primero); sin fecha van al final
+    result.sort((a, b) => {
+      const dateA = a.date ? new Date(a.date).getTime() : 0
+      const dateB = b.date ? new Date(b.date).getTime() : 0
+      return dateB - dateA
+    })
     result.forEach((p, i) => {
       console.log(`[API blog] Post ${i} final - title:${p?.title?.slice(0, 40)} image:${p?.image ? 'SI(' + p.image.slice(0, 50) + '...)' : 'NO'} descLen:${p?.description?.length || 0}`)
     })

@@ -73,7 +73,7 @@ En el mundo de los autos, tanto "subasta" como "remate" se usan para ventas con 
 
 **Remates judiciales de autos:** El tribunal ordena la venta de vehículos embargados. Precio bajo, adjudicación rápida, garantía previa obligatoria.
 
-**Subastas privadas de autos (AutoRemates):** Vendedores particulares y empresas venden sus autos de forma voluntaria. Hay inspección previa, compradores verificados y pujas en vivo. El vendedor acepta o rechaza la mejor oferta.
+**Subastas privadas de autos ([AutoRemates](/)):** Vendedores particulares y empresas venden sus autos de forma voluntaria. Puedes ver los [remates activos](/remates) en la web. Hay inspección previa, compradores verificados y pujas en vivo. El vendedor acepta o rechaza la mejor oferta.
 
 En ambos casos hay pujas y adjudicación al mejor postor; la diferencia está en el origen (judicial vs voluntario) y las reglas (garantías, inspección, etc.).
 
@@ -123,4 +123,4 @@ El remate judicial lo ordena un tribunal; los vehículos son embargados. El rema
 
 Entender **qué diferencia hay entre una subasta y un remate** te ayuda a elegir bien cuando quieras participar. La subasta es el proceso de venta con pujas; el remate suele ser la fase de adjudicación o las ventas judiciales obligatorias. En Chile, en inmuebles y vehículos, se usan ambos términos; lo clave es revisar las bases de cada convocatoria.
 
-Si quieres vender tu auto con transparencia y sin compromiso, los remates privados como AutoRemates pueden ser una buena opción: inspección incluida, compradores verificados y tú decides si aceptas la mejor oferta.
+Si quieres vender tu auto con transparencia y sin compromiso, los remates privados como [AutoRemates](/) pueden ser una buena opción: inspección incluida, compradores verificados y tú decides si aceptas la mejor oferta. [Inscribe tu auto](/) o [revisa los remates activos](/remates).

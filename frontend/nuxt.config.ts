@@ -5,7 +5,17 @@ export default defineNuxtConfig({
   ssr: true,
   pages: true,
   app: {
-    baseURL: '/'
+    baseURL: '/',
+    head: {
+      link: [
+        { rel: 'preconnect', href: 'https://images.unsplash.com', crossorigin: 'anonymous' },
+        { rel: 'dns-prefetch', href: 'https://images.unsplash.com' },
+        { rel: 'preconnect', href: 'https://picsum.photos', crossorigin: 'anonymous' },
+        { rel: 'dns-prefetch', href: 'https://picsum.photos' },
+        { rel: 'preconnect', href: 'https://api.autoremates.cl', crossorigin: 'anonymous' },
+        { rel: 'dns-prefetch', href: 'https://api.autoremates.cl' }
+      ]
+    }
   },
   modules: [
     '@nuxtjs/tailwindcss',
@@ -36,6 +46,10 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       enabled: false
+    },
+    routeRules: {
+      '/_nuxt/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+      '/favicon.ico': { headers: { 'cache-control': 'public, max-age=86400' } }
     }
   },
   sitemap: {
@@ -46,7 +60,14 @@ export default defineNuxtConfig({
       '/superadmin/**',
       '/vendedor/**',
       '/dealer/**',
-      '/perito/**'
-    ]
+      '/perito/**',
+      '/login',
+      '/registro'
+    ],
+    defaults: {
+      lastmod: new Date().toISOString().split('T')[0],
+      changefreq: 'weekly',
+      priority: 0.7
+    }
   }
 })

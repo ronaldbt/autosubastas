@@ -3,9 +3,11 @@
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
       <img 
-        src="https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=2636&auto=format&fit=crop" 
+        src="https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=1400&auto=format&fit=crop" 
         alt="Remate de autos usados en Chile - AutoRemates" 
         class="w-full h-full object-cover opacity-40"
+        fetchpriority="high"
+        decoding="async"
       />
       <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
     </div>
@@ -27,7 +29,7 @@
               Remate de autos de particulares y empresas en Chile – <span class="text-blue-400 inline-block transform hover:scale-105 transition-transform duration-300">Remates online</span>
             </h1>
             <p class="text-xl text-slate-300 mt-4 leading-relaxed max-w-xl">
-              Remate de autos y remate de vehículos de particulares y empresas en Chile. Remates de autos online, remate auto con inspección incluida. Vehículos inspeccionados, en buen estado. Cuando vendes, podemos ir a dejar el auto al comprador a cualquier ciudad de Chile (tiene un costo). <strong class="text-white">Inspección profesional incluida</strong>. Si el precio no te convence, no vendes.
+              Remate de autos y remate de vehículos de particulares y empresas en Chile. Remates de autos online y remate online de autos con inspección incluida; también subasta de vehículos para quien busca autos en remate en Chile. Puedes ver los <NuxtLink to="/remates" class="text-blue-400 font-semibold hover:underline">remates activos</NuxtLink> en cualquier momento. Remates autos y remates de vehículos en una sola página: vehículos inspeccionados, en buen estado. Cuando vendes, podemos ir a dejar el auto al comprador a cualquier ciudad de Chile (tiene un costo). <strong class="text-white">Inspección profesional incluida</strong>. Si el precio no te convence, no vendes.
             </p>
           </AnimatedSection>
 

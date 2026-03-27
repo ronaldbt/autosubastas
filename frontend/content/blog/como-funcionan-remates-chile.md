@@ -44,7 +44,7 @@ La Dirección General del Crédito Prendario (Dicrep) y la Fiscalía, entre otra
 
 ### 3. Remates privados de autos (particulares y empresas)
 
-Aquí entra el modelo de **AutoRemates**: remates online de autos de particulares y empresas que quieren vender su vehículo con transparencia. No son judiciales ni de incautación; son autos en buen estado que pasan por una inspección profesional antes de subastarse.
+Aquí entra el modelo de [AutoRemates](/): remates online de autos de particulares y empresas que quieren vender su vehículo con transparencia. Puedes ver los [remates activos](/remates) en cualquier momento. No son judiciales ni de incautación; son autos en buen estado que pasan por una inspección profesional antes de subastarse.
 
 **Características:**
 - Sin garantía previa para vender; compradores depositan $200.000 CLP
@@ -149,4 +149,4 @@ Sí. Los remates telemáticos en Chile están regulados y tienen la misma valide
 
 Saber **cómo funcionan los remates en Chile** te ayuda a elegir bien: si quieres vender tu auto particular con rapidez y transparencia, un remate privado como AutoRemates puede ser la opción más práctica. Si buscas comprar vehículos en subastas judiciales o de Dicrep, deberás considerar garantías, comisiones y plazos de pago.
 
-En todos los casos, infórmate bien de las bases, revisa el bien si es posible y participa solo si estás seguro de cumplir con el pago. Si quieres vender tu auto con inspección incluida y sin compromiso, inscríbelo en AutoRemates.
+En todos los casos, infórmate bien de las bases, revisa el bien si es posible y participa solo si estás seguro de cumplir con el pago. Si quieres vender tu auto con inspección incluida y sin compromiso, [inscríbelo en AutoRemates](/). Para participar como comprador, entra a los [remates activos de autos](/remates).

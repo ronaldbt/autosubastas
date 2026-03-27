@@ -4,7 +4,7 @@
       <AnimatedSection class="text-center mb-16">
         <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Remates de autos por ciudad</h2>
         <p class="text-slate-500 text-lg max-w-2xl mx-auto">
-          Remate de autos Santiago y remates de autos en Santiago, Concepción, Iquique, Valparaíso y más. Encuentra remates de autos en las principales ciudades de Chile.
+          Remate de autos Santiago y remates de autos en Santiago, Concepción, Iquique, Valparaíso y más. Remates de autos santiago y remates de vehículos en Chile: encuentra remates de autos en las principales ciudades.
         </p>
       </AnimatedSection>
 

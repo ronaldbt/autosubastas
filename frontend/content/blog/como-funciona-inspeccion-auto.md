@@ -57,4 +57,4 @@ La inspección cubre más de 60 puntos en las siguientes áreas:
 
 La inspección está **incluida sin costo adicional** para el vendedor. Es parte del servicio de AutoRemates.
 
-Si quieres vender tu auto con transparencia total, inscríbelo en el próximo remate.
+Si quieres vender tu auto con transparencia total, [inscríbelo en AutoRemates](/). Si quieres comprar, [revisa los remates activos](/remates); todos los autos tienen esta inspección incluida.

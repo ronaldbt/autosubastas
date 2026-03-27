@@ -66,7 +66,7 @@ Los **remates privados** son organizados por particulares o empresas sin orden j
 - Pueden ser presenciales u online
 - Bases definidas por la casa de remates o plataforma
 
-**Ejemplo: AutoRemates.** Plataforma de remates de autos donde particulares y empresas venden sus vehículos. Incluye inspección profesional, compradores verificados y pujas en vivo. El vendedor acepta o rechaza la mejor oferta.
+**Ejemplo: [AutoRemates](/).** Plataforma de [remates de autos](/remates) donde particulares y empresas venden sus vehículos. Incluye inspección profesional, compradores verificados y pujas en vivo. El vendedor acepta o rechaza la mejor oferta.
 
 ---
 
@@ -91,7 +91,7 @@ Los **remates privados** son organizados por particulares o empresas sin orden j
 
 **Si quieres vender:**
 - Remates judiciales: solo si hay orden de embargo; no es una decisión voluntaria.
-- Remates privados: opción voluntaria para vender rápido. En AutoRemates no pagas garantía para vender; los compradores pujan tras ver el informe de inspección.
+- Remates privados: opción voluntaria para vender rápido. En [AutoRemates](/) no pagas garantía para vender; los compradores pujan tras ver el informe de inspección. [Ver remates activos](/remates).
 
 ---
 
@@ -137,4 +137,4 @@ No. La Aduana subasta también mercancía, contenedores, carga y otros bienes no
 
 **Cuántos tipos de remates existen:** principalmente tres —judiciales, aduaneros (Dicrep, Aduana, Fiscalía) y privados. Cada uno tiene requisitos, objetivos y bases distintas. Saber en qué tipo participas te ayuda a preparar documentación, garantía y expectativas.
 
-Si quieres vender tu auto de forma voluntaria y transparente, un remate privado como AutoRemates te permite recibir ofertas de compradores verificados, con inspección incluida. Inscríbelo en el próximo remate.
+Si quieres vender tu auto de forma voluntaria y transparente, un remate privado como [AutoRemates](/) te permite recibir ofertas de compradores verificados, con inspección incluida. [Inscribe tu auto](/) o [entra a ver los remates activos](/remates).

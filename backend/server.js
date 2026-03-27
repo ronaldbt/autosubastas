@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const compression = require('compression');
 require('dotenv').config();
 const { connectDB } = require('./config/database');
 
@@ -61,8 +62,11 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'API is running' });
 });
 
-// Servir archivos estáticos (imágenes de autos)
-app.use('/uploads', express.static('uploads'));
+// Servir archivos estáticos con Cache-Control (imágenes de autos)
+app.use('/uploads', express.static('uploads', {
+  maxAge: 31536000000, // 1 año
+  setHeaders: (res) => res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
+}));
 
 // Proxy para imágenes de R2 (evita problemas de CORS)
 // Usa el cliente S3 para descargar directamente desde R2

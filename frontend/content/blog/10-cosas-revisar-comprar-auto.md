@@ -55,4 +55,4 @@ Luces, aire acondicionado, tablero, elevalunas. Todo debe funcionar.
 
 Profundidad del dibujo, fecha de fabricación, desgaste parejo.
 
-En AutoRemates todos los autos pasan por una inspección técnica profesional de 60 puntos antes de subastarse, lo que te da mayor tranquilidad al comprar.
+En [AutoRemates](/) todos los autos pasan por una inspección técnica profesional de 60 puntos antes de subastarse, lo que te da mayor tranquilidad al comprar. [Revisa los remates activos](/remates) para ver vehículos ya inspeccionados.

@@ -109,4 +109,20 @@ useSeoMeta({
   description: 'Guías y consejos sobre remates de autos, subastas, cómo vender y comprar vehículos en Chile. AutoRemates.',
   ogUrl: siteUrl + '/blog'
 })
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+          { '@type': 'ListItem', position: 2, name: 'Blog', item: siteUrl + '/blog' }
+        ]
+      })
+    }
+  ]
+})
 </script>

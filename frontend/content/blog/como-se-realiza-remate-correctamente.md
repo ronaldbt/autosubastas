@@ -18,7 +18,7 @@ author: AutoRemates Chile
 
 ## Paso 1: Informarte e inscribirte
 
-Antes de participar, debes conocer el bien, las bases y la fecha del remate. Las publicaciones suelen estar en sitios de martilleros, plataformas oficiales (Dicrep, Aduana) o plataformas privadas como AutoRemates.
+Antes de participar, debes conocer el bien, las bases y la fecha del remate. Las publicaciones suelen estar en sitios de martilleros, plataformas oficiales (Dicrep, Aduana) o plataformas privadas como [AutoRemates](/). Puedes ver los [remates activos de autos](/remates) en nuestra web.
 
 **Inscripción:**
 - Registrarte en la plataforma o casa de remates
@@ -140,4 +140,4 @@ En remates judiciales e institucionales, la comisión del martillero (por ejempl
 
 **Cómo se realiza el remate de forma correcta:** Inscripción, garantía (cuando aplica), conexión el día del remate, pujas en vivo, pago del saldo y retiro del bien. Sigue las bases de cada convocatoria, revisa el bien si puedes y no pujes por encima de tu tope.
 
-Si quieres participar en remates de autos con inspección incluida y compradores verificados, AutoRemates te permite pujar depositando $200.000 CLP de garantía. Regístrate y participa en el próximo remate.
+Si quieres participar en remates de autos con inspección incluida y compradores verificados, [AutoRemates](/) te permite pujar depositando $200.000 CLP de garantía. [Entra a los remates activos](/remates), regístrate y participa en el próximo remate.

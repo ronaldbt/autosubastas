@@ -612,9 +612,33 @@ useSeoMeta({
   ogUrl: siteUrl + '/remates'
 })
 
-useHead({
-  link: [{ rel: 'canonical', href: siteUrl + '/remates' }],
-  script: [
+useHead(() => {
+  const cars = filteredCars.value
+  const vehicleItems = cars.slice(0, 20).map((car, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'Vehicle',
+      name: car.title,
+      brand: { '@type': 'Brand', name: car.marca || '' },
+      vehicleModelDate: car.year,
+      fuelType: car.fuelLabel || undefined,
+      url: `${siteUrl}/dealer/remates-live-${car.id}`,
+      image: car.imageUrl
+    }
+  }))
+  const scripts = [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+          { '@type': 'ListItem', position: 2, name: 'Remates Activos', item: siteUrl + '/remates' }
+        ]
+      })
+    },
     {
       type: 'application/ld+json',
       children: JSON.stringify({
@@ -628,5 +652,22 @@ useHead({
       })
     }
   ]
+  if (vehicleItems.length > 0) {
+    scripts.push({
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Remates activos de autos',
+        description: 'Vehículos en remate con inspección profesional. AutoRemates Chile.',
+        numberOfItems: cars.length,
+        itemListElement: vehicleItems
+      })
+    })
+  }
+  return {
+    link: [{ rel: 'canonical', href: siteUrl + '/remates' }],
+    script: scripts
+  }
 })
 </script>

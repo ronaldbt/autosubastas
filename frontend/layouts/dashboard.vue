@@ -2,7 +2,7 @@
   <ClientOnly>
     <div class="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
       <Sidebar v-if="hasUser" :mobile="false" />
-      <div :class="['flex-1 transition-all duration-300 flex flex-col', hasUser ? sidebarWidthDesktop : 'ml-0', 'pb-20 lg:pb-6']">
+      <div :class="['flex-1 transition-all duration-300 flex flex-col', hasUser ? sidebarWidthDesktop : 'ml-0', 'pb-28 lg:pb-6']">
         <main class="p-6 flex-1">
           <slot />
         </main>

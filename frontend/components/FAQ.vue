@@ -64,19 +64,19 @@ const faqs = [
   },
   {
     question: '¿Aceptan autos chocados o de aseguradora?',
-    answer: 'No. En AutoRemates nos enfocamos en vehículos de particulares y empresas, en buen estado y sin daños estructurales. Los remates de autos chocados o de aseguradora son otra modalidad del mercado; nosotros te ayudamos a vender tu auto particular o de flota con transparencia total.'
+    answer: 'No. En AutoRemates nos enfocamos en vehículos de particulares y empresas, en buen estado y sin daños estructurales. La venta de autos chocados particulares o autos chocados en remate es otra modalidad del mercado; nosotros te ayudamos a vender tu auto particular o de flota con transparencia total.'
   },
   {
     question: '¿Cómo saber si un auto es de remate?',
-    answer: 'Un auto es de remate cuando fue incautado, embargado, siniestrado o está en poder de aseguradoras, municipalidades o tribunales. Puedes verificarlo en el Registro de Vehículos Motorizados (REVEM) del Ministerio de Transportes o consultando la procedencia del vehículo con el vendedor.'
+    answer: 'Un auto es de remate cuando fue incautado, embargado, siniestrado o está en poder de aseguradoras, municipalidades o tribunales. Para ver si un auto es de remate puedes consultar el Registro de Vehículos Motorizados (REVEM) del Ministerio de Transportes o pedir la procedencia del vehículo al vendedor.'
   },
   {
     question: '¿Cómo funcionan los remates de autos?',
-    answer: 'Los remates de autos son subastas donde los compradores pujan por vehículos. En AutoRemates: 1) El vendedor inscribe su auto, 2) Realizamos una inspección técnica profesional de 60 puntos, 3) El auto se subasta online con compradores verificados, 4) Se acepta la mejor oferta y el pago es inmediato.'
+    answer: 'Los remates de autos son subastas donde los compradores pujan por vehículos. En AutoRemates: 1) El vendedor inscribe su auto, 2) Realizamos una inspección técnica profesional de 60 puntos, 3) El auto se subasta online con compradores verificados, 4) Se acepta la mejor oferta y el pago es inmediato. Las subastas de autos en Chile en nuestra plataforma son solo para vehículos en buen estado.'
   },
   {
     question: '¿Cómo participar en una subasta de autos online?',
-    answer: 'Debes registrarte como comprador (dealer) en AutoRemates. Una vez verificado, podrás ver los autos disponibles, revisar las inspecciones y pujar en las subastas en vivo. Los remates se realizan cada viernes a las 15:00 hrs. El registro es gratuito.'
+    answer: 'Debes registrarte como comprador (dealer) en AutoRemates. Una vez verificado, podrás ver los autos disponibles, revisar las inspecciones y pujar en las subastas en vivo. Los remates online de autos en Chile se realizan con horarios publicados. El registro es gratuito.'
   },
   {
     question: '¿Qué es un remate de autos de aseguradora?',
@@ -84,7 +84,27 @@ const faqs = [
   },
   {
     question: '¿Dónde hay remates de autos en Chile?',
-    answer: 'En AutoRemates realizamos remates online, por lo que puedes participar desde cualquier parte de Chile. Tenemos centros de inspección en Santiago, Concepción e Iquique. Si ganas un remate, podemos entregar el auto en cualquier ciudad (con costo).'
+    answer: 'En AutoRemates realizamos remates online, por lo que puedes participar desde cualquier parte de Chile. Somos una de las páginas de remates de autos con subastas de autos en Chile. Tenemos centros de inspección en Santiago, Concepción e Iquique. Si ganas un remate, podemos entregar el auto en cualquier ciudad (con costo).'
+  },
+  {
+    question: '¿Venden autos rematados o de remate judicial?',
+    answer: 'No. Los autos rematados por tribunales (autos en remate judicial o autos en remates judiciales), los remates judiciales de vehículos y los autos decomisados en venta son otra categoría. Nosotros solo trabajamos con vehículos de particulares y empresas, en buen estado. El remate de vehículos en Chile que hacemos es solo para autos en buen estado; si buscas un vehiculo rematado por embargo o judicial, existen otros canales especializados.'
+  },
+  {
+    question: '¿Hay subasta de motos o remates de motos?',
+    answer: 'Sí. En AutoRemates puedes inscribir también motos para remate. La subasta de motos y los remates de motos siguen el mismo proceso: inspección, publicación y ofertas. Consulta en el formulario de inicio la opción Moto.'
+  },
+  {
+    question: '¿Qué documentos debo pedir al comprar un auto usado?',
+    answer: 'Además del permiso de circulación y factura, conviene solicitar el certificado de anotaciones vigentes del vehículo (REVEM) para ver si tiene gravámenes, prohibición de enajenar o si es un vehículo rematado. En AutoRemates todos los autos pasan por inspección y documentación verificada.'
+  },
+  {
+    question: '¿Por qué revisar el auto antes de comprar?',
+    answer: 'Revisar el auto antes de comprar te evita comprar un vehículo con fallas ocultas o con pérdida total no declarada. Nuestra inspección de 60 puntos incluye motor, transmisión, frenos y más. Es la misma revisión que hacemos a los autos que entran a remate en nuestra plataforma.'
+  },
+  {
+    question: 'Me vendieron un auto con pérdida total, ¿qué puedo hacer?',
+    answer: 'Si te vendieron un auto con pérdida total sin informarlo, puedes asesorarte con un abogado y el SERNAC. Revisa el certificado de anotaciones vigentes antes de comprar y, si es posible, pide una inspección técnica. En AutoRemates todos los vehículos son inspeccionados y no trabajamos con autos siniestrados o pérdida total.'
   },
   {
     question: '¿Pueden entregar el auto al comprador si está en otra ciudad?',
@@ -92,7 +112,7 @@ const faqs = [
   },
   {
     question: '¿Cómo funciona el proceso de remate en AutoRemates?',
-    answer: 'El proceso es simple: 1) Inscribes tu auto con la patente y datos básicos, 2) Inspección técnica profesional de 60 puntos en centros certificados, 3) Tu auto se publica y recibes ofertas en vivo en el remate online, 4) Aceptas la mejor oferta y recibes el pago inmediato.'
+    answer: 'El proceso es simple: 1) Inscribes tu auto con la patente y datos básicos, 2) Inspección técnica profesional de 60 puntos en centros certificados, 3) Tu auto se publica y recibes ofertas en vivo en el remate online, 4) Aceptas la mejor oferta y recibes el pago inmediato. Cada remate de un vehículo incluye informe técnico. Somos una de las páginas de remates de autos y remate automotriz en Chile para particulares y empresas.'
   },
   {
     question: '¿Qué pasa si el precio no me convence?',

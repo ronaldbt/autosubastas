@@ -493,6 +493,7 @@ const route = useRoute()
 const { getAuthHeaders, user, checkAuth } = useAuth()
 const config = useRuntimeConfig()
 const API_BASE = config.public.apiBase || 'http://localhost:5000/api'
+const siteUrl = config.public.siteUrl || 'https://autoremates.cl'
 
 const auction = ref(null)
 const bids = ref([])
@@ -1086,6 +1087,51 @@ onUnmounted(() => {
   if (hammerTimeout) clearTimeout(hammerTimeout)
   if (viewerPollInterval) clearInterval(viewerPollInterval)
   if (viewerHeartbeatInterval) clearInterval(viewerHeartbeatInterval)
+})
+
+useHead(() => {
+  const a = auction.value
+  const pagePath = route.path
+  const scripts = []
+  scripts.push({
+    type: 'application/ld+json',
+    children: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Remates Activos', item: siteUrl + '/remates' },
+        ...(a ? [{ '@type': 'ListItem', position: 3, name: `${a.marca || ''} ${a.modelo || ''}`.trim() || 'Auto', item: siteUrl + pagePath }] : [])
+      ]
+    })
+  })
+  if (a) {
+    const img = a.imagenes?.length ? a.imagenes[0] : undefined
+    const fullImg = img && (img.startsWith('http') ? img : `${API_BASE.replace(/\/api\/?$/, '')}${img.startsWith('/') ? '' : '/'}${img}`)
+    scripts.push({
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Vehicle',
+        name: `${a.marca || ''} ${a.modelo || ''}`.trim() || 'Auto',
+        brand: a.marca ? { '@type': 'Brand', name: a.marca } : undefined,
+        vehicleModelDate: a.anio,
+        mileageFromOdometer: a.kilometraje ? { '@type': 'QuantitativeValue', value: a.kilometraje, unitCode: 'KMT' } : undefined,
+        fuelType: a.peritaje?.combustible || undefined,
+        image: img,
+        url: siteUrl + pagePath,
+        description: a.descripcion || `Remate en vivo de ${a.marca} ${a.modelo} ${a.anio}. Vehículo inspeccionado.`
+      })
+    })
+  }
+  return {
+    title: a ? `${a.marca} ${a.modelo} ${a.anio} – Remate en vivo | AutoRemates` : 'Remate en vivo | AutoRemates',
+    meta: a ? [
+      { name: 'description', content: `Remate de ${a.marca} ${a.modelo} ${a.anio}. Puja por este auto en vivo. Vehículo inspeccionado.` }
+    ] : [],
+    link: [{ rel: 'canonical', href: siteUrl + pagePath }],
+    script: scripts
+  }
 })
 </script>
 

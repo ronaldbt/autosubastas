@@ -11,7 +11,7 @@
             <span class="text-xl font-bold text-white">AutoRemates</span>
           </div>
           <p class="text-sm leading-relaxed mb-6 text-slate-400">
-            Remate y subasta de autos online en Chile. Página de remates de autos con inspección profesional. Mejor sitio de remates de autos en Chile.
+            Remate y subasta de autos online en Chile. Remates vehiculos y subasta de vehículos con inspección profesional. Remates automotores para particulares y empresas. Mejor página de remates de autos en Chile.
           </p>
           <div class="flex gap-4">
             <a href="https://www.instagram.com/autoremates" target="_blank" rel="noopener" class="hover:text-blue-400 transition-colors">

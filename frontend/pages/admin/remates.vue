@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="mb-6 flex justify-between items-center">
+    <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">Remates Activos</h1>
-        <p class="text-gray-600 mt-2">Gestiona los remates en curso</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Remates Activos</h1>
+        <p class="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Gestiona los remates en curso</p>
       </div>
     </div>
 
@@ -126,76 +126,75 @@
       <div
         v-for="auto in filteredRemates"
         :key="auto.id"
-        class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6"
+        class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-4 sm:p-6"
       >
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-4">
-              <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                <img
-                  v-if="auto.imagenes && auto.imagenes.length > 0"
-                  :src="getImageUrl(auto.imagenes[0])"
-                  :alt="auto.marca + ' ' + auto.modelo"
-                  class="w-full h-full object-cover"
-                />
-                <Car v-else :size="32" class="text-gray-400" />
+        <div class="flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-6">
+          <div class="flex flex-col sm:flex-row flex-1 min-w-0 gap-4">
+            <div class="w-full sm:w-28 h-40 sm:h-28 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden shrink-0 mx-auto sm:mx-0">
+              <img
+                v-if="auto.imagenes && auto.imagenes.length > 0"
+                :src="getImageUrl(auto.imagenes[0])"
+                :alt="auto.marca + ' ' + auto.modelo"
+                class="w-full h-full object-cover"
+              />
+              <Car v-else :size="32" class="text-gray-400" />
+            </div>
+            <div class="flex-1 min-w-0 w-full">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:flex-wrap sm:gap-3 mb-3">
+                <h3 class="text-lg sm:text-xl font-bold text-gray-900 break-words">
+                  {{ auto.marca }} {{ auto.modelo }} {{ auto.anio }}
+                </h3>
+                <span
+                  :class="[
+                    'px-2 py-1 text-xs font-semibold rounded-full shrink-0 self-start',
+                    getStatusBadgeClass(auto.estado)
+                  ]"
+                >
+                  {{ formatStatus(auto.estado) }}
+                </span>
               </div>
-              <div class="flex-1">
-                <div class="flex items-center space-x-3 mb-2">
-                  <h3 class="text-xl font-bold text-gray-900">
-                    {{ auto.marca }} {{ auto.modelo }} {{ auto.anio }}
-                  </h3>
-                  <span
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-2">
+                <div class="min-w-0 rounded-lg bg-orange-50/50 sm:bg-transparent p-2 sm:p-0 -mx-2 sm:mx-0">
+                  <p class="text-xs text-gray-500 font-medium">Puja Actual</p>
+                  <p class="text-base sm:text-lg font-bold text-orange-600 break-all">${{ formatPrice(auto.precioActual) }}</p>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-500 font-medium">Precio Base</p>
+                  <p class="text-sm sm:text-base font-medium text-gray-700 break-all">${{ formatPrice(auto.precioBase) }}</p>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-500 font-medium">Total Pujas</p>
+                  <p class="text-sm font-medium text-gray-700">{{ auto.totalPujas || 0 }}</p>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-500 font-medium">Tiempo Restante</p>
+                  <p
+                    v-if="auto.fechaFinRemate"
                     :class="[
-                      'px-2 py-1 text-xs font-semibold rounded-full',
-                      getStatusBadgeClass(auto.estado)
+                      'text-sm font-medium break-words',
+                      getTimeRemainingClass(auto.fechaFinRemate)
                     ]"
                   >
-                    {{ formatStatus(auto.estado) }}
-                  </span>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
-                  <div>
-                    <p class="text-xs text-gray-500">Puja Actual</p>
-                    <p class="text-lg font-bold text-orange-600">${{ formatPrice(auto.precioActual) }}</p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500">Precio Base</p>
-                    <p class="text-sm font-medium text-gray-700">${{ formatPrice(auto.precioBase) }}</p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500">Total Pujas</p>
-                    <p class="text-sm font-medium text-gray-700">{{ auto.totalPujas || 0 }}</p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500">Tiempo Restante</p>
-                    <p 
-                      v-if="auto.fechaFinRemate"
-                      :class="[
-                        'text-sm font-medium',
-                        getTimeRemainingClass(auto.fechaFinRemate)
-                      ]"
-                    >
-                      {{ getTimeRemaining(auto.fechaFinRemate) }}
-                    </p>
-                    <p v-else class="text-sm font-medium text-gray-700">N/A</p>
-                  </div>
+                    {{ getTimeRemaining(auto.fechaFinRemate) }}
+                  </p>
+                  <p v-else class="text-sm font-medium text-gray-700">N/A</p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="flex flex-col space-y-2 ml-4">
+          <div class="flex flex-row sm:flex-row lg:flex-col gap-2 w-full lg:w-auto lg:min-w-[9rem] shrink-0">
             <NuxtLink
               :to="`/admin/remates/${auto.id}`"
-              class="inline-block text-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium"
+              class="flex-1 lg:flex-none text-center px-4 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium"
               @click="(e) => { console.log('[Admin Remates] Ver Remate click, auto.id=', auto.id, 'href=', `/admin/remates/${auto.id}`) }"
             >
               Ver Remate
             </NuxtLink>
             <button
               v-if="auto.estado === 'en_remate'"
+              type="button"
               @click="endRemate(auto.id)"
-              class="px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors text-sm"
+              class="flex-1 lg:flex-none px-4 py-2.5 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
             >
               Finalizar
             </button>

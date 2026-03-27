@@ -22,7 +22,7 @@ Un **remate** es un proceso de venta pública donde varios postores compiten ofr
 
 - **Remates judiciales:** ventas ordenadas por tribunales para cobrar deudas impagas
 - **Remates de instituciones:** Dicrep, Fiscalía, Aduana
-- **Remates privados:** casas de remates y plataformas como AutoRemates para autos
+- **Remates privados:** casas de remates y plataformas como [AutoRemates](/) para autos
 
 La RAE define el remate como "postura o proposición que obtiene la preferencia y se hace eficaz logrando la adjudicación en subastas o almonedas" y también como "subasta pública". En la práctica, remate y subasta se usan como sinónimos, aunque en el ámbito legal el remate suele referirse a la fase final de adjudicación.
 
@@ -81,7 +81,7 @@ Los remates se utilizan en varios contextos:
 
 ## Remate de autos: el caso de AutoRemates
 
-En AutoRemates, el remate cumple la función de **descubrir el valor de mercado** de forma transparente. Los vendedores (particulares y empresas) inscriben sus autos; cada auto pasa por una inspección de 60 puntos; los compradores verificados pujan en vivo; el vendedor acepta o rechaza la mejor oferta. No hay venta obligada: el remate sirve para obtener ofertas concretas sin compromiso previo.
+En [AutoRemates](/), el remate cumple la función de **descubrir el valor de mercado** de forma transparente. Puedes [ver los remates activos](/remates) cuando quieras. Los vendedores (particulares y empresas) inscriben sus autos; cada auto pasa por una inspección de 60 puntos; los compradores verificados pujan en vivo; el vendedor acepta o rechaza la mejor oferta. No hay venta obligada: el remate sirve para obtener ofertas concretas sin compromiso previo.
 
 ---
 
@@ -113,4 +113,4 @@ Si no hay ofertas que alcancen el precio mínimo, el remate puede declararse des
 
 **Qué es un remate:** una venta pública mediante subasta en la que el bien se adjudica al mejor postor. **Qué función tiene:** liquidar deudas (judiciales), descubrir el valor de mercado (privados), aportar transparencia y facilitar adjudicación rápida.
 
-Si quieres vender tu auto con transparencia y sin compromiso, un remate privado como AutoRemates te permite obtener ofertas concretas de compradores verificados, con inspección incluida. Inscríbelo en el próximo remate.
+Si quieres vender tu auto con transparencia y sin compromiso, un remate privado como [AutoRemates](/) te permite obtener ofertas concretas de compradores verificados, con inspección incluida. [Inscríbelo aquí](/) o [revisa los remates activos](/remates) para comprar.

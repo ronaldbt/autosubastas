@@ -17,8 +17,8 @@
           <p v-if="article.date" class="text-sm text-gray-500 mb-4">
             Publicado el {{ formatDate(article.date) }}
           </p>
-          <p v-if="article.description" class="text-xl text-gray-600 leading-relaxed">
-            {{ article.description }}
+          <p v-if="metaDescription" class="text-xl text-gray-600 leading-relaxed">
+            {{ metaDescription }}
           </p>
         </header>
 
@@ -70,6 +70,25 @@ const article = computed(() => articleData.value)
 const config = useRuntimeConfig()
 const siteUrl = config.public.siteUrl || 'https://autoremates.cl'
 
+// Título SEO: 50–60 caracteres recomendado. Solo título del artículo, sin sufijo largo.
+const metaTitle = computed(() => {
+  const t = article.value?.title
+  if (!t) return 'Blog AutoRemates'
+  const max = 60
+  return t.length > max ? t.slice(0, max - 3) + '...' : t
+})
+
+// Meta description: siempre específica del artículo, 150–160 caracteres.
+const metaDescription = computed(() => {
+  const d = article.value?.description
+  const str = typeof d === 'string' ? d : (d && typeof d === 'object' ? String(d.value ?? d.content ?? d.text ?? '') : '')
+  const fallback = article.value?.title
+    ? `${article.value.title}. Guía y consejos en el blog de AutoRemates Chile.`
+    : 'Artículo del blog AutoRemates Chile. Remates y subastas de autos.'
+  const s = (str && str !== '[object Object]' ? str : fallback).trim()
+  return s.length > 160 ? s.slice(0, 157) + '...' : s
+})
+
 function formatDate (dateStr) {
   if (!dateStr) return ''
   const d = new Date(dateStr)
@@ -77,10 +96,10 @@ function formatDate (dateStr) {
 }
 
 useSeoMeta({
-  title: () => article.value?.title ? `${article.value.title} | Blog AutoRemates Chile` : 'Blog AutoRemates',
-  description: () => article.value?.description || 'Artículo del blog de AutoRemates Chile. Remates y subastas de autos.',
-  ogTitle: () => article.value?.title ? `${article.value.title} | AutoRemates Chile` : 'Blog AutoRemates',
-  ogDescription: () => article.value?.description || '',
+  title: () => metaTitle.value,
+  description: () => metaDescription.value,
+  ogTitle: () => metaTitle.value,
+  ogDescription: () => metaDescription.value,
   ogType: 'article',
   ogUrl: () => siteUrl + route.path,
   ogImage: () => article.value?.image ? (article.value.image.startsWith('http') ? article.value.image : siteUrl + article.value.image) : siteUrl + '/subasta.png',
@@ -88,28 +107,44 @@ useSeoMeta({
   articlePublishedTime: () => article.value?.date || undefined,
   articleAuthor: () => article.value?.author || 'AutoRemates Chile',
   twitterCard: 'summary_large_image',
-  twitterTitle: () => article.value?.title ? `${article.value.title} | AutoRemates` : 'Blog AutoRemates',
-  twitterDescription: () => article.value?.description || '',
+  twitterTitle: () => metaTitle.value,
+  twitterDescription: () => metaDescription.value,
   twitterImage: () => article.value?.image ? (article.value.image.startsWith('http') ? article.value.image : siteUrl + article.value.image) : siteUrl + '/subasta.png'
 })
 
 useHead(() => {
   const a = article.value
-  const scripts = a ? [{
-    type: 'application/ld+json',
-    children: JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: a.title,
-      description: a.description,
-      image: a.image ? (a.image.startsWith('http') ? a.image : siteUrl + a.image) : siteUrl + '/subasta.png',
-      datePublished: a.date,
-      dateModified: a.dateModified || a.date,
-      author: { '@type': 'Organization', name: a.author || 'AutoRemates Chile', url: siteUrl },
-      publisher: { '@type': 'Organization', name: 'AutoRemates Chile', logo: { '@type': 'ImageObject', url: siteUrl + '/favicon-256.png' } },
-      mainEntityOfPage: { '@type': 'WebPage', '@id': siteUrl + route.path }
+  const descStr = typeof a?.description === 'string' ? a.description : metaDescription.value
+  const scripts = []
+  if (a) {
+    scripts.push({
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: a.title,
+        description: descStr,
+        image: a.image ? (a.image.startsWith('http') ? a.image : siteUrl + a.image) : siteUrl + '/subasta.png',
+        datePublished: a.date,
+        dateModified: a.dateModified || a.date,
+        author: { '@type': 'Organization', name: a.author || 'AutoRemates Chile', url: siteUrl },
+        publisher: { '@type': 'Organization', name: 'AutoRemates Chile', logo: { '@type': 'ImageObject', url: siteUrl + '/favicon-256.png' } },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': siteUrl + route.path }
+      })
     })
-  }] : []
+    scripts.push({
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+          { '@type': 'ListItem', position: 2, name: 'Blog', item: siteUrl + '/blog' },
+          { '@type': 'ListItem', position: 3, name: a.title, item: siteUrl + route.path }
+        ]
+      })
+    })
+  }
   return {
     link: [{ rel: 'canonical', href: siteUrl + route.path }],
     script: scripts

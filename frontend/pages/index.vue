@@ -11,7 +11,7 @@
         <div class="max-w-7xl mx-auto px-4">
           <AnimatedSection class="text-center mb-16">
             <h2 class="text-4xl font-black text-slate-900 mb-4">Cómo funcionan los remates de autos</h2>
-            <p class="text-slate-500 text-lg max-w-2xl mx-auto">Vende tu auto de forma segura, rápida y al mejor precio del mercado en 4 simples pasos.</p>
+            <p class="text-slate-500 text-lg max-w-2xl mx-auto">Vende tu auto de forma segura, rápida y al mejor precio del mercado en 4 simples pasos. Puedes <NuxtLink to="/remates" class="text-blue-600 font-semibold hover:underline">ver los remates activos</NuxtLink> o inscribir tu auto cuando quieras.</p>
           </AnimatedSection>
           
           <!-- Timeline Animado -->
@@ -146,23 +146,40 @@
       <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4">
           <h2 class="text-3xl font-black mb-10 text-center text-slate-900">Guías y consejos sobre remate de autos</h2>
-          <div class="grid md:grid-cols-3 gap-8">
+          <div class="flex flex-wrap items-stretch gap-6">
             <NuxtLink
               v-for="(post, i) in blogPosts"
-              :key="i"
-              :to="post.slug ? `/blog/${post.slug}` : '/blog'"
-              class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition-shadow block group"
+              :key="post.path || i"
+              :to="getBlogPostPath(post)"
+              class="flex-1 min-w-[280px] max-w-full md:max-w-[calc(33.333%-1rem)] bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition-shadow block group"
             >
-              <img :src="post.img" :alt="post.title" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+              <img :src="post.image || 'https://picsum.photos/seed/blog' + (i+1) + '/600/400'" :alt="post.title" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
               <div class="p-6">
                 <span class="text-xs font-bold text-blue-600 uppercase mb-2 block">Blog</span>
                 <h3 class="text-lg font-bold mb-2 group-hover:text-blue-600 transition-colors text-slate-900">{{ post.title }}</h3>
-                <p class="text-sm text-slate-500">Aprende los mejores trucos para comprar y vender autos en Chile de forma segura.</p>
+                <p class="text-sm text-slate-500 line-clamp-2">{{ post.description || 'Aprende los mejores trucos para comprar y vender autos en Chile de forma segura.' }}</p>
                 <span class="text-blue-600 font-semibold text-sm mt-4 inline-block group-hover:underline">Leer más →</span>
               </div>
             </NuxtLink>
+            <NuxtLink
+              to="/blog"
+              class="flex items-center justify-center min-w-[120px] self-center rounded-2xl border-2 border-slate-200 hover:border-blue-600 hover:bg-blue-50 text-slate-600 hover:text-blue-600 transition-all group"
+              aria-label="Ver todos los artículos del blog"
+            >
+              <span class="flex items-center gap-2 font-bold px-6 py-4">
+                Ver más artículos
+                <ArrowRight :size="20" class="group-hover:translate-x-1 transition-transform" />
+              </span>
+            </NuxtLink>
           </div>
-          <div class="text-center mt-10">
+          <div class="text-center mt-10 flex flex-wrap justify-center gap-4">
+            <NuxtLink
+              to="/remates"
+              class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-bold transition-colors"
+            >
+              Ver remates activos
+              <ArrowRight :size="18" />
+            </NuxtLink>
             <NuxtLink
               to="/blog"
               class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-colors"
@@ -181,12 +198,18 @@
         <div class="max-w-7xl mx-auto px-4">
           <h2 class="text-3xl md:text-5xl font-black mb-6">¿Listo para vender tu auto en remate?</h2>
           <p class="text-xl text-slate-400 mb-8">Cada remate tiene su propio plazo. Inscribe tu auto y participa cuando quieras.</p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <div class="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
             <NuxtLink
               to="/registro"
               class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-transform text-center text-white"
             >
               Inscribir mi Auto Gratis
+            </NuxtLink>
+            <NuxtLink
+              to="/remates"
+              class="bg-white/10 hover:bg-white/20 border-2 border-white/50 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors text-center"
+            >
+              Ver remates activos
             </NuxtLink>
             <NuxtLink
               to="/login"
@@ -225,7 +248,7 @@ const route = useRoute()
 useSeoMeta({
   title: 'AutoRemates Chile - Remate de Autos de Particulares y Empresas | Remates Online',
   description: 'Remate de autos de particulares y empresas en Chile. Remates online. Podemos entregar el auto al comprador en cualquier ciudad de Chile. Inspección profesional incluida. Si el precio no te convence, no vendes.',
-  keywords: 'remate de autos, remates de autos, remate auto, remate autos, remate vehiculos, remate de autos santiago, remates de autos en santiago, remate siniestrados, remate autos siniestrados, remate de autos embargados, remate de autos embargados chile, compra vehiculos chocados, remate de autos particulares, remate de autos empresas, remate de autos chile, subasta de autos, remates online',
+  keywords: 'remate de autos, remates de autos, remate auto, remate autos, remate vehiculos, remates vehiculos, remates de vehículos, remate de vehiculos, remate de autos santiago, remates de autos en santiago, remates de autos santiago, remate siniestrados, remate autos siniestrados, remate de autos embargados, remate de autos embargados chile, compra vehiculos chocados, remate de autos particulares, remate de autos empresas, remate de autos chile, remate autos chile, remates de autos chile, subasta de autos, subasta autos chile, subasta de vehiculos, subasta de motos, remates online, remates online autos chile, remates de autos online, remates autos, remates auto, remate online autos, autos en remate chile, autos remates chile, remate de auto, remates chocados, remate autos chocados, remates automotores, autos embargados, remates judiciales vehículos, remates de vehiculos, remates de vehiculos chile, remates de vehículos en chile, paginas de remates, revisar auto antes de comprar, vehiculo rematado, autos rematados, remates motos, certificado de anotaciones vigentes, proximos remates de autos',
   ogTitle: 'AutoRemates Chile - Remate de Autos de Particulares y Empresas',
   ogDescription: 'Remate de autos de particulares y empresas en Chile. Remates online, vehículos inspeccionados, en buen estado. Inspección profesional incluida.',
   ogImage: siteUrl + '/subasta.png',
@@ -248,6 +271,43 @@ useHead({
     { rel: 'canonical', href: siteUrl + route.path }
   ],
   script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        '@id': siteUrl + '#localbusiness',
+        name: 'AutoRemates Chile',
+        url: siteUrl,
+        logo: siteUrl + '/favicon-256.png',
+        description: 'Remate de autos de particulares y empresas en Chile. Remates online, vehículos inspeccionados, en buen estado.',
+        image: siteUrl + '/subasta.png',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Av. Apoquindo 4500',
+          addressLocality: 'Las Condes',
+          addressRegion: 'Región Metropolitana',
+          addressCountry: 'CL'
+        },
+        telephone: '+56-9-7979-6841',
+        openingHoursSpecification: [
+          { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '18:00' }
+        ],
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+56-9-7979-6841',
+          contactType: 'customer service',
+          areaServed: 'CL',
+          availableLanguage: 'Spanish',
+          email: 'contacto@autoremates.cl'
+        },
+        sameAs: [
+          'https://www.facebook.com/autoremates',
+          'https://www.instagram.com/autoremates',
+          'https://www.youtube.com/autoremates'
+        ]
+      })
+    },
     {
       type: 'application/ld+json',
       children: JSON.stringify({
@@ -346,11 +406,18 @@ onUnmounted(() => {
   }
 })
 
-const blogPosts = [
-  { title: 'Remate vs Clasificados', img: 'https://picsum.photos/seed/blog1/600/400', slug: 'remate-vs-clasificados' },
-  { title: '10 Cosas que revisar antes de comprar', img: 'https://picsum.photos/seed/blog2/600/400', slug: '10-cosas-revisar-comprar-auto' },
-  { title: 'Cómo funciona la inspección', img: 'https://picsum.photos/seed/blog3/600/400', slug: 'como-funciona-inspeccion-auto' }
-]
+// Cargar artículos desde la API del blog (solo los 3 más recientes en la home)
+const { data: blogList } = await useAsyncData('home-blog', () => $fetch('/api/blog').catch(() => []))
+const blogPosts = computed(() => {
+  const list = blogList.value || []
+  return list.slice(0, 3)
+})
+function getBlogPostPath (post) {
+  if (!post) return '/blog'
+  if (post.path && post.path.startsWith('/')) return post.path
+  const slug = post.path?.replace(/^\/blog\/?/, '') || post.slug || ''
+  return slug ? `/blog/${slug}` : '/blog'
+}
 
 // Función para obtener el próximo viernes
 const getNextFridayDate = () => {

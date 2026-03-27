@@ -4,7 +4,7 @@
       <AnimatedSection class="text-center mb-12">
         <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Tipos de remates de autos en Chile</h2>
         <p class="text-slate-500 text-lg max-w-2xl mx-auto mb-4">
-          Existen diversos tipos de remates de autos: remate de autos embargados, remate de autos embargados Chile, remate siniestrados, remate autos siniestrados, chocados, de aseguradora, judiciales, municipales y más. <strong class="text-slate-700">AutoRemates se especializa en remates de particulares y empresas, con vehículos en buen estado.</strong>
+          Existen diversos tipos de remates de autos y remates de vehículos: remate de autos embargados, remate de autos embargados Chile, remate siniestrados, remate autos siniestrados, remate autos chocados, remates chocados, de aseguradora, remates judiciales de vehículos, autos embargados, municipales y más. <strong class="text-slate-700">AutoRemates se especializa en remates de particulares y empresas, con vehículos en buen estado.</strong>
         </p>
       </AnimatedSection>
 

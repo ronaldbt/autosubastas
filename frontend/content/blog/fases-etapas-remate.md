@@ -112,4 +112,4 @@ Si ninguna oferta alcanza el mínimo legal, el remate puede declararse desierto.
 
 ## Conclusión
 
-Conocer las **fases y etapas de un remate** te ayuda a prepararte bien: convocatoria, inscripción, garantía, pujas, adjudicación y pago. En remates judiciales se añaden demanda, embargo y tasación. En Dicrep y remates privados de autos el proceso es más directo. Si quieres participar en remates de autos con inspección incluida y compradores verificados, AutoRemates te permite pujar depositando $200.000 CLP de garantía. Revisa las bases, regístrate y participa en el próximo remate.
+Conocer las **fases y etapas de un remate** te ayuda a prepararte bien: convocatoria, inscripción, garantía, pujas, adjudicación y pago. En remates judiciales se añaden demanda, embargo y tasación. En Dicrep y remates privados de autos el proceso es más directo. Si quieres participar en remates de autos con inspección incluida y compradores verificados, [AutoRemates](/) te permite pujar depositando $200.000 CLP de garantía. [Revisa los remates activos](/remates), regístrate y participa en el próximo remate.

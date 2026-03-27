@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="mb-6 flex justify-between items-center">
+    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">Remates Activos</h1>
-        <p class="text-gray-600 mt-2">Gestiona todos los remates en curso</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Remates Activos</h1>
+        <p class="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Gestiona todos los remates en curso</p>
       </div>
-      <button class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center space-x-2">
+      <button class="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center gap-2">
         <PlusCircle :size="20" />
         <span>Nuevo Remate</span>
       </button>
@@ -100,76 +100,77 @@
       <div
         v-for="remate in filteredRemates"
         :key="remate.id"
-        class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6"
+        class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-4 sm:p-6"
       >
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center space-x-4">
-              <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
-                <img
-                  v-if="getFirstImage(remate.auto)"
-                  :src="getImageUrl(getFirstImage(remate.auto))"
-                  :alt="remate.auto.marca + ' ' + remate.auto.modelo"
-                  class="w-full h-full object-cover"
-                />
-                <Car v-else :size="32" class="text-gray-400" />
+        <div class="flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-6">
+          <div class="flex flex-col sm:flex-row flex-1 min-w-0 gap-4">
+            <div class="w-full sm:w-28 h-40 sm:h-28 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden shrink-0 mx-auto sm:mx-0">
+              <img
+                v-if="getFirstImage(remate.auto)"
+                :src="getImageUrl(getFirstImage(remate.auto))"
+                :alt="remate.auto.marca + ' ' + remate.auto.modelo"
+                class="w-full h-full object-cover"
+              />
+              <Car v-else :size="32" class="text-gray-400" />
+            </div>
+            <div class="flex-1 min-w-0 w-full">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:flex-wrap sm:gap-3">
+                <h3 class="text-lg sm:text-xl font-bold text-gray-900 break-words">
+                  {{ remate.auto.marca }} {{ remate.auto.modelo }} {{ remate.auto.anio }}
+                </h3>
+                <span
+                  :class="[
+                    'px-2 py-1 text-xs font-semibold rounded-full shrink-0 self-start',
+                    getStatusBadgeClass(remate.auto.estado)
+                  ]"
+                >
+                  {{ formatStatus(remate.auto.estado) }}
+                </span>
               </div>
-              <div class="flex-1">
-                <div class="flex items-center space-x-3">
-                  <h3 class="text-xl font-bold text-gray-900">
-                    {{ remate.auto.marca }} {{ remate.auto.modelo }} {{ remate.auto.anio }}
-                  </h3>
-                  <span
-                    :class="[
-                      'px-2 py-1 text-xs font-semibold rounded-full',
-                      getStatusBadgeClass(remate.auto.estado)
-                    ]"
-                  >
-                    {{ formatStatus(remate.auto.estado) }}
-                  </span>
+              <p class="text-sm text-gray-600 mt-1 break-words">
+                {{ remate.auto.patente ? `${remate.auto.patente} • ` : '' }}
+                {{ remate.auto.kilometraje ? `${remate.auto.kilometraje} km` : '' }}
+              </p>
+              <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="min-w-0 rounded-lg bg-orange-50/50 sm:bg-transparent p-2 sm:p-0 -mx-2 sm:mx-0">
+                  <p class="text-xs text-gray-500 font-medium">Puja Actual</p>
+                  <p class="text-base sm:text-lg font-bold text-orange-600 break-all">${{ formatPrice(remate.pujaActual) }}</p>
                 </div>
-                <p class="text-sm text-gray-600 mt-1">
-                  {{ remate.auto.patente ? `${remate.auto.patente} • ` : '' }}
-                  {{ remate.auto.kilometraje ? `${remate.auto.kilometraje} km` : '' }}
-                </p>
-                <div class="mt-3 flex items-center space-x-6">
-                  <div>
-                    <p class="text-xs text-gray-500">Puja Actual</p>
-                    <p class="text-lg font-bold text-orange-600">${{ formatPrice(remate.pujaActual) }}</p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500">Precio Base</p>
-                    <p class="text-sm font-medium text-gray-700">${{ formatPrice(remate.precioBase) }}</p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500">Pujas</p>
-                    <p class="text-sm font-medium text-gray-700">{{ remate.totalPujas }}</p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500">Finaliza</p>
-                    <p class="text-sm font-medium text-gray-700">{{ formatDate(remate.fechaFin) }}</p>
-                  </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-500 font-medium">Precio Base</p>
+                  <p class="text-sm font-medium text-gray-700 break-all">${{ formatPrice(remate.precioBase) }}</p>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-500 font-medium">Pujas</p>
+                  <p class="text-sm font-medium text-gray-700">{{ remate.totalPujas }}</p>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-500 font-medium">Finaliza</p>
+                  <p class="text-sm font-medium text-gray-700 break-words">{{ formatDate(remate.fechaFin) }}</p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="flex flex-col space-y-2 ml-4">
+          <div class="flex flex-row flex-wrap lg:flex-col gap-2 w-full lg:w-auto lg:min-w-[9rem] shrink-0">
             <button
+              type="button"
               @click="viewRemate(remate)"
-              class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm"
+              class="flex-1 min-w-[30%] lg:flex-none lg:w-full px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium"
             >
               Ver Detalles
             </button>
             <button
+              type="button"
               @click="editRemate(remate)"
-              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+              class="flex-1 min-w-[30%] lg:flex-none lg:w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
             >
               Editar
             </button>
             <button
               v-if="remate.estado === 'en_remate'"
+              type="button"
               @click="endRemate(remate)"
-              class="px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors text-sm"
+              class="flex-1 min-w-full sm:min-w-[30%] lg:flex-none lg:w-full px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
             >
               Finalizar
             </button>
